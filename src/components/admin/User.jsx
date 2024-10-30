@@ -41,7 +41,7 @@ const User = () => {
 
           {/* Responsive Table */}
           <div className="w-full overflow-x-auto pt-4 md:pt-7 md:px-3 lg:px-7">
-            <table className="min-w-screen border-collapse border border-gray-300">
+            <table className="min-w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="border-1 border-gray-400 uppercase">
                   <th className="py-2 px-4 text-center text-xs sm:text-sm">
