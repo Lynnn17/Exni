@@ -6,6 +6,7 @@ export default {
       colors: {
         teks: "#666666",
         mainBg: "#F3F2EF",
+        exni: "#A95ECE",
       },
     },
   },

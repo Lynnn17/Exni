@@ -1,9 +1,9 @@
-import Sidebar from "../../components/Sidebar";
-import Header from "../../components/Header";
-import Content from "../../components/admin/User";
-import NavMobile from "../../components/NavMobile";
+import Sidebar from "../../../components/Sidebar";
+import Header from "../../../components/Header";
+import Content from "../../../components/admin/vehicle/Dashboard";
+import NavMobile from "../../../components/NavMobile";
 
-const User = () => {
+const Dashboard = () => {
   return (
     <>
       <NavMobile />
@@ -20,4 +20,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Dashboard;

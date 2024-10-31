@@ -10,7 +10,7 @@ import { IoIosCube } from "react-icons/io";
 import { FaCarSide } from "react-icons/fa";
 
 const Sidebar = () => {
-  const activeStyle = "text-primary font-semibold";
+  const activeStyle = "text-black font-semibold";
   const defaultStyle = "text-teks";
   return (
     <aside className="bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 h-screen overflow-y-auto w-64">
@@ -101,7 +101,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <IoIosCube className="text-2xl" />
             <NavLink
-              to="/tenant"
+              to="/tenants"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -115,7 +115,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <FaCarSide className="text-2xl" />
             <NavLink
-              to="/vehicle"
+              to="/vehicles"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
