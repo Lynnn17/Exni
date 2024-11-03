@@ -7,6 +7,7 @@ import { FaUsers, FaBuilding, FaCarSide } from "react-icons/fa";
 import { TbBuildingWarehouse } from "react-icons/tb";
 import { GiReceiveMoney } from "react-icons/gi";
 import { IoIosCube } from "react-icons/io";
+import { FaHandshakeSimple } from "react-icons/fa6";
 import IconUser from "../assets/icon/user.svg";
 
 const NavMobile = () => {
@@ -27,7 +28,7 @@ const NavMobile = () => {
         </button>
 
         {isOpen && (
-          <div className="h-screen w-[300px] bg-white fixed top-0 right-0 rounded-[10px] z-10">
+          <div className="h-screen w-[250px] bg-white fixed top-0 right-0 rounded-[10px] z-10">
             <div className="text-4xl pr-4 pt-3 flex justify-end">
               <button onClick={toggleSidebar}>
                 <IoCloseSharp />
@@ -90,6 +91,20 @@ const NavMobile = () => {
                   </NavLink>
 
                   <NavLink
+                    to="/submissions"
+                    className={({ isActive }) =>
+                      `flex items-center pt-4 ${
+                        isActive ? activeClass : "text-teks"
+                      }`
+                    }
+                  >
+                    <FaHandshakeSimple className="text-2xl" />
+                    <p className="text-sm uppercase pl-3 font-medium">
+                      Pengajuan
+                    </p>
+                  </NavLink>
+
+                  <NavLink
                     to="/transactions"
                     className={({ isActive }) =>
                       `flex items-center pt-4 ${
@@ -99,14 +114,14 @@ const NavMobile = () => {
                   >
                     <GiReceiveMoney className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">
-                      Transactions
+                      Transaksi
                     </p>
                   </NavLink>
                 </div>
 
                 <div>
                   <div className="text-xs text-teks pt-14 flex items-center">
-                    <p className="uppercase">Assets</p>
+                    <p className="uppercase">Aset</p>
                     <div className="w-20 h-[0.3px] bg-teks ml-1"></div>
                   </div>
 

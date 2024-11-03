@@ -1,133 +1,132 @@
+import React from "react";
 import { MdKeyboardBackspace } from "react-icons/md";
-import { Link } from "react-router-dom";
-import Input from "../../reusable/Input";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../reusable/Button";
-import React, { useState } from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import InputField from "../../reusable/InputField"; // Import the new InputField component
 
 const Edit = () => {
-  const [nama, setNama] = useState("");
-  const [alamat, setAlamat] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [fotoAvatar, setFotoAvatar] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleNamaChange = (e) => setNama(e.target.value);
-  const handleAlamatChange = (e) => setAlamat(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-  const handleFotoAvatarChange = (e) => setFotoAvatar(e.target.files[0]);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+  const navigate = useNavigate();
+  const initialValues = {
+    nama: "",
+    alamat: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    fotoAvatar: null,
   };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword((prev) => !prev);
-  };
+  const validationSchema = Yup.object({
+    nama: Yup.string().required("Nama is required"),
+    alamat: Yup.string().required("Alamat is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Confirm Password is required"),
+    fotoAvatar: Yup.mixed().required("Foto Avatar is required"),
+  });
 
-  const handleSave = () => {
-    console.log("Data disimpan");
+  const handleSave = (values) => {
+    console.log("Data disimpan:", values);
   };
 
   const handleCancel = () => {
-    console.log("Batal simpan");
+    navigate("/users");
   };
 
   return (
-    <>
-      <main>
-        <div className="w-full p-4 bg-white mt-4 h-full">
-          <div className="flex items-center gap-2">
-            <Link to="/users">
-              <MdKeyboardBackspace className="text-2xl" />
-            </Link>
-            <p className="text-lg font-medium">Edit User</p>
-          </div>
-          <div className="w-full h-[1px] bg-teks mt-2"></div>
-
-          <div className="border border-gray-200 mt-4 py-4 md:px-6">
-            <div className="flex items-center py-3 px-4 gap-2">
-              <p className=" text-sm ">User Information</p>
-              <div className="w-[10rem] h-[1px] bg-teks"></div>
-            </div>
-            <Input
-              type="text"
-              label="Nama"
-              name="nama"
-              placeholder="Masukan Nama"
-              value={nama}
-              onChange={handleNamaChange}
-            />
-            <Input
-              type="text"
-              label="Alamat"
-              name="alamat"
-              placeholder="Masukan Alamat"
-              value={alamat}
-              onChange={handleAlamatChange}
-            />
-
-            <Input
-              type="file"
-              label="Foto Avatar"
-              name="fotoAvatar"
-              onChange={handleFotoAvatarChange}
-            />
-            <div className="flex gap-3 justify-center md:justify-end pt-5">
-              <Button label="Simpan" color="bg-exni" onClick={handleSave} />
-              <Button label="Batal" color="bg-red-500" onClick={handleCancel} />
-            </div>
-
-            <div className="pt-10">
-              <div className="flex items-center py-3 px-4 gap-2 ">
-                <p className=" text-sm ">User Login</p>
-                <div className="w-[10rem] h-[1px] bg-teks"></div>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSave}
+    >
+      {({ setFieldValue, resetForm }) => (
+        <Form>
+          <main>
+            <div className="w-full p-4 bg-white mt-4 h-full">
+              <div className="flex items-center gap-2">
+                <Link to="/users">
+                  <MdKeyboardBackspace className="text-2xl" />
+                </Link>
+                <p className="text-lg font-medium">Edit User</p>
               </div>
-              <Input
-                type="email"
-                label="Email"
-                name="email"
-                placeholder="Masukan Email"
-                value={email}
-                onChange={handleEmailChange}
-              />
-              <Input
-                type={showPassword ? "text" : "password"}
-                label="Password"
-                name="password"
-                placeholder="Masukan Password"
-                value={password}
-                onChange={handlePasswordChange}
-                showPasswordToggle={true}
-                onToggle={togglePasswordVisibility}
-              />
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                label="Confirm Password"
-                name="confirmPassword"
-                placeholder="Konfirmasi Password"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                showPasswordToggle={true}
-                onToggle={toggleConfirmPasswordVisibility}
-              />
-              <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                <Button label="Simpan" color="bg-exni" onClick={handleSave} />
-                <Button
-                  label="Batal"
-                  color="bg-red-500"
-                  onClick={handleCancel}
+              <div className="w-full h-[1px] bg-teks mt-2"></div>
+
+              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+                <div className="flex items-center py-3 px-4 gap-2">
+                  <p className=" text-sm ">User Information</p>
+                  <div className="w-[10rem] h-[1px] bg-teks"></div>
+                </div>
+
+                <InputField
+                  name="nama"
+                  label="Nama"
+                  type="text"
+                  placeholder="Masukan Nama"
                 />
+                <InputField
+                  name="alamat"
+                  label="Alamat"
+                  type="text"
+                  placeholder="Masukan Alamat"
+                />
+
+                <div className="mb-4">
+                  <InputField
+                    type="file"
+                    label="Foto Avatar"
+                    name="fotoAvatar"
+                    onChange={(e) =>
+                      setFieldValue("fotoAvatar", e.target.files[0])
+                    }
+                  />
+                </div>
+
+                <div className="pt-10">
+                  <div className="flex items-center py-3 px-4 gap-2">
+                    <p className=" text-sm ">User Login</p>
+                    <div className="w-[10rem] h-[1px] bg-teks"></div>
+                  </div>
+
+                  <InputField
+                    name="email"
+                    label="Email"
+                    type="email"
+                    placeholder="Masukan Email"
+                  />
+                  <InputField
+                    name="password"
+                    label="Password"
+                    type="password"
+                    placeholder="Masukan Password"
+                  />
+                  <InputField
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    type="password"
+                    placeholder="Konfirmasi Password"
+                  />
+
+                  <div className="flex gap-3 justify-center pt-5 md:justify-end">
+                    <Button type="submit" label="Simpan" color="bg-exni" />
+                    <Button
+                      type="button"
+                      label="Batal"
+                      color="bg-red-500"
+                      onClick={() => handleCancel()}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </main>
-    </>
+          </main>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

@@ -27,11 +27,15 @@ const Dashboard = () => {
               <Card
                 key={i}
                 foto={Foto}
-                title={`Rumah Terbalik ${i + 1}`}
-                address="Jl. Masjid Besar Band Nera 34245 JAKARTA"
-                salesOffice="Kantor Penjualan Tiket"
-                landSize="16568"
-                buildingSize="13231"
+                title={`Paheho Sport OLd Edition ${i + 1}`}
+                address="F 610 M"
+                details={{
+                  "Sales Office": "2018",
+                  "Land Size": "16568",
+                  "Building Size": "13231",
+                  "Additional Info": "Custom Value",
+                }}
+                id={i + 1}
               />
             ))}
           </div>

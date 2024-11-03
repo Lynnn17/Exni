@@ -27,9 +27,9 @@ const Dashboard = () => {
               <Card
                 key={i}
                 foto={Foto}
-                title={`Rumah Terbalik ${i + 1}`}
-                address="Jl. Masjid Besar Band Nera 34245 JAKARTA"
-                salesOffice="Kantor Penjualan Tiket"
+                title={`Kabin Kapal Arunika Samudera ${i + 1}`}
+                address="PT Pelni JAKARTA"
+                salesOffice="Kabin Kapal"
                 landSize="16568"
                 buildingSize="13231"
               />

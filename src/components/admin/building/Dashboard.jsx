@@ -30,8 +30,9 @@ const Dashboard = () => {
                 title={`Rumah Terbalik ${i + 1}`}
                 address="Jl. Masjid Besar Band Nera 34245 JAKARTA"
                 salesOffice="Kantor Penjualan Tiket"
-                landSize="16568"
-                buildingSize="13231"
+                landSize="16568 m²"
+                buildingSize="13231 m²"
+                id={i + 1}
               />
             ))}
           </div>

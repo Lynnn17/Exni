@@ -1,5 +1,6 @@
 import { FaRegFilePdf } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
+import { Link } from "react-router-dom";
 const CardAsset = ({
   foto,
   title,
@@ -7,6 +8,7 @@ const CardAsset = ({
   salesOffice,
   landSize,
   buildingSize,
+  id,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -22,12 +24,14 @@ const CardAsset = ({
           <p>{salesOffice}</p>
           <p className="pt-2 text-xs">Luas Tanah & Bangunan</p>
           <div className="pt-1 text-xs">
-            <p>{landSize} m²</p>
-            <p>{buildingSize} m²</p>
+            <p>{landSize}</p>
+            <p>{buildingSize}</p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni">
             <FaRegFilePdf />
-            <BsPencilSquare />
+            <Link to={`/edit/${id}`}>
+              <BsPencilSquare />
+            </Link>
           </div>
         </div>
       </div>
