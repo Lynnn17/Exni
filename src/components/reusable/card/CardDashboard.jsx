@@ -1,3 +1,4 @@
+import React from "react";
 const Card = ({ count, label, icon: Icon }) => {
   return (
     <div className="bg-white p-8 rounded-lg shadow-xl">

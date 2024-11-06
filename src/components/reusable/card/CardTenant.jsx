@@ -1,15 +1,8 @@
 import { FaRegFilePdf } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
-const CardAsset = ({
-  foto,
-  title,
-  address,
-  salesOffice,
-  landSize,
-  buildingSize,
-  id,
-}) => {
+import React from "react";
+const CardTenant = ({ foto, title, address, alokasi, capacity, link }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
       <img
@@ -21,15 +14,14 @@ const CardAsset = ({
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
         <div className="pt-4">
-          <p>{salesOffice}</p>
-          <p className="pt-2 text-xs">Luas Tanah & Bangunan</p>
+          <p>{alokasi}</p>
+          <p className="pt-2 text-xs font-medium">Kapasitas Ruangan</p>
           <div className="pt-1 text-xs">
-            <p>{landSize}</p>
-            <p>{buildingSize}</p>
+            <p>{capacity}</p>
           </div>
-          <div className="flex justify-end text-2xl gap-2 text-exni">
+          <div className="flex justify-end text-2xl gap-2 text-exni pt-4">
             <FaRegFilePdf />
-            <Link to={`/edit/${id}`}>
+            <Link to={link}>
               <BsPencilSquare />
             </Link>
           </div>
@@ -39,4 +31,4 @@ const CardAsset = ({
   );
 };
 
-export default CardAsset;
+export default CardTenant;

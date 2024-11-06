@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardAdmin from "./views/admin/Dashboard";
 import UsersAdmin from "./views/admin/user/Dashboard";
@@ -10,6 +11,8 @@ import VehicleAdmin from "./views/admin/vehicle/Dashboard";
 import PengajuanAdmin from "./views/admin/pengajuan/Dashboard";
 import AddBuilding from "./views/admin/building/Add";
 import EditBuilding from "./views/admin/building/Edit";
+import DetailPengajuan from "./views/admin/pengajuan/Detail";
+
 function App() {
   return (
     <>
@@ -29,7 +32,11 @@ function App() {
           {/* end building */}
           <Route path="/tenants" element={<TenantAdmin />} />
           <Route path="/vehicles" element={<VehicleAdmin />} />
+
+          {/* pengajuan */}
           <Route path="/submissions" element={<PengajuanAdmin />} />
+          <Route path="/submissions/detail/:id" element={<DetailPengajuan />} />
+          {/* end pengajuan */}
         </Routes>
       </BrowserRouter>
     </>

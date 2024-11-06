@@ -1,11 +1,10 @@
 import React from "react";
-import { MdKeyboardBackspace } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
-
+import HeaderForm from "../../reusable/HeaderForm";
 const Add = () => {
   const navigate = useNavigate();
   const validationSchema = Yup.object({
@@ -46,14 +45,7 @@ const Add = () => {
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <div className="flex items-center gap-2">
-                <Link to="/buildings">
-                  <MdKeyboardBackspace className="text-2xl" />
-                </Link>
-                <p className="text-lg font-medium">Tambah Aset Bangunan</p>
-              </div>
-              <div className="w-full h-[1px] bg-teks mt-2"></div>
-
+              <HeaderForm title="Add Building" link="/buildings" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 <InputField
                   name="nama"
@@ -92,7 +84,28 @@ const Add = () => {
                   placeholder="Masukan Luas Tanah"
                 />
 
+                <InputField
+                  name="harga"
+                  label="Harga Sewa"
+                  type="text"
+                  placeholder="Masukan Luas Tanah"
+                />
+
+                <InputField
+                  name="deskripsi"
+                  label="Deskripsi"
+                  type="text"
+                  placeholder="Masukan Deskripsi (Optional)"
+                />
                 <div className="mb-4">
+                  <InputField
+                    type="file"
+                    label="Dokumen Aset"
+                    name="dokumenAset"
+                    onChange={(e) =>
+                      setFieldValue("dokumenAset", e.target.files[0])
+                    }
+                  />
                   <InputField
                     type="file"
                     label="Foto Aset"

@@ -3,7 +3,7 @@ import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
 import Pagination from "../../reusable/Pagination";
 import Search from "../../reusable/Search";
-import DataTable from "../../dataTable/DataTable";
+import DataTable from "../../reusable/dataTable/DataTable";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,14 +24,14 @@ const Dashboard = () => {
     properti: "Cargo Ship",
     nominal: "Rp 100.000.000,-",
     waktu: "01 Oktober 2024 - 30 Desember 2024",
-    status: "Aktif",
+    status: "Pengajuan",
   }));
 
   const actions = [
     {
       link: (id) => `/submissions/detail/${id}`,
       icon: <FaCircleInfo />,
-      className: "text-exni",
+      className: "text-exni text-[1.5rem] text-center",
     },
   ];
 
@@ -42,8 +42,6 @@ const Dashboard = () => {
           <HeaderSection
             title="Pengajuan"
             subtitle=""
-            linkTo="/submissions/add"
-            linkText="Add"
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >

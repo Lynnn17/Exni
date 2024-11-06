@@ -1,7 +1,8 @@
+import React from "react";
 import Foto from "../../../assets/mobil.png";
-import Card from "../../reusable/CardAsset";
+import Card from "../../reusable/card/CardVehicles";
 import Pagination from "../../reusable/Pagination";
-import React, { useState } from "react";
+import { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import Search from "../../reusable/Search";
 
@@ -13,7 +14,7 @@ const Dashboard = () => {
         <div className="w-full p-4 bg-white mt-4 h-full">
           <HeaderSection
             title="Assets"
-            subtitle="Vihicles"
+            subtitle="Vehicles"
             linkTo="/tenants/add"
             linkText="Add"
             isOpen={isOpen}
@@ -28,13 +29,11 @@ const Dashboard = () => {
                 key={i}
                 foto={Foto}
                 title={`Paheho Sport OLd Edition ${i + 1}`}
-                address="F 610 M"
-                details={{
-                  "Sales Office": "2018",
-                  "Land Size": "16568",
-                  "Building Size": "13231",
-                  "Additional Info": "Custom Value",
-                }}
+                plat="F 610 M"
+                year="2018"
+                machine="JM51E1055436"
+                frame="MH1jM511897070"
+                condition="Baik"
                 id={i + 1}
               />
             ))}

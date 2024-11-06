@@ -5,7 +5,7 @@ import { IoPencil } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
 import Pagination from "../../reusable/Pagination";
 import Search from "../../reusable/Search";
-import DataTable from "../../dataTable/DataTable";
+import DataTable from "../../reusable/dataTable/DataTable";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,5 +1,5 @@
 import Foto from "../../../assets/rumah.png";
-import Card from "../../reusable/CardAsset";
+import Card from "../../reusable/card/CardBuilding";
 import Pagination from "../../reusable/Pagination";
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
@@ -29,10 +29,12 @@ const Dashboard = () => {
                 foto={Foto}
                 title={`Rumah Terbalik ${i + 1}`}
                 address="Jl. Masjid Besar Band Nera 34245 JAKARTA"
-                salesOffice="Kantor Penjualan Tiket"
+                alokasi="Kantor Penjualan Tiket"
                 landSize="16568 m²"
                 buildingSize="13231 m²"
-                id={i + 1}
+                harga="Rp. 100.000.000"
+                deskripsi=""
+                link={`/buildings/edit/${i + 1}`}
               />
             ))}
           </div>

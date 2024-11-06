@@ -1,3 +1,4 @@
+import React from "react";
 import { FaMoon } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";

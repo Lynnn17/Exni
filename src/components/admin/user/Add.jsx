@@ -5,6 +5,7 @@ import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
+import HeaderForm from "../../reusable/HeaderForm";
 const Edit = () => {
   const initialValues = {
     nama: "",
@@ -47,14 +48,7 @@ const Edit = () => {
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <div className="flex items-center gap-2">
-                <Link to="/users">
-                  <MdKeyboardBackspace className="text-2xl" />
-                </Link>
-                <p className="text-lg font-medium">Edit User</p>
-              </div>
-              <div className="w-full h-[1px] bg-teks mt-2"></div>
-
+              <HeaderForm title="Add User" link="/users" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className=" text-sm ">User Information</p>

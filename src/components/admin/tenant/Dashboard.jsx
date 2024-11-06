@@ -1,5 +1,5 @@
 import Foto from "../../../assets/ruangan.png";
-import Card from "../../reusable/CardAsset";
+import Card from "../../reusable/card/CardTenant";
 import Pagination from "../../reusable/Pagination";
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
@@ -29,9 +29,8 @@ const Dashboard = () => {
                 foto={Foto}
                 title={`Kabin Kapal Arunika Samudera ${i + 1}`}
                 address="PT Pelni JAKARTA"
-                salesOffice="Kabin Kapal"
-                landSize="16568"
-                buildingSize="13231"
+                alokasi="Kabin Kapal"
+                capacity="16568"
               />
             ))}
           </div>

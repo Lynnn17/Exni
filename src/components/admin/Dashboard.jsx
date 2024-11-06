@@ -1,7 +1,8 @@
 import { FaUsers } from "react-icons/fa6";
 import { TbBuildingWarehouse } from "react-icons/tb";
 import { GiReceiveMoney } from "react-icons/gi";
-import Card from "../reusable/CardDashboard";
+import Card from "../reusable/card/CardDashboard";
+import React from "react";
 const Dashboard = () => {
   return (
     <>
