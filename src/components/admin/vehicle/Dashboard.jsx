@@ -1,7 +1,7 @@
 import React from "react";
 import Foto from "../../../assets/mobil.png";
 import Card from "../../reusable/card/CardVehicles";
-import Pagination from "../../reusable/Pagination";
+import Pagination from "../../Pagination";
 import { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import Search from "../../reusable/Search";
@@ -15,7 +15,7 @@ const Dashboard = () => {
           <HeaderSection
             title="Assets"
             subtitle="Vehicles"
-            linkTo="/tenants/add"
+            linkTo="/vehicles/add"
             linkText="Add"
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
@@ -34,7 +34,7 @@ const Dashboard = () => {
                 machine="JM51E1055436"
                 frame="MH1jM511897070"
                 condition="Baik"
-                id={i + 1}
+                link={`/vehicles/edit/${i + 1}`}
               />
             ))}
           </div>

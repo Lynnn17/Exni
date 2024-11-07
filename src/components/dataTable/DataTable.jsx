@@ -2,7 +2,14 @@ import React from "react";
 import ColumnHeader from "./ColumnHeader";
 import DataRow from "./DataRow";
 
-const DataTable = ({ columns, data, actions, onStatusChange, aksi }) => (
+const DataTable = ({
+  columns,
+  data,
+  actions,
+  onStatusChange,
+  options,
+  aksi,
+}) => (
   <div className="w-full overflow-x-auto pt-4 md:pt-7 md:px-3 lg:px-7">
     <table className="min-w-full border-collapse border border-gray-300">
       <ColumnHeader columns={columns} actions={actions} actionLabel={aksi} />
@@ -15,6 +22,8 @@ const DataTable = ({ columns, data, actions, onStatusChange, aksi }) => (
               columns={columns}
               onStatusChange={onStatusChange}
               actions={actions}
+              options={options}
+              status={item.status}
             />
           ))
         ) : (

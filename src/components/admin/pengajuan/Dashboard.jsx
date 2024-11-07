@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
-import Pagination from "../../reusable/Pagination";
+import Pagination from "../../Pagination";
 import Search from "../../reusable/Search";
-import DataTable from "../../reusable/dataTable/DataTable";
+import DataTable from "../../dataTable/DataTable";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +27,12 @@ const Dashboard = () => {
     status: "Pengajuan",
   }));
 
+  const options = [
+    { value: "pengajuan", label: "Pengajuan" },
+    { value: "Tidak Aktif", label: "Tidak Aktif" },
+    { value: "Pending", label: "Pending" },
+  ];
+
   const actions = [
     {
       link: (id) => `/submissions/detail/${id}`,
@@ -47,7 +53,12 @@ const Dashboard = () => {
           >
             <Search />
           </HeaderSection>
-          <DataTable columns={columns} data={data} actions={actions} Aksi="" />
+          <DataTable
+            columns={columns}
+            data={data}
+            actions={actions}
+            options={options}
+          />
           <Pagination />
         </div>
       </main>

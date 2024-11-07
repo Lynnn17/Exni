@@ -36,7 +36,7 @@ const CardBuilding = ({
           </div>
           <div>
             <p className="pt-4 font-medium  ">Deskripsi</p>
-            <p className="mt-2 text-sm w-full border border-gray-300 rounded-md px-3 pt-2 text-justify h-[12vh] overflow-y-scroll">
+            <p className="mt-2 text-sm w-full border border-gray-300 rounded-md px-3 pt-2 text-justify h-[12vh] overflow-y-scroll resize-none no-scrollbar">
               {deskripsi ? deskripsi : "-"}
             </p>
           </div>

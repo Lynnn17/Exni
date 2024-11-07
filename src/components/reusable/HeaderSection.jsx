@@ -11,6 +11,7 @@ const HeaderSection = ({
   isOpen,
   onToggle,
   children,
+  back,
 }) => {
   return (
     <>

@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
+import SingleSelectCheckboxGroup from "../../reusable/SingleSelectCheckboxGroup";
 
 const Edit = () => {
   const navigate = useNavigate();
-
   const validationSchema = Yup.object({
     nama: Yup.string().required("Nama is required"),
     alamat: Yup.string().required("Alamat is required"),
@@ -21,15 +21,25 @@ const Edit = () => {
       .typeError("Luas Tanah must be a number")
       .required("Luas Tanah is required"),
     fotoAset: Yup.mixed().required("Foto Aset is required"),
+    dokumenAset: Yup.mixed().required("Dokumen Aset is required"),
+    harga: Yup.number()
+      .typeError("Harga must be a number")
+      .required("Harga is required"),
+    dekripsi: Yup.string(),
+    penghuni: Yup.string(),
   });
 
   const handleSubmit = (values) => {
     console.log("Data submitted:", values);
   };
-
   const handleCancel = () => {
     navigate("/buildings");
   };
+
+  const options = [
+    { value: "available", label: "Tersedia" },
+    { value: "unavailable", label: "Tidak Tersedia" },
+  ];
 
   return (
     <Formik
@@ -41,16 +51,20 @@ const Edit = () => {
         luasGedung: "",
         luasTanah: "",
         fotoAset: null,
+        dokumenAset: null,
+        harga: "",
+        deskripsi: "",
+        penghuni: "",
+        statusKetersediaan: "available", // Set default selected option
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue }) => (
+      {({ setFieldValue, values }) => (
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <HeaderForm title="Edit Building" link="/buildings" />
-
+              <HeaderForm title="Add Building" link="/buildings" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 <InputField
                   name="nama"
@@ -92,15 +106,30 @@ const Edit = () => {
                   name="harga"
                   label="Harga Sewa"
                   type="text"
-                  placeholder="Masukan Luas Tanah"
+                  placeholder="Masukan Harga Sewa"
                 />
-
+                <InputField
+                  name="penghuni"
+                  label="Penghuni"
+                  type="text"
+                  placeholder="Masukan Nama Penghuni/Penyewa (Optional)"
+                />
                 <InputField
                   name="deskripsi"
                   label="Deskripsi"
                   type="text"
                   placeholder="Masukan Deskripsi (Optional)"
                 />
+                <div className="px-3 pb-3">
+                  <SingleSelectCheckboxGroup
+                    label="Status Ketersediaan"
+                    options={options}
+                    selectedValue={values.statusKetersediaan} // Bind to Formik value
+                    onChange={(value) =>
+                      setFieldValue("statusKetersediaan", value)
+                    } // Update Formik field value
+                  />
+                </div>
                 <div className="mb-4">
                   <InputField
                     type="file"
@@ -120,7 +149,7 @@ const Edit = () => {
                   />
                 </div>
 
-                <div className="flex gap-3 justify-center md:justify-end pt-5">
+                <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
                   <Button type="submit" label="Simpan" color="bg-exni" />
                   <Button
                     type="button"

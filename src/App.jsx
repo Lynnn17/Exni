@@ -12,7 +12,11 @@ import PengajuanAdmin from "./views/admin/pengajuan/Dashboard";
 import AddBuilding from "./views/admin/building/Add";
 import EditBuilding from "./views/admin/building/Edit";
 import DetailPengajuan from "./views/admin/pengajuan/Detail";
-
+import AddTenant from "./views/admin/tenant/Add";
+import EditTenant from "./views/admin/tenant/Edit";
+import AddVehicle from "./views/admin/vehicle/Add";
+import EditVehicle from "./views/admin/vehicle/Edit";
+import TransaksiAdmin from "./views/admin/transaksi/Dashboard";
 function App() {
   return (
     <>
@@ -30,13 +34,24 @@ function App() {
           <Route path="/buildings/add" element={<AddBuilding />} />
           <Route path="/buildings/edit/:id" element={<EditBuilding />} />
           {/* end building */}
+          {/* Tenant */}
           <Route path="/tenants" element={<TenantAdmin />} />
+          <Route path="/tenants/add" element={<AddTenant />} />
+          <Route path="/tenants/edit/:id" element={<EditTenant />} />
+          {/* end tenant */}
+
           <Route path="/vehicles" element={<VehicleAdmin />} />
+          <Route path="/vehicles/add" element={<AddVehicle />} />
+          <Route path="/vehicles/edit/:id" element={<EditVehicle />} />
 
           {/* pengajuan */}
           <Route path="/submissions" element={<PengajuanAdmin />} />
           <Route path="/submissions/detail/:id" element={<DetailPengajuan />} />
           {/* end pengajuan */}
+
+          {/* transaksi */}
+          <Route path="/transactions" element={<TransaksiAdmin />} />
+          {/* end transaksi */}
         </Routes>
       </BrowserRouter>
     </>

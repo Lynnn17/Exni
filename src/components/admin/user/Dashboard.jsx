@@ -3,9 +3,9 @@ import HeaderSection from "../../reusable/HeaderSection";
 import IconUser from "../../../assets/icon/user.svg";
 import { IoPencil } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
-import Pagination from "../../reusable/Pagination";
+import Pagination from "../../Pagination";
 import Search from "../../reusable/Search";
-import DataTable from "../../reusable/dataTable/DataTable";
+import DataTable from "../../dataTable/DataTable";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);

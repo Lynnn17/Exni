@@ -1,6 +1,6 @@
 import Foto from "../../../assets/ruangan.png";
 import Card from "../../reusable/card/CardTenant";
-import Pagination from "../../reusable/Pagination";
+import Pagination from "../../Pagination";
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import Search from "../../reusable/Search";
@@ -31,6 +31,7 @@ const Dashboard = () => {
                 address="PT Pelni JAKARTA"
                 alokasi="Kabin Kapal"
                 capacity="16568"
+                link={`/tenants/edit/${i + 1}`}
               />
             ))}
           </div>
