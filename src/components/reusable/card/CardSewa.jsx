@@ -6,9 +6,11 @@ const CardTenant = ({
   foto,
   title,
   address,
-  alokasi,
-  capacity,
+  noContract,
+  price,
+  broad,
   link,
+  rentalPeriod,
   nameTenant,
 }) => {
   return (
@@ -22,15 +24,26 @@ const CardTenant = ({
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
         <div className="pt-4">
-          <p>{alokasi}</p>
+          <p className="pt-2 text-xs font-medium">Nomor Kontrak</p>
+          <div className="pt-1 text-xs">
+            <p>{noContract}</p>
+          </div>
           <p className="pt-2 text-xs font-medium">Kapasitas Ruangan</p>
           <div className="pt-1 text-xs">
-            <p>{capacity}</p>
+            <p>{price}</p>
           </div>
-          {nameTenant ? (
-            <div className="pt-2">
-              <div className="w-full h-[1px] bg-teks mt-2"></div>
-              <div className="pt-2">
+          <p className="pt-2 text-xs font-medium">Luas Tanah & Bangunan</p>
+          <div className="pt-1 text-xs">
+            <p>{broad}</p>
+          </div>
+          <p className="pt-2 text-xs font-medium">Masa Sewa</p>
+          <div className="pt-1 text-xs">
+            <p>{rentalPeriod}</p>
+          </div>
+          <div className="pt-5 pb-1">
+            <div className="w-full h-[1px] bg-teks mt-2"></div>
+            {nameTenant ? (
+              <div className="pt-3">
                 <h1 className="text-base">Penyewa:</h1>
                 <div className="flex justify-between  ">
                   <p className="text-xs">{nameTenant}</p>
@@ -39,15 +52,14 @@ const CardTenant = ({
                   </p>
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="flex justify-end text-2xl gap-2 text-exni pt-4">
-              <FaRegFilePdf />
-              <Link to={link}>
-                <BsPencilSquare />
-              </Link>
-            </div>
-          )}
+            ) : (
+              <div className="flex justify-center items-center  pt-4">
+                <p className="text-xs font-medium uppercase ">
+                  <Link to={link}>Lihat Selengkapnya</Link>
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

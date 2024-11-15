@@ -79,7 +79,7 @@ const NavMobile = () => {
                   </NavLink>
 
                   <NavLink
-                    to="/admin/asset"
+                    to="/admin/asset/sewa-aset"
                     className={({ isActive }) =>
                       `flex items-center pt-4 ${
                         isActive ? activeClass : "text-teks"
@@ -87,7 +87,9 @@ const NavMobile = () => {
                     }
                   >
                     <TbBuildingWarehouse className="text-2xl" />
-                    <p className="text-sm uppercase pl-3 font-medium">Assets</p>
+                    <p className="text-sm uppercase pl-3 font-medium">
+                      Aset Sewa
+                    </p>
                   </NavLink>
 
                   <NavLink
