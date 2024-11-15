@@ -3,7 +3,7 @@ import HeaderSection from "../../reusable/HeaderSection";
 import IconUser from "../../../assets/icon/user.svg";
 import { IoPencil } from "react-icons/io5";
 import { FaTrash } from "react-icons/fa";
-import Pagination from "../../Pagination";
+import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
 
@@ -29,12 +29,12 @@ const Dashboard = () => {
 
   const actions = [
     {
-      link: (id) => `/users/edit/${id}`,
+      link: (id) => `/admin/user/edit/${id}`,
       icon: <IoPencil />,
       className: "text-[#5641BA]",
     },
     {
-      link: (id) => `/users/delete/${id}`,
+      link: (id) => `/admin/user/delete/${id}`,
       icon: <FaTrash />,
       className: "text-red-500",
     },
@@ -46,7 +46,7 @@ const Dashboard = () => {
         <HeaderSection
           title="Users"
           subtitle=""
-          linkTo="/users/add"
+          linkTo="/admin/user/add"
           linkText="Add"
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}

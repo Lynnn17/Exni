@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
-import Pagination from "../../Pagination";
+import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
 
@@ -35,7 +35,7 @@ const Dashboard = () => {
 
   const actions = [
     {
-      link: (id) => `/submissions/detail/${id}`,
+      link: (id) => `/admin/submission/detail/${id}`,
       icon: <FaCircleInfo />,
       className: "text-exni text-[1.5rem] text-center",
     },

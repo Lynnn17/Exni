@@ -36,7 +36,7 @@ const Edit = () => {
   };
 
   const handleCancel = () => {
-    navigate("/users");
+    navigate("/admin/user");
   };
 
   return (
@@ -49,7 +49,7 @@ const Edit = () => {
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <HeaderForm title="Edit User" link="/users" />
+              <HeaderForm title="Edit User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className=" text-sm ">User Information</p>
