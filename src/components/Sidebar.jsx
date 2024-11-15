@@ -21,6 +21,18 @@ const Sidebar = () => {
         <div className="text-2xl text-teks pt-8 cursor-pointer flex items-center">
           <IoHome />
           <NavLink
+            to="/tes"
+            className={({ isActive }) =>
+              `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
+            }
+          >
+            Home
+          </NavLink>
+        </div>
+
+        <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
+          <IoHome />
+          <NavLink
             to="/"
             className={({ isActive }) =>
               `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
@@ -53,14 +65,14 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
-              to="/assets"
+              to="/sewa"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Assets
+              Aset Sewa
             </NavLink>
           </div>
 

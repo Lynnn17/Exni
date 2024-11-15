@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DashboardAdmin from "./views/admin/Dashboard";
 import UsersAdmin from "./views/admin/user/Dashboard";
-import AssetAdmin from "./views/admin/asset/Dashboard";
 import AddUser from "./views/admin/user/Add";
 import EditUser from "./views/admin/user/Edit";
 import BuildingAdmin from "./views/admin/building/Dashboard";
@@ -28,7 +27,7 @@ function App() {
           <Route path="/users/add" element={<AddUser />} />
           <Route path="/users/edit/:id" element={<EditUser />} />
           {/* end user */}
-          <Route path="/assets" element={<AssetAdmin />} />
+          <Route path="/sewa" element={<sewaAdmin />} />
           {/* building */}
           <Route path="/buildings" element={<BuildingAdmin />} />
           <Route path="/buildings/add" element={<AddBuilding />} />
