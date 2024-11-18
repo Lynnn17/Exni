@@ -1,7 +1,7 @@
 const Tes = () => {
   return (
     <img
-      src="https://drive.google.com/uc?export=view&id=1CizSM4Oy_niz4NW_8VgAR2v1cCz4jbTw"
+      src="/proxy-image/uc?export=view&id=1J65HO1aWm3jFhtefQHMH84OrN4HvVL4f"
       alt="Deskripsi Gambar"
     />
   );
