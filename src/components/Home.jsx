@@ -10,7 +10,7 @@ import Pagination from "./admin/Pagination";
 // Komponen untuk menampilkan bagian Tentang Kami
 const AboutSection = ({ onPesanSekarangClick, className }) => (
   <div
-    className={`bg-[#404C58] md:w-[60%] lg:h-[390px] lg:w-[55%] text-white p-8 ${className}`}
+    className={`bg-[#404C58] md:w-[60%] lg:h-[310px] lg:w-[55%] text-white p-12 ${className}`}
   >
     <h1 className="text-2xl font-bold md:text-3xl uppercase ">Tentang Kami</h1>
     <p className="text-sm w-[90%] text-justify">
@@ -106,7 +106,7 @@ const Home = () => {
       </div>
 
       {/* Tentang Kami Section */}
-      <div className="pt-3 px-4 md:px-6 lg:px-10 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] relative z-100">
+      <div className="pt-3 px-4 md:px-6 lg:px-10 h-50 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] relative z-100">
         {/* First About Section with top rounded corners */}
         <AboutSection
           onPesanSekarangClick={handlePesanSekarangClick}
@@ -114,14 +114,14 @@ const Home = () => {
         />
 
         {/* Image Section */}
-        <div className="md:w-[40%] lg:w-[45%]">
-          <img className="w-full h-full  " src={FotoKapal2} alt="Kapal" />
+        <div className="md:w-[40%] lg:h-76 lg:w-[45%]">
+          <img className="w-full h-full" src={FotoKapal2} alt="Kapal" />
         </div>
       </div>
 
-      {/* Bottom Section */}
+      {/* Bottom image Section */}
       <div className="px-4 md:px-6 lg:px-10  md:flex md:flex-wrap">
-        <div className="md:w-[40%] lg:w-[45%]">
+        <div className="md:w-[40%] lg:h-[19.4rem] lg:w-[45%] ">
           <img className="w-full h-full" src={FotoKapal3} alt="Kapal" />
         </div>
 
