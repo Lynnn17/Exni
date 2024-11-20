@@ -16,7 +16,7 @@ const Dashboard = () => {
       <main>
         <div className="w-full p-4 bg-white mt-4 h-full">
           <HeaderSection
-            title="Asset Sewa"
+            title="Aset Sewa"
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >

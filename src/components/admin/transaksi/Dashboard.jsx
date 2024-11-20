@@ -59,7 +59,7 @@ const Dashboard = () => {
     <main>
       <div className="w-full px-3 py-5 bg-white mt-4 h-full">
         <HeaderSection
-          title="Transaction"
+          title="Transaksi"
           subtitle=""
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
