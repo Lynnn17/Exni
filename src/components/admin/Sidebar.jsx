@@ -53,14 +53,14 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
-              to="/admin/asset"
+              to="/admin/asset/sewa-aset"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Assets
+              Aset Sewa
             </NavLink>
           </div>
 

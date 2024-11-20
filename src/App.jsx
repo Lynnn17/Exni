@@ -4,6 +4,7 @@ import AdminRoutes from "./routes/AdminRoutes";
 import UserRoutes from "./routes/UserRoutes";
 import Login from "./views/Login";
 import Home from "./views/Home";
+import Tes from "./views/Tes";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="/user/*" element={<UserRoutes />} />
+        <Route path="/tes" element={<Tes />} />
       </Routes>
     </BrowserRouter>
   );

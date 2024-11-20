@@ -11,6 +11,7 @@ const CardTenant = ({
   frame,
   condition,
   link,
+  nameTenant,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -35,14 +36,29 @@ const CardTenant = ({
               <p className="pt-1 text-xs">{frame}</p>
             </div>
           </div>
-          <div className="flex justify-between items-center  gap-2  pt-6">
-            <div className="text-sm font-medium">Kondisi {condition}</div>
-            <div className="text-exni text-2xl">
-              <Link to={link}>
-                <BsPencilSquare />
-              </Link>
+          {nameTenant ? (
+            <div className="pt-2">
+              <div className="w-full h-[1px] bg-teks mt-2"></div>
+              <div className="pt-2">
+                <h1 className="text-base">Penyewa:</h1>
+                <div className="flex justify-between  ">
+                  <p className="text-xs">{nameTenant}</p>
+                  <p className="text-xs font-medium uppercase ">
+                    <Link to={link}>Lihat Selengkapnya</Link>
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-between items-center  gap-2  pt-6">
+              <div className="text-sm font-medium">Kondisi {condition}</div>
+              <div className="text-exni text-2xl">
+                <Link to={link}>
+                  <BsPencilSquare />
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
