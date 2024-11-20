@@ -12,9 +12,9 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
   return (
-    <div className="flex justify-between items-center p-2 px-8 bg-white w-full h-[95px] rounded-b-[25px] drop-shadow-xl">
-      <img src={LogoExni} className="w-28" alt="logo" />
-      <div className="hidden xl:flex items-center gap-8 text-xl ">
+    <div className="flex justify-between items-center p-2 px-8 bg-white w-full h-[76px] rounded-b-[20px] drop-shadow-xl">
+      <img src={LogoExni} className="w-24" alt="logo" />
+      <div className="hidden xl:flex items-center gap-10 text-sm ">
         <NavLink
           to="/"
           className={({ isActive }) => (isActive ? "font-bold " : "")}
@@ -36,7 +36,7 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <img src={IconUser} alt="user" className="w-10 h-10 rounded-full" />
           <div className="pr-6 pl-1">
-            <p className="text-base font-medium">John Doe</p>
+            <p className="text-sm font-medium">John Doe</p>
             <p className="text-xs">Admin</p>
           </div>
         </div>

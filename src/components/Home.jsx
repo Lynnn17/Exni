@@ -80,7 +80,7 @@ const Home = () => {
   return (
     <>
       {/* Hero Section */}
-      <div className="pt-8 px-4 md:px-6 lg:px-10">
+      <div className="pt-4 px-4 md:px-6 lg:px-10">
         <div
           className="relative bg-cover bg-no-repeat bg-center rounded-[20px] md:rounded-[50px]  z-[-10]"
           style={{ backgroundImage: `url(${bgKapal})` }}
