@@ -1,6 +1,6 @@
 import LogoExni from "../assets/logo/exni.svg";
 import LogoPelni from "../assets/logo/pelni.svg";
-import LogoBumn from "../assets/logo/bumn.svg";
+import LogoBumn from "../assets/logo/BUMN Terbaru.png";
 import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
@@ -14,7 +14,7 @@ const Footer = () => {
             <p className="mt-1 font-medium md:text-base">From</p>
             <img src={LogoPelni} className="w-24 md:w-32" alt="Logo Pelni" />
           </div>
-          <img src={LogoBumn} className="w-20 md:w-24" alt="Logo BUMN" />
+          <img src={LogoBumn} className="w-24 md:w-34" alt="Logo BUMN" />
         </div>
         <div className="flex flex-wrap  justify-between  pt-2 text-[12px] w-full  gap-6 md:gap-0">
           <div className="grid grid-cols-3 gap-2 md:w-[30rem]">
@@ -29,14 +29,14 @@ const Footer = () => {
             </div>
             <div className="">
               <p className="font-bold">PT. PELNI (Persero) HQ</p>
-              <address className="text-[10px] not-italic">
+              <address className="text-[11px] not-italic">
                 Jl. Gajah Mada No. 14, Jakarta Pusat, 10130 DKI Jakarta,
                 Indonesia
               </address>
             </div>
             <div className="">
               <p className="font-bold">Kontak Pusat</p>
-              <ul className="list-none text-[10px]">
+              <ul className="list-none text-[11px]">
                 <li>T. 162 (Jabodetabek)</li>
                 <li>F. +62 21 6385 4130</li>
                 <li>E. infopelni162@pelni.co.id</li>
