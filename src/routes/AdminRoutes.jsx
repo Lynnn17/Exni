@@ -4,7 +4,7 @@ import DashboardAdmin from "../views/admin/Dashboard";
 import UserDashboardRoutes from "./AdminRoutes/UserDashboardRoutes";
 import AssetDashboardRoutes from "./AdminRoutes/AssetDashboardRoutes";
 import SubmissionDashboardRoutes from "./AdminRoutes/SubmissionDashboardRoutes";
-import TransaksiDashboard from "../views/admin/transaksi/Dashboard";
+import TransaksiDashboardRoutes from "./AdminRoutes/TransactionDashboardRoutes";
 const AdminRoutes = () => {
   return (
     <Routes>
@@ -12,7 +12,7 @@ const AdminRoutes = () => {
       <Route path="/user/*" element={<UserDashboardRoutes />} />
       <Route path="/asset/*" element={<AssetDashboardRoutes />} />
       <Route path="/submission/*" element={<SubmissionDashboardRoutes />} />
-      <Route path="/transaction/*" element={<TransaksiDashboard />} />
+      <Route path="/transaction/*" element={<TransaksiDashboardRoutes />} />
     </Routes>
   );
 };

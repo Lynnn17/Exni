@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
+import { LuPenSquare } from "react-icons/lu";
 import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
@@ -52,6 +53,11 @@ const Dashboard = () => {
           <FaCircleInfo />
         </button>
       ),
+    },
+    {
+      icon: <LuPenSquare />,
+      link: () => `/admin/transaction/detail`,
+      className: "text-exni text-2xl pt-1",
     },
   ];
 
