@@ -9,6 +9,7 @@ import { GiReceiveMoney } from "react-icons/gi";
 import { IoIosCube } from "react-icons/io";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import IconUser from "../../assets/icon/user.svg";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,6 @@ const NavMobile = () => {
                     <p className="text-xs">Admin</p>
                   </div>
                 </div>
-
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
@@ -57,6 +57,18 @@ const NavMobile = () => {
                   }
                 >
                   <IoHome />
+                  <p className="text-sm uppercase pl-3">Beranda</p>
+                </NavLink>
+
+                <NavLink
+                  to="/admin/dashboard"
+                  className={({ isActive }) =>
+                    `text-2xl pt-4 flex items-center ${
+                      isActive ? activeClass : "text-teks"
+                    }`
+                  }
+                >
+                  <MdSpaceDashboard />
                   <p className="text-sm uppercase pl-3">Dashboard</p>
                 </NavLink>
 
@@ -75,7 +87,9 @@ const NavMobile = () => {
                     }
                   >
                     <FaUsers className="text-2xl" />
-                    <p className="text-sm uppercase pl-3 font-medium">Users</p>
+                    <p className="text-sm uppercase pl-3 font-medium">
+                      Akun Pengguna
+                    </p>
                   </NavLink>
 
                   <NavLink
@@ -136,9 +150,7 @@ const NavMobile = () => {
                     }
                   >
                     <FaBuilding className="text-2xl" />
-                    <p className="text-sm uppercase pl-3 font-medium">
-                      Buildings
-                    </p>
+                    <p className="text-sm uppercase pl-3 font-medium">Gedung</p>
                   </NavLink>
 
                   <NavLink
@@ -163,7 +175,7 @@ const NavMobile = () => {
                   >
                     <FaCarSide className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">
-                      Vehicle
+                      Kendaraan
                     </p>
                   </NavLink>
                 </div>

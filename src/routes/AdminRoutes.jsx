@@ -8,7 +8,7 @@ import TransaksiDashboardRoutes from "./AdminRoutes/TransactionDashboardRoutes";
 const AdminRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<DashboardAdmin />} />
+      <Route path="/dashboard" element={<DashboardAdmin />} />
       <Route path="/user/*" element={<UserDashboardRoutes />} />
       <Route path="/asset/*" element={<AssetDashboardRoutes />} />
       <Route path="/submission/*" element={<SubmissionDashboardRoutes />} />

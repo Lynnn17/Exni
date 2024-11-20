@@ -44,10 +44,10 @@ const Dashboard = () => {
     <main>
       <div className="w-full px-3 py-5 bg-white mt-4 h-full">
         <HeaderSection
-          title="Users"
+          title="Akun Pengguna"
           subtitle=""
           linkTo="/admin/user/add"
-          linkText="Add"
+          linkText="Tambah"
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
         >

@@ -9,6 +9,7 @@ import { FaBuilding } from "react-icons/fa";
 import { IoIosCube } from "react-icons/io";
 import { FaCarSide } from "react-icons/fa";
 import { FaHandshakeSimple } from "react-icons/fa6";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const Sidebar = () => {
   const activeStyle = "text-black font-semibold";
@@ -22,6 +23,18 @@ const Sidebar = () => {
           <IoHome />
           <NavLink
             to="/"
+            className={({ isActive }) =>
+              `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
+            }
+          >
+            Beranda
+          </NavLink>
+        </div>
+
+        <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
+          <MdSpaceDashboard />
+          <NavLink
+            to="/admin/dashboard"
             className={({ isActive }) =>
               `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
             }
@@ -46,7 +59,7 @@ const Sidebar = () => {
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Users
+              Akun pelanggan
             </NavLink>
           </div>
 
@@ -88,7 +101,7 @@ const Sidebar = () => {
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Transactions
+              Transaksi
             </NavLink>
           </div>
         </div>
@@ -109,7 +122,7 @@ const Sidebar = () => {
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Buildings
+              Gedung
             </NavLink>
           </div>
 
@@ -137,7 +150,7 @@ const Sidebar = () => {
                 } text-sm uppercase pl-3 font-medium`
               }
             >
-              Vehicle
+              Kendaraan
             </NavLink>
           </div>
         </div>

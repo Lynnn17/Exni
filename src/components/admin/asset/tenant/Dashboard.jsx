@@ -12,10 +12,10 @@ const Dashboard = () => {
       <main>
         <div className="w-full p-4 bg-white mt-4 h-full">
           <HeaderSection
-            title="Assets"
+            title="Aset"
             subtitle="Tenants"
             linkTo="add"
-            linkText="Add"
+            linkText="Tambah"
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >
