@@ -7,13 +7,15 @@ const Dashboard = () => {
   return (
     <>
       <NavMobile />
-      <div className="flex w-full  bg-mainBg gap-4">
+      <div className="flex w-full  bg-mainBg gap-4 ">
         <div className="hidden lg:flex">
           <Sidebar />
         </div>
         <div className="flex flex-col w-full">
           <Header />
-          <Content />
+          <div className="overflow-y-scroll h-[calc(100vh-64px)] ">
+            <Content />
+          </div>
         </div>
       </div>
     </>

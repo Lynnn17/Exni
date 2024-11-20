@@ -15,7 +15,7 @@ const Sidebar = () => {
   const activeStyle = "text-black font-semibold";
   const defaultStyle = "text-teks";
   return (
-    <aside className=" bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60">
+    <aside className=" bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60 ">
       <div className="px-1">
         <img src={LogoExni} alt="logo" className="w-[100px] h-[38px]" />
 
