@@ -114,15 +114,33 @@ const Home = () => {
         />
 
         {/* Image Section */}
+<<<<<<< Updated upstream
         <div className="md:w-[40%] lg:w-[45%]">
           <img className="w-full h-full  " src={FotoKapal2} alt="Kapal" />
+=======
+        <div className="md:w-[40%] lg:h-76 lg:w-[45%] 2xl:h-[19.4rem] ">
+          <img
+            className="w-full h-full object-cover"
+            src={FotoKapal2}
+            alt="Kapal"
+          />
+>>>>>>> Stashed changes
         </div>
       </div>
 
       {/* Bottom Section */}
       <div className="px-4 md:px-6 lg:px-10  md:flex md:flex-wrap">
+<<<<<<< Updated upstream
         <div className="md:w-[40%] lg:w-[45%]">
           <img className="w-full h-full" src={FotoKapal3} alt="Kapal" />
+=======
+        <div className="md:w-[40%] lg:h-[19.4rem] lg:w-[45%] ">
+          <img
+            className="w-full h-full object-cover"
+            src={FotoKapal3}
+            alt="Kapal"
+          />
+>>>>>>> Stashed changes
         </div>
 
         {/* Second About Section with bottom rounded corners */}

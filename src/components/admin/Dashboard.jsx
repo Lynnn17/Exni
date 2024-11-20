@@ -7,7 +7,7 @@ const Dashboard = () => {
   return (
     <>
       <main>
-        <div className="w-full p-4 bg-white mt-4 h-full">
+        <div className="w-full p-4 bg-white mt-4 h-full lg:h-screen">
           <p className="text-lg uppercase font-medium">Dashboard</p>
           <div className="w-full h-[1px] bg-teks mt-2"> </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
