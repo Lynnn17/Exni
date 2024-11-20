@@ -7,10 +7,19 @@ import SectionDivider from "../../reusable/SectionDivider";
 import TenantInfo from "../../reusable/TenantInfo";
 import EditableTextarea from "../../reusable/EditableTextarea";
 import { FaArrowRight } from "react-icons/fa";
+import PembayaranModal from "../../reusable/PembayaranModal";
 import { HiEye } from "react-icons/hi";
 
 const Detail = () => {
-  const [isReadOnly, setIsReadOnly] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const payments = [
+    { id: 1, name: "Pembayaran 1", status: "Paid", amount: 42000000 },
+    { id: 2, name: "Pembayaran 2", status: "Paid", amount: 32000000 },
+  ];
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
+
   const [statusPembayaran, setStatusPembayaran] = useState("transaksi");
 
   const optionsPembayaran = [
@@ -71,9 +80,14 @@ const Detail = () => {
                       Status Pembayaran
                     </label>
                     <div className="text-exni text-3xl">
-                      <button>
+                      <button onClick={handleOpenModal}>
                         <HiEye />
                       </button>
+                      <PembayaranModal
+                        isOpen={isModalOpen}
+                        onClose={handleCloseModal}
+                        payments={payments}
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
