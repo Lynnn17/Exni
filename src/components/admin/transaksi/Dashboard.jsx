@@ -56,7 +56,7 @@ const Dashboard = () => {
     },
     {
       icon: <LuPenSquare />,
-      link: () => `/admin/transaction/detail`,
+      link: (item) => `/admin/transaction/detail/${item}`,
       className: "text-exni text-2xl pt-1",
     },
   ];

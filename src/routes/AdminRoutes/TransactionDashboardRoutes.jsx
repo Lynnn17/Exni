@@ -5,7 +5,7 @@ import TransaksiDetail from "../../views/admin/transaksi/Detail";
 const UserDashboardRoutes = () => (
   <Routes>
     <Route path="/" element={<TransaksiDashboard />} />
-    <Route path="/detail" element={<TransaksiDetail />} />
+    <Route path="/detail/:id" element={<TransaksiDetail />} />
   </Routes>
 );
 
