@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
-import Pagination from "../../Pagination";
+import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
 import StatusButton from "../../reusable/StatusButton";

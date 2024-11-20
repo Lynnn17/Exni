@@ -1,6 +1,4 @@
 import React from "react";
-import { MdKeyboardBackspace } from "react-icons/md";
-import { Link } from "react-router-dom";
 import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -48,7 +46,7 @@ const Edit = () => {
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <HeaderForm title="Add User" link="/users" />
+              <HeaderForm title="Add User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className=" text-sm ">User Information</p>

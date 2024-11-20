@@ -1,7 +1,7 @@
-import Sidebar from "../../../components/Sidebar";
-import Header from "../../../components/Header";
+import Sidebar from "../../../components/admin/Sidebar";
+import Header from "../../../components/admin/Header";
 import Content from "../../../components/admin/pengajuan/Dashboard";
-import NavMobile from "../../../components/NavMobile";
+import NavMobile from "../../../components/admin/NavMobile";
 
 const Dashboard = () => {
   return (
