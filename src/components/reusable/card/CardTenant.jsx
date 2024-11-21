@@ -10,6 +10,7 @@ const CardTenant = ({
   capacity,
   link,
   nameTenant,
+  teksLink,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -41,11 +42,23 @@ const CardTenant = ({
               </div>
             </div>
           ) : (
-            <div className="flex justify-end text-2xl gap-2 text-exni pt-4">
-              <FaRegFilePdf />
-              <Link to={link}>
-                <BsPencilSquare />
-              </Link>
+            <div className="flex justify-end  gap-2 text-exni pt-4">
+              {teksLink ? (
+                <Link
+                  className="bg-[#404C58] text-white px-4 py-2 font-bold rounded-2xl flex items-center mx-auto text-xs"
+                  to={link}
+                >
+                  {teksLink}
+                </Link>
+              ) : (
+                <Link
+                  to={link}
+                  className=" text-2xl flex items-center gap-2 text-exni"
+                >
+                  <FaRegFilePdf />
+                  <BsPencilSquare />
+                </Link>
+              )}
             </div>
           )}
         </div>
