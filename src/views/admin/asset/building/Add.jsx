@@ -12,8 +12,10 @@ const Add = () => {
           <Sidebar />
         </div>
         <div className="flex flex-col w-full">
-          <Header />
-          <Content />
+          <Header />{" "}
+          <div className="overflow-y-scroll h-[calc(100vh-64px)] ">
+            <Content />
+          </div>
         </div>
       </div>
     </>

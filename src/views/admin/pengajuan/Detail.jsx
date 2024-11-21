@@ -13,7 +13,9 @@ const Detail = () => {
         </div>
         <div className="flex flex-col w-full">
           <Header />
-          <Content />
+          <div className="overflow-y-scroll h-[calc(100vh-64px)] ">
+            <Content />
+          </div>
         </div>
       </div>
     </>
