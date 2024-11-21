@@ -4,7 +4,12 @@ import Content from "../components/Login";
 const Home = () => {
   return (
     <>
-      <Content />
+      <div className="z-50 absolute w-full">
+        <Navbar />
+      </div>
+      <div className="h-full w-full fixed pt-10">
+        <Content />
+      </div>
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import bgLogin from "../assets/bg-login.png";
+import fbgLogin from "../assets/front-bg-login.png";
 import Input from "./reusable/Input";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -22,7 +23,7 @@ const Login = () => {
         className="w-full h-screen bg-cover bg-no-repeat bg-center"
         style={{ backgroundImage: `url(${bgLogin})` }}
       >
-        <div className="w-full h-full flex justify-center items-center">
+        <div className="h-full flex justify-center items-center">
           <div className="flex ">
             {/* card */}
             <div className="bg-white w-[20rem] md:w-[25rem] py-7 xl:rounded-l-[30px] rounded-[30px] xl:rounded-none ">
@@ -65,7 +66,7 @@ const Login = () => {
             <div className="hidden xl:flex">
               <div
                 className="w-[35rem] h-full bg-cover rounded-r-[30px]"
-                style={{ backgroundImage: `url(${bgLogin})` }}
+                style={{ backgroundImage: `url(${fbgLogin})` }}
               >
                 <div className=" h-full p-4 px-10 flex flex-col justify-center">
                   <h1 className="text-4xl font-bold text-center text-white ">

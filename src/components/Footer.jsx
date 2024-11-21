@@ -1,6 +1,6 @@
 import LogoExni from "../assets/logo/exni.svg";
 import LogoPelni from "../assets/logo/pelni.svg";
-import LogoBumn from "../assets/logo/BUMN Terbaru.png";
+import LogoBumn from "../assets/logo/logobumn.png";
 import { FaInstagram, FaYoutube, FaFacebook, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
