@@ -34,7 +34,7 @@ const Sidebar = () => {
         <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
           <MdSpaceDashboard />
           <NavLink
-            to="/admin/dashboard"
+            to="/user/dashboard"
             className={({ isActive }) =>
               `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
             }
@@ -50,23 +50,9 @@ const Sidebar = () => {
           </div>
 
           <div className="flex pt-4 items-center">
-            <FaUsers className="text-2xl" />
-            <NavLink
-              to="/admin/user"
-              className={({ isActive }) =>
-                `${
-                  isActive ? activeStyle : defaultStyle
-                } text-sm uppercase pl-3 font-medium`
-              }
-            >
-              Akun pelanggan
-            </NavLink>
-          </div>
-
-          <div className="flex pt-4 items-center">
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
-              to="/admin/asset/sewa-aset"
+              to="/user/asset/sewa-aset"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -80,7 +66,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <FaHandshakeSimple className="text-2xl" />
             <NavLink
-              to="/admin/submission"
+              to="/user/submission"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -94,7 +80,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <GiReceiveMoney className="text-2xl" />
             <NavLink
-              to="/admin/transaction"
+              to="/user/transaction"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -115,7 +101,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <FaBuilding className="text-2xl" />
             <NavLink
-              to="/admin/asset/building"
+              to="/user/asset/building"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -129,7 +115,7 @@ const Sidebar = () => {
           <div className="flex pt-4 items-center">
             <IoIosCube className="text-2xl" />
             <NavLink
-              to="/admin/asset/tenant"
+              to="/user/asset/tenant"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -137,20 +123,6 @@ const Sidebar = () => {
               }
             >
               Tenant
-            </NavLink>
-          </div>
-
-          <div className="flex pt-4 items-center">
-            <FaCarSide className="text-2xl" />
-            <NavLink
-              to="/admin/asset/vehicle"
-              className={({ isActive }) =>
-                `${
-                  isActive ? activeStyle : defaultStyle
-                } text-sm uppercase pl-3 font-medium`
-              }
-            >
-              Kendaraan
             </NavLink>
           </div>
         </div>
