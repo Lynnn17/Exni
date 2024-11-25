@@ -45,7 +45,7 @@ const StatusPengajuan = ({ data }) => {
           {data.status.map((status, index) => (
             <div
               key={index}
-              className={`relative z-10 flex flex-col items-center ${
+              className={`relative z-1 flex flex-col items-center ${
                 index + 1 <= statusAktif ? "text-purple-500" : "text-gray-600"
               }`}
             >
