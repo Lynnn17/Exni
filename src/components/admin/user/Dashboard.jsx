@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import HeaderSection from "../../reusable/HeaderSection";
 import IconUser from "../../../assets/icon/user.svg";
 import { IoPencil } from "react-icons/io5";
@@ -9,23 +10,16 @@ import DataTable from "../../dataTable/DataTable";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState([]); // State for user data
+  const [loading, setLoading] = useState(true); // State for loading status
+  const [error, setError] = useState(null); // State for error handling
 
   const columns = [
     { title: "No", key: "no" },
-    { title: "Nama", key: "name" },
+    { title: "PIC", key: "pic" },
     { title: "Alamat", key: "address" },
     { title: "Email", key: "email" },
   ];
-
-  // Define data with corresponding keys for each column
-  const data = [...Array(10)].map((_, index) => ({
-    id: index + 1,
-    no: index + 1,
-    iconUser: IconUser,
-    name: "John Doe",
-    address: "Jakarta, padat banget wes gk ngerti lah",
-    email: "lintangkusuma17@gmail.com",
-  }));
 
   const actions = [
     {
@@ -39,6 +33,45 @@ const Dashboard = () => {
       className: "text-red-500",
     },
   ];
+
+  // Fetch user data with Axios
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        console.log(token);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}users`, // Replace 'users' with your endpoint
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Bearer token header
+            },
+          }
+        );
+
+        const users = response.data.data.users.map((user, index) => ({
+          id: user.id,
+          no: index + 1,
+          iconUser: IconUser, // Static icon
+          pic: user.pic,
+          address: user.address,
+          email: user.email,
+        }));
+
+        setData(users);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError("Failed to load user data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main>
@@ -54,12 +87,18 @@ const Dashboard = () => {
           <Search />
         </HeaderSection>
 
-        <DataTable
-          columns={columns}
-          data={data}
-          actions={actions}
-          aksi="Aksi"
-        />
+        {loading ? (
+          <p>Loading data...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={data}
+            actions={actions}
+            aksi="Aksi"
+          />
+        )}
 
         <Pagination />
       </div>

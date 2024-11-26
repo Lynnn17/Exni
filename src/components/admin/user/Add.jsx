@@ -4,31 +4,61 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
+import axios from "axios";
+
 const Edit = () => {
   const initialValues = {
-    nama: "",
-    alamat: "",
+    company: "",
     email: "",
     password: "",
+    address: "",
+    contact: "",
+    pic: "",
     confirmPassword: "",
-    fotoAvatar: null,
   };
 
   const validationSchema = Yup.object({
-    nama: Yup.string().required("Nama is required"),
-    alamat: Yup.string().required("Alamat is required"),
+    company: Yup.string().required("Company is required"),
+    address: Yup.string().required("Address is required"),
+    contact: Yup.string()
+      .required("Contact is required")
+      .matches(/^[0-9]+$/, "Contact must be a valid number"),
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string()
+      .min(6, "Password must have at least 6 characters")
+      .required("Password is required"),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm Password is required"),
-    fotoAvatar: Yup.mixed().required("Foto Avatar is required"),
+    pic: Yup.string().required("PIC is required"),
   });
 
-  const handleSave = (values) => {
-    console.log("Data disimpan:", values);
+  const handleSave = async (values, { setSubmitting, resetForm }) => {
+    console.log(values);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}auth/register`,
+        {
+          company: values.company,
+          email: values.email,
+          password: values.password,
+          address: values.address,
+          contact: values.contact,
+          pic: values.pic,
+        }
+      );
+
+      console.log("Data saved successfully:", response.data);
+      alert("User registered successfully!");
+      resetForm();
+    } catch (error) {
+      console.error("Error saving data:", error.response || error.message);
+      alert("Failed to register user. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCancel = (resetForm) => {
@@ -42,71 +72,94 @@ const Edit = () => {
       validationSchema={validationSchema}
       onSubmit={handleSave}
     >
-      {({ setFieldValue, resetForm }) => (
+      {({ setFieldValue, resetForm, isSubmitting }) => (
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
+                {/* User Information Section */}
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className=" text-sm ">User Information</p>
                   <div className="w-[10rem] h-[1px] bg-teks"></div>
                 </div>
 
+                {/* Company */}
                 <InputField
-                  name="nama"
-                  label="Nama"
+                  name="company"
+                  label="Company"
                   type="text"
-                  placeholder="Masukan Nama"
-                />
-                <InputField
-                  name="alamat"
-                  label="Alamat"
-                  type="text"
-                  placeholder="Masukan Alamat"
+                  placeholder="Enter company name"
                 />
 
+                {/* Address */}
+                <InputField
+                  name="address"
+                  label="Address"
+                  type="text"
+                  placeholder="Enter address"
+                />
+
+                {/* Contact */}
+                <InputField
+                  name="contact"
+                  label="Contact"
+                  type="text"
+                  placeholder="Enter contact number"
+                />
+
+                {/*pIC */}
                 <div className="mb-4">
                   <InputField
-                    type="file"
-                    label="Foto Avatar"
-                    name="fotoAvatar"
-                    onChange={(e) =>
-                      setFieldValue("fotoAvatar", e.target.files[0])
-                    }
+                    type="text"
+                    label="PIC"
+                    name="pic"
+                    placeholder="Enter PIC"
                   />
                 </div>
 
+                {/* User Login Section */}
                 <div className="pt-10">
                   <div className="flex items-center py-3 px-4 gap-2">
                     <p className=" text-sm ">User Login</p>
                     <div className="w-[10rem] h-[1px] bg-teks"></div>
                   </div>
 
+                  {/* Email */}
                   <InputField
                     name="email"
                     label="Email"
                     type="email"
-                    placeholder="Masukan Email"
+                    placeholder="Enter email"
                   />
+
+                  {/* Password */}
                   <InputField
                     name="password"
                     label="Password"
                     type="password"
-                    placeholder="Masukan Password"
+                    placeholder="Enter password"
                   />
+
+                  {/* Confirm Password */}
                   <InputField
                     name="confirmPassword"
                     label="Confirm Password"
                     type="password"
-                    placeholder="Konfirmasi Password"
+                    placeholder="Confirm password"
                   />
 
+                  {/* Action Buttons */}
                   <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                    <Button type="submit" label="Simpan" color="bg-exni" />
+                    <Button
+                      type="submit"
+                      label={isSubmitting ? "Saving..." : "Save"}
+                      color="bg-exni"
+                      disabled={isSubmitting}
+                    />
                     <Button
                       type="button"
-                      label="Batal"
+                      label="Cancel"
                       color="bg-red-500"
                       onClick={() => handleCancel(resetForm)}
                     />

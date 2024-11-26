@@ -15,12 +15,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 const Pesan = () => {
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className=" px-3 py-5 bg-white mt-4 ">
         {/* Header */}
         <HeaderForm title="Detail Properti" link="/user/asset/building" />
 
-        <div className="flex flex-wrap gap-8">
-          <div className="w-full md:w-[60%] mt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
+          <div className="w-full md:col-span-2 mt-5 ">
             <Swiper
               pagination={{ clickable: true }}
               navigation={true}
@@ -72,7 +72,7 @@ const Pesan = () => {
           </div>
 
           {/* Informasi Properti */}
-          <div className="w-full md:w-[33.8%] bg-white border border-gray-200 mt-5 p-4">
+          <div className="w-full  bg-white border border-gray-200 mt-5 p-4">
             <div className="md:flex md:gap-3">
               <div className="w-full">
                 <SectionDivider title="Properti" />
@@ -91,7 +91,7 @@ const Pesan = () => {
           </div>
 
           {/* Deskripsi Properti */}
-          <div className="bg-white border border-gray-200 p-4 w-full">
+          <div className="bg-white border border-gray-200 p-4 w-full  md:col-span-3">
             <div className="w-full h-full">
               <SectionDivider title="Deskripsi" />
               <div className="pt-2">

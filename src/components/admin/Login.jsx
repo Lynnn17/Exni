@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import bgLogin from "../assets/bg-login.png";
-import fbgLogin from "../assets/front-bg-login.png";
+import bgLogin from "../../assets/bg-login.png";
+import fbgLogin from "../../assets/front-bg-login.png";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "./reusable/InputField";
+import InputField from "../reusable/InputField";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -36,12 +36,12 @@ const Login = () => {
         }
       );
 
-      console.log("Login successful:", response.data);
-      const token = response.data.token;
+      console.log("Login successful:", response.data.data);
+      const token = response.data.data.access_token;
       localStorage.setItem("token", token);
       alert("Login successful!");
       resetForm();
-      navigate("/user/dashboard");
+      navigate("/admin/dashboard");
     } catch (error) {
       console.error("Login failed:", error.response || error.message);
       alert("Login failed. Please check your credentials.");
@@ -60,7 +60,7 @@ const Login = () => {
           {/* Card */}
           <div className="bg-white w-[20rem] md:w-[25rem] py-7 xl:rounded-l-[30px] rounded-[30px] xl:rounded-none">
             <div className="p-4">
-              <p className="text-2xl font-bold text-center">Login</p>
+              <p className="text-2xl font-bold text-center">Login Admin</p>
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
