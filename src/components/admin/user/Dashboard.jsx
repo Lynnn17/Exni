@@ -19,6 +19,7 @@ const Dashboard = () => {
     { title: "PIC", key: "pic" },
     { title: "Alamat", key: "address" },
     { title: "Email", key: "email" },
+    { title: "No.HP", key: "noHP" },
   ];
 
   const actions = [
@@ -41,13 +42,13 @@ const Dashboard = () => {
       setError(null);
 
       try {
-        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        const token = localStorage.getItem("token");
         console.log(token);
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}users`, // Replace 'users' with your endpoint
+          `${import.meta.env.VITE_API_URL}users`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Bearer token header
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -59,6 +60,7 @@ const Dashboard = () => {
           pic: user.pic,
           address: user.address,
           email: user.email,
+          noHP: user.contact,
         }));
 
         setData(users);

@@ -1,31 +1,67 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
+import getAuthHeaders from "../../../utils/authUtils";
 
 const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(false);
-
-  // Initial Values
-  const initialValues = {
+  const [initialValues, setInitialValues] = useState({
     pic: "",
-    addres: "",
+    address: "",
     company: "",
+    contact: "",
     password: "",
     confirmPassword: "",
-  };
+  });
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Fetch user data by ID
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const headers = await getAuthHeaders();
+        const endpoint = `${import.meta.env.VITE_API_URL}users/${id}`;
+        const response = await axios.get(endpoint, {
+          headers,
+        });
+        const data = response.data.data.user;
+
+        console.log("Fetched user data:", data);
+
+        // Update initial values with the fetched data
+        setInitialValues({
+          pic: data.pic || "",
+          address: data.address || "",
+          company: data.company || "",
+          contact: data.contact || "",
+          password: "", // password is intentionally left empty for security
+          confirmPassword: "", // confirmPassword is intentionally left empty
+        });
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [id]);
 
   const infoValidationSchema = Yup.object({
     pic: Yup.string().required("Pic is required"),
-    addres: Yup.string().required("Alamat is required"),
-    contact: Yup.number().required("Kontak is required"),
-    company: Yup.string().required("Nama Perusahan is required"),
+    address: Yup.string().required("Alamat is required"),
+    contact: Yup.number()
+      .typeError("Kontak harus berupa angka")
+      .required("Kontak is required"),
+    company: Yup.string().required("Nama Perusahaan is required"),
   });
 
   const loginValidationSchema = Yup.object({
@@ -37,22 +73,38 @@ const Edit = () => {
 
   // Save Handler
   const handleSave = async (values) => {
-    console.log(id);
-    // try {
-    //   const endpoint = showLoginForm
-    //     ? `${import.meta.env.VITE_API_URL}users/`
-    //     : `${import.meta.env.VITE_API_URL}users/user-info`;
-    //   const response = await axios.post(endpoint, values);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error("Error updating information:", error);
-    // }
+    const filteredValues = { ...values };
+    if (!showLoginForm) {
+      delete filteredValues.password;
+      delete filteredValues.confirmPassword;
+    } else {
+      delete filteredValues.company;
+      delete filteredValues.address;
+      delete filteredValues.contact;
+      delete filteredValues.pic;
+    }
+    setIsSaving(true);
+    try {
+      const headers = await getAuthHeaders();
+      const endpoint = `${import.meta.env.VITE_API_URL}users/${id}`;
+      const response = await axios.put(endpoint, filteredValues, { headers }); // Use PUT for updates
+      console.log("Update successful:", response.data);
+      navigate("/admin/user"); // Redirect after successful save
+    } catch (error) {
+      console.error("Error updating information:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Cancel Handler
   const handleCancel = () => {
     navigate("/admin/user");
   };
+
+  if (loading) {
+    return <p>Loading...</p>; // Show a loading indicator
+  }
 
   return (
     <Formik
@@ -95,7 +147,7 @@ const Edit = () => {
                       placeholder="Masukan Nama PIC"
                     />
                     <InputField
-                      name="addres"
+                      name="address"
                       label="Alamat"
                       type="text"
                       placeholder="Masukan Alamat"
@@ -138,7 +190,12 @@ const Edit = () => {
                 )}
 
                 <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                  <Button type="submit" label="Simpan" color="bg-exni" />
+                  <Button
+                    type="submit"
+                    color="bg-exni"
+                    label={isSaving ? "Loading..." : "Simpan"}
+                    disabled={isSaving}
+                  />
                   <Button
                     type="button"
                     label="Batal"

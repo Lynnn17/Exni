@@ -30,16 +30,22 @@ const Login = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}auth/login`,
+
         {
           email: values.email,
           password: values.password,
+        },
+        {
+          withCredentials: true, // Ini wajib untuk menyertakan cookie HttpOnly
         }
       );
 
       console.log("Login successful:", response.data.data);
+      console.log("Headers:", response.headers["set-cookie"]);
       const token = response.data.data.access_token;
       localStorage.setItem("token", token);
       alert("Login successful!");
+
       resetForm();
       navigate("/admin/dashboard");
     } catch (error) {
