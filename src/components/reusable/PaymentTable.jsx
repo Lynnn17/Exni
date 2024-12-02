@@ -31,7 +31,12 @@ const PaymentTable = ({ data }) => {
                     {item.status}
                   </span>
                 ) : (
-                  <button className="px-4 py-2 bg-red-500 text-white text-xs font-bold rounded hover:bg-red-600">
+                  <button
+                    onClick={() =>
+                      (window.location.href = `/user/transaction/detail/${item.id}`)
+                    }
+                    className="px-4 py-2 bg-red-500 text-white text-xs font-bold rounded hover:bg-red-600"
+                  >
                     {item.status}
                   </button>
                 )}
@@ -58,7 +63,12 @@ const PaymentTable = ({ data }) => {
                   {item.status}
                 </span>
               ) : (
-                <button className="px-4 py-2 bg-red-500 text-white text-xs font-bold rounded hover:bg-red-600">
+                <button
+                  onClick={() =>
+                    (window.location.href = `/user/transaction/detail/${item.id}`)
+                  }
+                  className="px-4 py-2 bg-red-500 text-white text-xs font-bold rounded hover:bg-red-600"
+                >
                   {item.status}
                 </button>
               )}
