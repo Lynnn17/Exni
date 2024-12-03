@@ -1,20 +1,19 @@
 import React from "react";
 
-const ColumnHeader = ({ columns, actions, actionLabel }) => (
-  <thead>
-    <tr className="border border-gray-400 uppercase">
-      {columns.map((column, index) => (
-        <th key={index} className="py-2 px-4 text-center text-xs sm:text-sm">
-          {column.title}
-        </th>
-      ))}
-      {actions.length > 0 && (
-        <th className="py-2 px-4 text-center text-xs sm:text-sm">
-          {actionLabel}
-        </th>
-      )}
-    </tr>
-  </thead>
+const ColumnHeader = ({ columns }) => (
+  <tr>
+    {columns.map((column) => (
+      <th
+        key={column.key}
+        className="py-3 px-4 font-semibold text-gray-700 border-b border-gray-300"
+      >
+        {column.title}
+      </th>
+    ))}
+    <th className="py-3 px-4 font-semibold text-gray-700 border-b border-gray-300">
+      Aksi
+    </th>
+  </tr>
 );
 
 export default ColumnHeader;

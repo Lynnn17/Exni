@@ -32,6 +32,23 @@ const Detail = () => {
       isPaid: true,
     },
   ];
+  const actions = [
+    {
+      icon: (item) => (
+        <button
+          onClick={() =>
+            (window.location.href = `/user/transaction/detail/${item.id}`)
+          }
+          className={`px-4 py-2 rounded-md text-white ${
+            item.status === "paid" ? "bg-gray-400" : "bg-red-500"
+          }`}
+          disabled={item.status === "paid"}
+        >
+          {item.status === "paid" ? "Lunas" : "Bayar"}
+        </button>
+      ),
+    },
+  ];
   return (
     <main>
       <div className="w-full px-3 py-5 bg-white mt-4 h-full">
