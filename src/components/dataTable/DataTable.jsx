@@ -10,8 +10,8 @@ const DataTable = ({
   options,
   aksi,
 }) => (
-  <div className="w-full overflow-x-auto pt-4 md:pt-7 md:px-3 lg:px-7">
-    <table className="min-w-full border-collapse border border-gray-300">
+  <div className="w-full overflow-x-auto pt-4 md:pt-7 md:px-3 lg:px-7 ">
+    <table className="min-w-full border-collapse border border-gray-300 ">
       <ColumnHeader columns={columns} actions={actions} actionLabel={aksi} />
       <tbody>
         {data.length > 0 ? (

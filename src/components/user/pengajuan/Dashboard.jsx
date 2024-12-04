@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <main>
+      <main className="bg-gray-50">
         <div className="w-full p-4 bg-white mt-4 h-full">
           <HeaderSection title="Pengajuan" />
           <div className="pt-5 w-full bg-white border border-gray-200 mt-5 p-4">

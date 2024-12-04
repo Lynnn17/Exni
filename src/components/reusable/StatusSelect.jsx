@@ -11,7 +11,7 @@ const StatusSelect = ({
     <select
       value={value}
       onChange={onChange}
-      className={`border border-gray-300  rounded text-center py-1 w-[8rem] text-xs font-semibold rounded-lg pr-8 ${
+      className={`border border-gray-300   text-center py-1 w-[8rem] text-xs font-semibold rounded-lg pr-8 ${
         customStyles.selectBg || "bg-ungu"
       } ${customStyles.textColor || "text-white"}`}
       style={{

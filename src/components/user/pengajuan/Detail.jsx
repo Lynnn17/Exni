@@ -6,11 +6,9 @@ import "react-status-alert/dist/status-alert.css";
 
 const Detail = () => {
   const [metodePembayaran, setMetodePembayaran] = useState("Cicilan");
-  const [fileProposal, setFileProposal] = useState("Jidan Slebeew.pdf");
-  const [fileBeritaAcara, setFileBeritaAcara] = useState("Jidan Slebeew.pdf");
-  const [keterangan, setKeterangan] = useState(
-    "Pembayaran per tahun (Proses) Peralihan Sewa"
-  );
+  const [fileProposal, setFileProposal] = useState("");
+  const [fileBeritaAcara, setFileBeritaAcara] = useState("");
+  const [keterangan, setKeterangan] = useState("");
   const [hargaPengajuan, setHargaPengajuan] = useState("Rp. 130.000.000,-");
 
   const handleFileUpload = (setFile) => (e) => {
@@ -26,8 +24,8 @@ const Detail = () => {
   };
 
   return (
-    <main className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <main className="p-4 bg-gray-50 min-h-screen">
+      <div className="w-[100%] bg-white shadow-md rounded-lg p-6">
         <StatusAlert />
         {/* Header */}
         <button
@@ -79,30 +77,32 @@ const Detail = () => {
         </div>
 
         {/* Status Pengajuan dan Status Pembayaran */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 mt-8">
           <div>
-            <p className="text-sm text-gray-500 font-medium">
+            <p className="text-sm text-gray-500 font-medium mb-2">
               Status Pengajuan
             </p>
-            <p className="bg-purple-100 text-purple-600 font-semibold text-sm px-3 py-1 rounded-full inline-block">
+            <p className="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded-full inline-block">
               Pengajuan
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-500 font-medium">
+            <p className="text-sm text-gray-500 font-medium mb-2">
               Status Pembayaran
             </p>
-            <p className="bg-purple-100 text-purple-600 font-semibold text-sm px-3 py-1 rounded-full inline-block">
+            <p className="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded-full inline-block">
               Cicilan
             </p>
           </div>
         </div>
 
         {/* Jangka Waktu dan Harga */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
-            <p className="text-sm text-gray-500 font-medium">Jangka Waktu</p>
-            <div className="flex items-center gap-2">
+            <p className="text-sm text-gray-500 font-medium mb-2">
+              Jangka Waktu
+            </p>
+            <div className="flex items-center gap-1">
               <input
                 type="date"
                 className="border border-gray-300 rounded-md p-2 text-gray-800 text-sm"
@@ -116,8 +116,10 @@ const Detail = () => {
               />
             </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-500 font-medium">Harga Pengajuan</p>
+          <div className=" w-[55%]">
+            <p className="text-sm text-gray-500 font-medium mb-2">
+              Harga Pengajuan
+            </p>
             <input
               type="text"
               className="w-full border border-gray-300 rounded-md p-2 text-gray-800 text-sm"
@@ -128,7 +130,7 @@ const Detail = () => {
         </div>
 
         {/* Link Proposal dan Berita Acara */}
-        <div className="grid grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
           <div>
             <label className="block text-sm text-gray-500 font-medium mb-2">
               Link Proposal
@@ -187,14 +189,14 @@ const Detail = () => {
             Keterangan
           </label>
           <textarea
-            className="w-full border border-gray-300 rounded-md p-2 text-gray-800 text-sm"
+            className="w-full md:w-[60%] md:h-[150px] border border-gray-300 rounded-md p-2 text-gray-800 text-sm"
             value={keterangan}
             readOnly
           />
         </div>
 
         {/* Buttons */}
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-center gap-4">
           <button
             onClick={handleBatal}
             className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"

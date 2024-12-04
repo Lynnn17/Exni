@@ -11,7 +11,7 @@ const Detail = () => {
   const [transactionId, setTransactionId] = useState("");
   const [submissionId, setSubmissionId] = useState("");
   const [tanggalPengajuan, setTanggalPengajuan] = useState("");
-  const [harga, setHarga] = useState(114000000);
+  const [harga] = useState(114000000);
   const [nominal, setNominal] = useState(0);
 
   useEffect(() => {
@@ -47,8 +47,8 @@ const Detail = () => {
   };
 
   return (
-    <main className="pt-4">
-      <div className="w-full mx-auto bg-white shadow-md rounded-lg p-6">
+    <main className=" pt-4  bg-gray-50">
+      <div className="w-[95%] lg:w-full mx-auto bg-white shadow-md rounded-lg p-6">
         {/* Komponen StatusAlert */}
         <StatusAlert />
 
@@ -65,7 +65,7 @@ const Detail = () => {
         <h1 className="text-xl font-semibold text-gray-800 mb-8">Transaksi</h1>
 
         {/* ID Transaksi, ID Pengajuan, dan Tanggal Pengajuan */}
-        <div className="grid grid-cols-2 gap-8 mb-6">
+        <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
             <p className="text-sm text-gray-500 font-medium">ID Transaksi</p>
             <p className="text-gray-800 font-semibold">{transactionId}</p>
@@ -85,7 +85,7 @@ const Detail = () => {
         {/* Form */}
         <form onSubmit={handleSubmit}>
           {/* Penyewa dan Properti Details */}
-          <div className="grid grid-cols-2 gap-8 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
             <div>
               <p className="text-sm text-gray-500 font-medium">Penyewa</p>
               <p className="text-gray-800 font-semibold">PT. SAMPOERNA Tbk.</p>
@@ -104,7 +104,7 @@ const Detail = () => {
           {/* Nominal */}
           <div className="grid grid-cols-2 gap-8 mb-6">
             <div>
-              <p className="text-sm text-gray-500 font-medium">Nominal</p>
+              <p className="text-sm text-gray-500 font-medium">Harga</p>
               <p className="text-gray-800 font-semibold">
                 Rp. {harga.toLocaleString("id-ID")},-
               </p>
@@ -112,8 +112,8 @@ const Detail = () => {
           </div>
 
           {/* Metode Pembayaran, Jumlah Cicilan, etc. */}
-          <div className="grid grid-cols-2 gap-8 mb-6">
-            <div>
+          <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="">
               <label className="block text-sm text-gray-500 font-medium mb-2">
                 Metode Pembayaran
               </label>
@@ -126,7 +126,7 @@ const Detail = () => {
                 <option value="Lunas">Lunas</option>
               </select>
             </div>
-            <div>
+            <div className="">
               <label className="block text-sm text-gray-500 font-medium mb-2">
                 Jumlah Cicilan
               </label>
@@ -143,7 +143,7 @@ const Detail = () => {
           </div>
 
           {/* Pembayaran Cicilan Ke and Nominal */}
-          <div className="grid grid-cols-2 gap-8 mb-6">
+          <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             <div>
               <label className="block text-sm text-gray-500 font-medium mb-2">
                 Pembayaran Cicilan Ke
@@ -161,7 +161,7 @@ const Detail = () => {
             </div>
             <div>
               <label className="block text-sm text-gray-500 font-medium mb-2">
-                Nominal
+                Nominal Pembayaran
               </label>
               <input
                 type="number"
@@ -174,14 +174,40 @@ const Detail = () => {
           </div>
 
           {/* Rekening and Upload */}
-          <div className="grid grid-cols-2 gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
+            {/* Rekening Section */}
             <div>
-              <p className="text-sm text-gray-500 font-medium">Rekening</p>
-              <p className="text-gray-800 font-semibold">7328195989</p>
+              <p className="text-sm text-gray-500 font-medium">
+                Nomor Rekening
+              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-800 font-semibold">7328195989</p>
+                <button
+                  className="text-purple-700 text-sm font-medium hover:underline"
+                  onClick={() => {
+                    navigator.clipboard
+                      .writeText("7328195989")
+                      .then(() => {
+                        StatusAlertService.showSuccess(
+                          "Nomor rekening berhasil disalin!"
+                        );
+                      })
+                      .catch(() => {
+                        StatusAlertService.showError(
+                          "Gagal menyalin nomor rekening."
+                        );
+                      });
+                  }}
+                >
+                  Salin
+                </button>
+              </div>
               <p className="text-gray-500 text-sm">
                 BCA / PT Pelayanan Nasional Indonesia
               </p>
             </div>
+
+            {/* Upload Bukti Transfer */}
             <div>
               <label className="block text-sm text-gray-500 font-medium mb-2">
                 Upload Bukti Transfer
@@ -189,11 +215,11 @@ const Detail = () => {
               <input
                 type="file"
                 className="block w-full text-sm text-gray-500
-                          file:mr-4 file:py-2 file:px-4
-                          file:rounded-lg file:border-0
-                          file:text-sm file:font-semibold
-                          file:bg-purple-50 file:text-purple-700
-                          hover:file:bg-purple-100"
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-semibold
+                file:bg-purple-50 file:text-purple-700
+                hover:file:bg-purple-100"
                 onChange={handleFileChange}
               />
               <p className="text-gray-700 text-sm mt-2">{fileName}</p>
@@ -201,19 +227,22 @@ const Detail = () => {
           </div>
 
           {/* Buttons */}
-          <div className="flex justify-end gap-4">
+          <div
+            className="flex justify-center
+           gap-4"
+          >
             <button
               onClick={() => window.history.back()}
               type="button"
               className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
             >
-              Cancel
+              Batal
             </button>
             <button
               type="submit"
               className="px-6 py-2 bg-purple-600 text-white rounded-md"
             >
-              Bayar
+              Unggah
             </button>
           </div>
         </form>

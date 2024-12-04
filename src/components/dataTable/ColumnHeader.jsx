@@ -1,16 +1,16 @@
 import React from "react";
 
 const ColumnHeader = ({ columns }) => (
-  <tr>
+  <tr className="bg-blue-600">
     {columns.map((column) => (
       <th
         key={column.key}
-        className="py-3 px-4 font-semibold text-gray-700 border-b border-gray-300"
+        className="py-3 px-4 font-semibold text-white border-b border-gray-300"
       >
         {column.title}
       </th>
     ))}
-    <th className="py-3 px-4 font-semibold text-gray-700 border-b border-gray-300">
+    <th className="py-3 px-4 font-semibold text-white border-b border-gray-300">
       Aksi
     </th>
   </tr>
