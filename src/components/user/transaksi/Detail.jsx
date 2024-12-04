@@ -1,3 +1,5 @@
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -41,12 +43,15 @@ const Detail = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Transaksi berhasil disubmit!");
+    StatusAlertService.showSuccess("Transaksi berhasil disubmit!");
   };
 
   return (
     <main className="pt-4">
       <div className="w-full mx-auto bg-white shadow-md rounded-lg p-6">
+        {/* Komponen StatusAlert */}
+        <StatusAlert />
+
         {/* Back Button */}
         <button
           onClick={() => window.history.back()}

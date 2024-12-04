@@ -7,6 +7,9 @@ import SectionDivider from "../../reusable/SectionDivider";
 import TenantInfo from "../../reusable/TenantInfo";
 import EditableTextarea from "../../reusable/EditableTextarea";
 import { FaArrowRight } from "react-icons/fa";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
+import { Link, useNavigate } from "react-router-dom";
 
 const Detail = () => {
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -26,9 +29,19 @@ const Detail = () => {
 
   const handleToggleReadOnly = () => setIsReadOnly(!isReadOnly);
 
+  const handleSimpan = () => {
+    StatusAlertService.showSuccess("Data berhasil disimpan!");
+  };
+
+  const navigate = useNavigate();
+  const handleBatal = () => {
+    navigate(`/admin/submission/`);
+  };
+
   return (
     <main>
       <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+        <StatusAlert />
         <HeaderForm title="Detail Pengajuan" link="/admin/submission" />
         <div className="bg-white border border-gray-200 mt-5 p-4">
           <div className="w-[95%] mx-auto grid grid-cols-2 md:flex gap-4 md:gap-10 lg:gap-12 xl:gap-24">
@@ -82,7 +95,7 @@ const Detail = () => {
               />
             </div>
             <div className="flex flex-col gap-3">
-              <div className="flex flex-row gap-5 md:gap-20">
+              <div className="flex flex-row gap-5 pt-4 md:gap-20">
                 <div>
                   <div className="flex flex-col gap-1">
                     <label className="block text-gray-700 font-medium">
@@ -121,6 +134,21 @@ const Detail = () => {
                 </div>
               </div>
             </div>
+          </div>
+          {/* Buttons */}
+          <div className="flex justify-center pt-6 pb-4 gap-4">
+            <button
+              onClick={handleBatal}
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
+            >
+              Batal
+            </button>
+            <button
+              className="px-4 py-2 bg-purple-600 text-white rounded-md"
+              onClick={handleSimpan}
+            >
+              Simpan
+            </button>
           </div>
         </div>
         <Pagination />
