@@ -47,7 +47,7 @@ const Detail = () => {
   };
 
   return (
-    <main className=" pt-4  bg-gray-50">
+    <main className=" pt-4 bg-gray-50">
       <div className="w-[95%] lg:w-full mx-auto bg-white shadow-md rounded-lg p-6">
         {/* Komponen StatusAlert */}
         <StatusAlert />

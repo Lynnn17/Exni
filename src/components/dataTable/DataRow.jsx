@@ -14,7 +14,7 @@ const DataRow = ({
     {columns.map((column, index) => (
       <td
         key={index}
-        className="py-2 px-4 text-xs sm:text-sm text-center cursor-pointer"
+        className="py-4 px-4 text-xs sm:text-sm text-center border-b"
       >
         {column.key === "status" ? (
           <StatusSelect
@@ -28,7 +28,7 @@ const DataRow = ({
       </td>
     ))}
     {actions.length > 0 && (
-      <td className="py-2 px-4 text-xs sm:text-sm cursor-pointer">
+      <td className="py-2 px-4 text-xs sm:text-sm cursor-pointer border-b">
         <ActionLinks actions={actions} item={item} />
       </td>
     )}

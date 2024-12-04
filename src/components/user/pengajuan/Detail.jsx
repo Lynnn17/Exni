@@ -24,8 +24,8 @@ const Detail = () => {
   };
 
   return (
-    <main className="p-4 bg-gray-50 min-h-screen">
-      <div className="w-[100%] bg-white shadow-md rounded-lg p-6">
+    <main className="pt-4 bg-gray-50 ">
+      <div className="w-[95%] lg:w-full bg-white shadow-md mx-auto rounded-lg p-6">
         <StatusAlert />
         {/* Header */}
         <button
