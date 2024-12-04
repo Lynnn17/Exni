@@ -40,8 +40,6 @@ const Login = () => {
         }
       );
 
-      console.log("Login successful:", response.data.data);
-      console.log("Headers:", response.headers["set-cookie"]);
       const token = response.data.data.access_token;
       localStorage.setItem("token", token);
       alert("Login successful!");

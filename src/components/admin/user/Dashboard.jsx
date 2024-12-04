@@ -7,8 +7,10 @@ import { FaTrash } from "react-icons/fa";
 import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
-
+import { handleTokenRefresh } from "../../../utils/authUtils";
+import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]); // State for user data
   const [loading, setLoading] = useState(true); // State for loading status
@@ -29,50 +31,92 @@ const Dashboard = () => {
       className: "text-[#5641BA]",
     },
     {
-      link: (id) => `/admin/user/delete/${id}`,
-      icon: <FaTrash />,
-      className: "text-red-500",
+      icon: (id) => (
+        <button className="text-red-500" onClick={() => handleDelete(id)}>
+          <FaTrash />
+        </button>
+      ),
     },
   ];
 
-  // Fetch user data with Axios
+  const handleDelete = async (id) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      };
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}users/${id.id}`,
+        {
+          headers,
+        }
+      );
+      console.log(response);
+      navigate("/admin/user");
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
+
+  const fetchUserData = async (token) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}users`, {
+        headers,
+      });
+
+      const users = response.data.data.users.map((user, index) => ({
+        id: user.id,
+        no: index + 1,
+        iconUser: IconUser,
+        pic: user.pic,
+        address: user.address,
+        email: user.email,
+        noHP: user.contact,
+      }));
+
+      setData(users);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      throw err;
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
+    const initializeData = async () => {
       setLoading(true);
       setError(null);
 
+      let token = localStorage.getItem("token");
+      if (!token || token === "undefined") {
+        try {
+          token = await handleTokenRefresh();
+        } catch (err) {
+          setError("Unable to authenticate user.");
+          setLoading(false);
+          return;
+        }
+      }
+
       try {
-        const token = localStorage.getItem("token");
-        console.log(token);
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}users`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        const users = response.data.data.users.map((user, index) => ({
-          id: user.id,
-          no: index + 1,
-          iconUser: IconUser, // Static icon
-          pic: user.pic,
-          address: user.address,
-          email: user.email,
-          noHP: user.contact,
-        }));
-
-        setData(users);
+        await fetchUserData(token);
       } catch (err) {
-        console.error("Error fetching user data:", err);
-        setError("Failed to load user data.");
+        if (err.response?.data?.message === "jwt expired") {
+          try {
+            const newToken = await handleTokenRefresh(navigate);
+            console.log("token", newToken);
+            await fetchUserData(newToken);
+          } catch (refreshError) {
+            setError("Session expired. Please login again.");
+          }
+        } else {
+          setError("Failed to load user data.");
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    initializeData();
   }, []);
 
   return (
