@@ -68,7 +68,6 @@ const Detail = () => {
             </div>
           </div>
         </div>
-        <Pagination />
       </div>
     </main>
   );

@@ -1,8 +1,8 @@
 import React from "react";
 
 const statusStyles = {
-  paid: { className: "bg-green-500 text-white", text: "Paid" },
-  unpaid: { className: "bg-yellow-500 text-white", text: "Unpaid" },
+  paid: { className: "bg-gray-200", text: "Paid" },
+  unpaid: { className: "bg-red-500 text-white", text: "Unpaid" },
   process: { className: "bg-blue-500 text-white", text: "Process" },
 };
 

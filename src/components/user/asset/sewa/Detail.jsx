@@ -8,7 +8,7 @@ import PaymentTable from "../../../reusable/PaymentTable";
 const Detail = () => {
   const data = [
     {
-      id: "1223354",
+      id: "TRX1223354",
       date: "01 Oktober 2024",
       type: "Cicilan",
       progress: "Pembayaran ke-1",
@@ -16,7 +16,7 @@ const Detail = () => {
       isPaid: false,
     },
     {
-      id: "1223355",
+      id: "TRX1223355",
       date: "01 Oktober 2024",
       type: "Cicilan",
       progress: "Pembayaran ke-1",
@@ -24,7 +24,7 @@ const Detail = () => {
       isPaid: false,
     },
     {
-      id: "1223356",
+      id: "TRX1223356",
       date: "01 Oktober 2024",
       type: "Non-Cicilan",
       progress: "-",
@@ -32,26 +32,10 @@ const Detail = () => {
       isPaid: true,
     },
   ];
-  const actions = [
-    {
-      icon: (item) => (
-        <button
-          onClick={() =>
-            (window.location.href = `/user/transaction/detail/${item.id}`)
-          }
-          className={`px-4 py-2 rounded-md text-white ${
-            item.status === "paid" ? "bg-gray-400" : "bg-red-500"
-          }`}
-          disabled={item.status === "paid"}
-        >
-          {item.status === "paid" ? "Lunas" : "Bayar"}
-        </button>
-      ),
-    },
-  ];
+
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderForm title="Detail Aset Sewa" link="/user/asset/sewa-aset" />
         <div className="flex flex-wrap gap-2">
           <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4">
@@ -74,7 +58,7 @@ const Detail = () => {
               <div className="pt-4 md:pt-0 w-full">
                 <SectionDivider title="Sewa" />
                 <div className="pt-2 flex flex-col gap-2">
-                  <TenantInfo label="Id Pengajuan" value="12312312" />
+                  <TenantInfo label="Id Pengajuan" value="SUB12312312" />
                   <TenantInfo label="Nomor Kontrak" value="132B/3B64/13121" />
                   <TenantInfo
                     label="Jangka Waktu"

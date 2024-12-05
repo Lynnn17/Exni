@@ -46,8 +46,8 @@ const Dashboard = () => {
   ];
 
   return (
-    <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+    <main className="bg-gray-50">
+      <div className="rounded-lg w-full px-3 py-5 bg-white mt-4 h-full">
         <HeaderSection
           title="Transaksi"
           subtitle=""

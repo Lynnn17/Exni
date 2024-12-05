@@ -23,8 +23,8 @@ const Dashboard = () => {
 
   return (
     <>
-      <main>
-        <div className="w-full p-4 bg-white mt-4 h-full">
+      <main className="bg-gray-50">
+        <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
           <HeaderSection title="Pengajuan" />
           <div className="pt-5 w-full bg-white border border-gray-200 mt-5 p-4">
             {dataPengajuan.status.map((status, index) => (

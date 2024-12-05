@@ -21,6 +21,7 @@ const Dashboard = () => {
     { title: "Nama Penyewa", key: "namaPenyewa" },
     { title: "Tanggal Pengajuan", key: "tanggalPengajuan" },
     { title: "Masa Sewa", key: "masaSewa" },
+    { title: "Status", key: "statusValue" },
   ];
 
   const data = [...Array(10)].map((_, index) => ({
@@ -31,7 +32,13 @@ const Dashboard = () => {
     namaPenyewa: "PT Geal Geol",
     tanggalPengajuan: "01 Oktober 2024",
     masaSewa: "3 Tahun",
-    status: index % 3 === 0 ? "unpaid" : index % 3 === 1 ? "paid" : "process",
+    statusValue: (
+      <StatusButton
+        status={
+          index % 3 === 0 ? "unpaid" : index % 3 === 1 ? "paid" : "process"
+        }
+      />
+    ),
   }));
 
   const handleOpenModal = (item) => {
@@ -40,10 +47,6 @@ const Dashboard = () => {
   };
 
   const actions = [
-    {
-      icon: (item) => <StatusButton status={item.status} />,
-    },
-
     {
       icon: (item) => (
         <button
