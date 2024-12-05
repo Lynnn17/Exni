@@ -9,6 +9,9 @@ import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
 import { handleTokenRefresh } from "../../../utils/authUtils";
 import { useNavigate } from "react-router-dom";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +42,14 @@ const Dashboard = () => {
     },
   ];
 
+  const showAlert = (message, type) => {
+    if (type === 200 || type === 201) {
+      StatusAlertService.showSuccess(message);
+    } else {
+      StatusAlertService.showError(message);
+    }
+  };
+
   const handleDelete = async (id) => {
     try {
       const headers = {
@@ -50,10 +61,11 @@ const Dashboard = () => {
           headers,
         }
       );
-      console.log(response);
+
+      showAlert(response.data.message, response.status);
       navigate("/admin/user");
     } catch (err) {
-      console.error("Error deleting user:", err);
+      showAlert("Failed to delete user. Please try again.");
     }
   };
 
@@ -76,8 +88,7 @@ const Dashboard = () => {
 
       setData(users);
     } catch (err) {
-      console.error("Error fetching user data:", err);
-      throw err;
+      showAlert("Error fetching user data. Please refresh the page.");
     }
   };
 
@@ -109,7 +120,7 @@ const Dashboard = () => {
             setError("Session expired. Please login again.");
           }
         } else {
-          setError("Failed to load user data.");
+          setError("Failed to load user data please refresh the page.");
         }
       } finally {
         setLoading(false);
@@ -121,6 +132,7 @@ const Dashboard = () => {
 
   return (
     <main>
+      <StatusAlert />
       <div className="w-full px-3 py-5 bg-white mt-4 h-full">
         <HeaderSection
           title="Akun Pengguna"

@@ -1,12 +1,35 @@
 import Foto from "../../../../assets/rumah.png";
 import Card from "../../../reusable/card/CardBuilding";
 import Pagination from "../../Pagination";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
+import axios from "axios";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState([]);
+
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
+        {
+          headers,
+        }
+      );
+      setData(response.data.data.assets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <main>
@@ -23,21 +46,27 @@ const Dashboard = () => {
           </HeaderSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {Array.from(Array(10).keys()).map((_, i) => (
-              <Card
-                key={i}
-                foto={Foto}
-                title={`Rumah Terbalik ${i + 1}`}
-                address="Jl. Masjid Besar Band Nera 34245 JAKARTA"
-                alokasi="Kantor Penjualan Tiket"
-                landSize="16568 m²"
-                buildingSize="13231 m²"
-                harga="Rp. 100.000.000"
-                deskripsi=""
-                link={`edit/${i + 1}`}
-              />
-            ))}
+            {data.map(
+              (item, i) => (
+                console.log(item),
+                (
+                  <Card
+                    key={i}
+                    foto={item.albums}
+                    title={item.name}
+                    address={item.properties.address}
+                    alokasi="Kantor Penjualan Tiket"
+                    landSize="16568 m²"
+                    buildingSize="13231 m²"
+                    harga={item.price}
+                    deskripsi={item.description}
+                    link={`edit/${i + 1}`}
+                  />
+                )
+              )
+            )}
           </div>
+
           <Pagination />
         </div>
       </main>
