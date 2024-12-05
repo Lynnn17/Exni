@@ -21,6 +21,7 @@ const Dashboard = () => {
 
   const columns = [
     { title: "No", key: "no" },
+    { title: "Nama PT", key: "namaPT" },
     { title: "PIC", key: "pic" },
     { title: "Alamat", key: "address" },
     { title: "Email", key: "email" },
@@ -84,6 +85,7 @@ const Dashboard = () => {
         address: user.address,
         email: user.email,
         noHP: user.contact,
+        namaPT: user.company,
       }));
 
       setData(users);

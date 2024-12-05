@@ -5,10 +5,8 @@ import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Edit = () => {
-  const navigate = useNavigate();
   const initialValues = {
     company: "",
     email: "",
@@ -55,7 +53,6 @@ const Edit = () => {
       console.log("Data saved successfully:", response.data);
       alert("User registered successfully!");
       resetForm();
-      navigate("/admin/user");
     } catch (error) {
       console.error("Error saving data:", error.response || error.message);
       alert("Failed to register user. Please try again.");
@@ -78,9 +75,9 @@ const Edit = () => {
       {({ setFieldValue, resetForm, isSubmitting }) => (
         <Form>
           <main>
-            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
+            <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add User" link="/admin/user" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 {/* User Information Section */}
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className=" text-sm ">User Information</p>

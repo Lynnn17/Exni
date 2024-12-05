@@ -165,7 +165,7 @@ const Edit = () => {
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm title="Edit User" link="/admin/user" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <div className="flex justify-end pr-4">
                   <button
                     type="button"
