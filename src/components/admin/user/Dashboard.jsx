@@ -11,6 +11,7 @@ import { handleTokenRefresh } from "../../../utils/authUtils";
 import { useNavigate } from "react-router-dom";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import ConfirmationModal from "../../reusable/ConfirmationModal";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const Dashboard = () => {
   const [data, setData] = useState([]); // State for user data
   const [loading, setLoading] = useState(true); // State for loading status
   const [error, setError] = useState(null); // State for error handling
+  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk kontrol modal
+  const [selectedId, setSelectedId] = useState(null); // State untuk menyimpan ID pengguna yang akan dihapus
+  const [isDeleting, setIsDeleting] = useState(false); // State untuk loading saat menghapus
 
   const columns = [
     { title: "No", key: "no" },
@@ -36,7 +40,7 @@ const Dashboard = () => {
     },
     {
       icon: (id) => (
-        <button className="text-red-500" onClick={() => handleDelete(id)}>
+        <button className="text-red-500" onClick={() => confirmDelete(id)}>
           <FaTrash />
         </button>
       ),
@@ -51,22 +55,31 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = (id) => {
+    setSelectedId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true); // Mulai loading
     try {
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
+
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}users/${id.id}`,
-        {
-          headers,
-        }
+        `${import.meta.env.VITE_API_URL}users/${selectedId}`,
+        { headers }
       );
 
       showAlert(response.data.message, response.status);
-      navigate("/admin/user");
+      setData(data.filter((user) => user.id !== selectedId)); // Perbarui data setelah penghapusan
+      setIsModalOpen(false); // Tutup modal setelah penghapusan berhasil
     } catch (err) {
-      showAlert("Failed to delete user. Please try again.");
+      showAlert("Waduh error..", err.response?.status || 500);
+      setIsModalOpen(false); // Tutup modal meskipun gagal
+    } finally {
+      setIsDeleting(false); // Selesai loading
     }
   };
 
@@ -146,6 +159,15 @@ const Dashboard = () => {
         >
           <Search />
         </HeaderSection>
+        {/* Modal Konfirmasi */}
+        <ConfirmationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)} // Tutup modal
+          onConfirm={handleDelete} // Konfirmasi penghapusan
+          message={
+            isDeleting ? "Mohon tunggu sebentar..." : "Yakin nih dihapus?"
+          }
+        />
 
         {loading ? (
           <p>Loading data...</p>
