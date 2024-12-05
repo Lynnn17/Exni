@@ -2,14 +2,7 @@ import React from "react";
 import StatusSelect from "../reusable/StatusSelect";
 import ActionLinks from "./ActionLinks";
 
-const DataRow = ({
-  item,
-  columns,
-  onStatusChange,
-  actions,
-  options,
-  status,
-}) => (
+const DataRow = ({ item, columns, onStatusChange, actions, options }) => (
   <tr>
     {columns.map((column, index) => (
       <td

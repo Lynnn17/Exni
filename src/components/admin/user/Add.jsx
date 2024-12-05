@@ -5,8 +5,10 @@ import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Edit = () => {
+  const navigate = useNavigate();
   const initialValues = {
     company: "",
     email: "",
@@ -53,6 +55,7 @@ const Edit = () => {
       console.log("Data saved successfully:", response.data);
       alert("User registered successfully!");
       resetForm();
+      navigate("/admin/user");
     } catch (error) {
       console.error("Error saving data:", error.response || error.message);
       alert("Failed to register user. Please try again.");

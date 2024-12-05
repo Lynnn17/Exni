@@ -1,58 +1,155 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
+import { handleTokenRefresh } from "../../../utils/authUtils";
 
 const Edit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(false);
-
-  // Initial Values
-  const initialValues = {
+  const [initialValues, setInitialValues] = useState({
     pic: "",
-    addres: "",
+    address: "",
     company: "",
-    password: "",
+    contact: "",
+    newPassword: "",
     confirmPassword: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Fetch user data by ID
+  const fetchUserData = async () => {
+    setLoading(true);
+    try {
+      let token = localStorage.getItem("token");
+      const endpoint = `${import.meta.env.VITE_API_URL}users/${id}`;
+
+      try {
+        const response = await axios.get(endpoint, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = response.data.data.user;
+        setInitialValues({
+          pic: data.pic || "",
+          address: data.address || "",
+          company: data.company || "",
+          contact: data.contact || "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      } catch (error) {
+        if (error.response?.data?.message === "jwt expired") {
+          token = await handleTokenRefresh();
+          const refreshedResponse = await axios.get(endpoint, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = refreshedResponse.data.data.user;
+          setInitialValues({
+            pic: data.pic || "",
+            address: data.address || "",
+            company: data.company || "",
+            contact: data.contact || "",
+            newPassword: "",
+            confirmPassword: "",
+          });
+        } else {
+          throw error;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchUserData();
+  }, [id]);
 
   const infoValidationSchema = Yup.object({
     pic: Yup.string().required("Pic is required"),
-    addres: Yup.string().required("Alamat is required"),
-    contact: Yup.number().required("Kontak is required"),
-    company: Yup.string().required("Nama Perusahan is required"),
+    address: Yup.string().required("Alamat is required"),
+    contact: Yup.number()
+      .typeError("Kontak harus berupa angka")
+      .required("Kontak is required"),
+    company: Yup.string().required("Nama Perusahaan is required"),
   });
 
   const loginValidationSchema = Yup.object({
-    password: Yup.string().required("Password is required"),
+    newPassword: Yup.string().required("Password is required"),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
       .required("Confirm Password is required"),
   });
 
   // Save Handler
   const handleSave = async (values) => {
-    console.log(id);
-    // try {
-    //   const endpoint = showLoginForm
-    //     ? `${import.meta.env.VITE_API_URL}users/`
-    //     : `${import.meta.env.VITE_API_URL}users/user-info`;
-    //   const response = await axios.post(endpoint, values);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error("Error updating information:", error);
-    // }
+    const filteredValues = { ...values };
+    if (!showLoginForm) {
+      delete filteredValues.newPassword;
+      delete filteredValues.confirmPassword;
+    } else {
+      delete filteredValues.company;
+      delete filteredValues.address;
+      delete filteredValues.contact;
+      delete filteredValues.pic;
+      delete filteredValues.confirmPassword;
+    }
+
+    setIsSaving(true);
+    try {
+      let token = localStorage.getItem("token");
+      const endpoint = showLoginForm
+        ? `${import.meta.env.VITE_API_URL}users/${id}/password/admin`
+        : `${import.meta.env.VITE_API_URL}users/${id}`;
+
+      try {
+        await axios.put(endpoint, filteredValues, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        navigate("/admin/user");
+      } catch (error) {
+        if (error.response?.data?.message === "jwt expired") {
+          token = await handleTokenRefresh();
+          await axios.put(endpoint, filteredValues, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          navigate("/admin/user");
+        } else {
+          throw error;
+        }
+      }
+    } catch (error) {
+      console.error("Error updating information:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  // Cancel Handler
   const handleCancel = () => {
     navigate("/admin/user");
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Formik
@@ -81,7 +178,6 @@ const Edit = () => {
                   </button>
                 </div>
 
-                {/* User Information Form */}
                 {!showLoginForm && (
                   <>
                     <div className="flex items-center py-3 px-4 gap-2">
@@ -95,7 +191,7 @@ const Edit = () => {
                       placeholder="Masukan Nama PIC"
                     />
                     <InputField
-                      name="addres"
+                      name="address"
                       label="Alamat"
                       type="text"
                       placeholder="Masukan Alamat"
@@ -115,7 +211,6 @@ const Edit = () => {
                   </>
                 )}
 
-                {/* User Login Form */}
                 {showLoginForm && (
                   <div>
                     <div className="flex items-center py-3 px-4 gap-2">
@@ -123,7 +218,7 @@ const Edit = () => {
                       <div className="w-[10rem] h-[1px] bg-teks"></div>
                     </div>
                     <InputField
-                      name="password"
+                      name="newPassword"
                       label="Password"
                       type="password"
                       placeholder="Masukan Password"
@@ -138,7 +233,12 @@ const Edit = () => {
                 )}
 
                 <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                  <Button type="submit" label="Simpan" color="bg-exni" />
+                  <Button
+                    type="submit"
+                    color="bg-exni"
+                    label={isSaving ? "Loading..." : "Simpan"}
+                    disabled={isSaving}
+                  />
                   <Button
                     type="button"
                     label="Batal"
