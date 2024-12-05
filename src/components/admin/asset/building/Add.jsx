@@ -63,9 +63,9 @@ const Add = () => {
       {({ setFieldValue, values }) => (
         <Form>
           <main>
-            <div className="w-full p-4 bg-white mt-4 h-full">
+            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm title="Add Building" link="/admin/asset/building" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
                   name="nama"
                   label="Nama"

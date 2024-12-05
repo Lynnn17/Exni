@@ -7,7 +7,7 @@ const Dashboard = () => {
   return (
     <>
       <NavMobile />
-      <div className="flex w-full  bg-mainBg gap-4 ">
+      <div className="flex w-full  bg-gray-50 gap-4 ">
         <div className="hidden lg:flex">
           <Sidebar />
         </div>

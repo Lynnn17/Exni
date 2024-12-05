@@ -75,7 +75,7 @@ const Edit = () => {
       {({ setFieldValue, resetForm, isSubmitting }) => (
         <Form>
           <main>
-            <div className="w-full p-4 bg-white mt-4 h-full">
+            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm title="Add User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6">
                 {/* User Information Section */}

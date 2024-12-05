@@ -58,9 +58,9 @@ const Add = () => {
       {({ setFieldValue, resetForm, values }) => (
         <Form>
           <main>
-            <div className="w-full p-4 bg-white mt-4 h-full">
+            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm title="Add Tenant Asset" link="/admin/asset/tenant" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <div className="flex items-center py-3 px-4 gap-2">
                   <p className="text-sm">User Information</p>
                   <div className="w-[10rem] h-[1px] bg-teks"></div>

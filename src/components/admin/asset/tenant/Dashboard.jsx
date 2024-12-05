@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <>
       <main>
-        <div className="w-full p-4 bg-white mt-4 h-full">
+        <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
           <HeaderSection
             title="Aset"
             subtitle="Tenants"
