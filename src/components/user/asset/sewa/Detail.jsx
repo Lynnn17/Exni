@@ -35,7 +35,7 @@ const Detail = () => {
 
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderForm title="Detail Aset Sewa" link="/user/asset/sewa-aset" />
         <div className="flex flex-wrap gap-2">
           <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4">
