@@ -1,12 +1,35 @@
 import Foto from "../../../../assets/ruangan.png";
 import Card from "../../../reusable/card/CardTenant";
 import Pagination from "../../Pagination";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
+import axios from "axios";
 
 const Dashboard = () => {
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
   const [isOpen, setIsOpen] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
+        {
+          headers,
+        }
+      );
+      console.log(response.data.data.assets);
+      setData(response.data.data.assets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <main>

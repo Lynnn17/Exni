@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "../../../reusable/InputField";
+import InputField from "../../../reusable/InputFieldbackup";
 import HeaderForm from "../../../reusable/HeaderForm";
 import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+import axios from "axios";
 
 const Edit = () => {
   const navigate = useNavigate();
@@ -40,6 +41,24 @@ const Edit = () => {
     { value: "available", label: "Tersedia" },
     { value: "unavailable", label: "Tidak Tersedia" },
   ];
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
+        {
+          headers,
+        }
+      );
+      setData(response.data.data.assets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Formik
