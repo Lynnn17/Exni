@@ -6,11 +6,13 @@ const CardTenant = ({
   foto,
   title,
   address,
-  alokasi,
+  building,
   capacity,
   link,
   nameTenant,
   teksLink,
+  modalFile,
+  linkFile,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -23,10 +25,10 @@ const CardTenant = ({
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
         <div className="pt-4">
-          <p>{alokasi}</p>
-          <p className="pt-2 text-xs font-medium">Kapasitas Ruangan</p>
+          <p>{building}</p>
+          <p className="pt-2 text-xs font-medium">Jumlah lantai</p>
           <div className="pt-1 text-xs">
-            <p>{capacity}</p>
+            <p>{capacity} Lantai</p>
           </div>
           {nameTenant ? (
             <div className="pt-2">
@@ -51,13 +53,14 @@ const CardTenant = ({
                   {teksLink}
                 </Link>
               ) : (
-                <Link
-                  to={link}
-                  className=" text-2xl flex items-center gap-2 text-exni"
-                >
-                  <FaRegFilePdf />
-                  <BsPencilSquare />
-                </Link>
+                <div className=" text-2xl flex items-center gap-2 text-exni">
+                  <button onClick={() => modalFile(linkFile)}>
+                    <FaRegFilePdf />
+                  </button>
+                  <Link to={link}>
+                    <BsPencilSquare />
+                  </Link>
+                </div>
               )}
             </div>
           )}

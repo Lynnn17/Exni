@@ -46,7 +46,7 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
           className="mt-2 block w-full border border-gray-300 p-2 rounded"
         />
       )}
-      <ErrorMessage name={name} component="div" className="text-red-500 pl-4" />
+      <ErrorMessage name={name} component="div" className="text-red-500 " />
     </div>
   );
 };

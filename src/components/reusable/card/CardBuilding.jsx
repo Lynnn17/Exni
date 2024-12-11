@@ -1,4 +1,4 @@
-import { FaRegFilePdf } from "react-icons/fa";
+import { FaRegFilePdf, FaRegFileImage } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -16,6 +16,9 @@ const CardBuilding = ({
   harga,
   modalFile,
   linkFile,
+  keterangan,
+  modalGambar,
+  linkGambar,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -27,6 +30,12 @@ const CardBuilding = ({
         rel="noopener noreferrer"
       ></iframe>
 
+      <img
+        src="https://drive.google.com/thumbnail?id=18lIBLxB0gddlObQaZS2guVLpeddaLU49&sz=s4000"
+        alt="asdasd"
+        srcset=""
+      />
+      <img src="https://lh3.google.com/u/0/d/18lIBLxB0gddlObQaZS2guVLpeddaLU49" />
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
@@ -45,8 +54,12 @@ const CardBuilding = ({
           <p className="pt-2 font-medium">Luas Tanah & Bangunan</p>
           <div className="pt-1 text-sm">
             <p>
-              {landSize} x {buildingSize}
+              {landSize} m2 x {buildingSize} m2
             </p>
+          </div>
+          <p className="pt-2 font-medium">Keterangan</p>
+          <div className="pt-1 text-sm">
+            <p>{keterangan ? "Tersedia" : "Tidak Tersedia"}</p>
           </div>
           <div>
             <p className="pt-4 font-medium  ">Deskripsi</p>
@@ -55,6 +68,7 @@ const CardBuilding = ({
             </p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
+            <FaRegFileImage onClick={() => modalGambar(linkGambar)} />
             <button onClick={() => modalFile(linkFile)}>
               <FaRegFilePdf />
             </button>

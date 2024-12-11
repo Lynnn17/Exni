@@ -40,8 +40,8 @@ const Login = () => {
       const token = response.data.token;
       localStorage.setItem("token", token);
       alert("Login successful!");
-      resetForm();
-      navigate("/user/dashboard");
+      // resetForm();
+      // navigate("/user/dashboard");
     } catch (error) {
       console.error("Login failed:", error.response || error.message);
       alert("Login failed. Please check your credentials.");

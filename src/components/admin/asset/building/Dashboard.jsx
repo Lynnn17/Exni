@@ -1,4 +1,3 @@
-import Foto from "../../../../assets/rumah.png";
 import Card from "../../../reusable/card/CardBuilding";
 import Pagination from "../../Pagination";
 import React, { useState, useEffect } from "react";
@@ -13,6 +12,7 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+  const [typeModal, setTypeModal] = useState(null);
 
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
@@ -24,6 +24,7 @@ const Dashboard = () => {
           headers,
         }
       );
+      console.log(response.data.data.assets);
       setData(response.data.data.assets);
     } catch (error) {
       console.error(error);
@@ -31,6 +32,13 @@ const Dashboard = () => {
   };
 
   const handleModalFile = (item) => {
+    setTypeModal("Dokumen");
+    setSelectedData(item);
+    setModalOpen(true);
+  };
+
+  const handleModalGambar = (item) => {
+    setTypeModal("Gambar");
     setSelectedData(item);
     setModalOpen(true);
   };
@@ -63,14 +71,17 @@ const Dashboard = () => {
                   foto={item.albums[0]}
                   title={item.name}
                   address={item.properties.address}
-                  alokasi="Kantor Penjualan Tiket"
-                  landSize="16568 m²"
-                  buildingSize="13231 m²"
+                  alokasi={item.properties.allocation}
+                  landSize={item.properties.landArea}
+                  buildingSize={item.properties.buildingArea}
                   harga={item.price}
                   deskripsi={item.description}
                   link={`edit/${i + 1}`}
                   modalFile={handleModalFile}
-                  linkFile={item.document}
+                  linkFile={item.documents}
+                  keterangan={item.isAvailable}
+                  modalGambar={handleModalGambar}
+                  linkGambar={item.albums}
                 />
               </div>
             ))}
@@ -79,6 +90,7 @@ const Dashboard = () => {
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
             data={selectedData}
+            type={typeModal}
           />
           <Pagination />
         </div>

@@ -1,15 +1,16 @@
 import React from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import LogoExni from "../../assets/logo/exni.svg";
+import ModalEdit from "./ModalEditFile";
 
-const InfoLine = ({ label, value }) => (
-  <div className="flex">
-    <strong className="w-[10rem] text-sm">{label}</strong>
-    <p className="text-sm">{value}</p>
-  </div>
-);
+const Modal = ({ isOpen, onClose, data, type }) => {
+  const [editModalOpen, setEditModalOpen] = React.useState(false);
 
-const Modal = ({ isOpen, onClose, data }) => {
+  const handleEdit = (id) => {
+    setIdData(id);
+    setEditModalOpen(true);
+  };
+
   if (!isOpen || !data) return null;
 
   return (
@@ -27,29 +28,41 @@ const Modal = ({ isOpen, onClose, data }) => {
         </div>
 
         <div className="mb-4">
-          <h3 className="font-semibold">Link Document</h3>
-          <ul className="list-disc pl-4">
-            {data.map(
-              (item, index) => (
-                console.log(item),
-                (
-                  <li key={index}>
-                    <a
-                      href={`https://drive.google.com/file/d/${item}/view`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm underline text-blue-600"
-                    >
-                      Document {index + 1}
-                    </a>
-                  </li>
-                )
-              )
-            )}
+          <h3 className="font-semibold">Link {type}</h3>
+          <ul className="list-disc pl-4 pt-2 max-h-[13rem] overflow-y-scroll">
+            {data.map((item, index) => (
+              <li key={index}>
+                <div className="flex gap-2 items-center justify-between pr-6">
+                  <a
+                    href={`https://drive.google.com/file/d/${item}/view`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm underline text-blue-600"
+                  >
+                    {type} {index + 1}
+                  </a>
+                  <button
+                    className="text-sm  bg-blue-600 text-white px-2 py-1 rounded"
+                    onClick={() => handleEdit(item)}
+                  >
+                    Edit
+                  </button>
+                  <button className="text-sm  bg-red-600 text-white px-2 py-1 rounded">
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
           <div className="flex flex-col gap-1"></div>
         </div>
       </div>
+      <ModalEdit
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        data={idData}
+        type={type}
+      />
     </div>
   );
 };
