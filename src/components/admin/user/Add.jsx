@@ -5,8 +5,13 @@ import * as Yup from "yup";
 import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import StatusAlert, { StatusAlertService } from "react-status-alert"; // Import StatusAlert
+import "react-status-alert/dist/status-alert.css"; // Import styles
 
 const Edit = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
   const initialValues = {
     company: "",
     email: "",
@@ -51,11 +56,18 @@ const Edit = () => {
       );
 
       console.log("Data saved successfully:", response.data);
-      alert("User registered successfully!");
+      StatusAlertService.showSuccess("User registered successfully!"); // Show success alert
+
+      setTimeout(() => {
+        navigate("/admin/user"); // Redirect to /admin/user after 2 seconds
+      }, 1000);
+
       resetForm();
     } catch (error) {
       console.error("Error saving data:", error.response || error.message);
-      alert("Failed to register user. Please try again.");
+      StatusAlertService.showError(
+        "Failed to register user. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -75,6 +87,7 @@ const Edit = () => {
       {({ setFieldValue, resetForm, isSubmitting }) => (
         <Form>
           <main>
+            <StatusAlert /> {/* Add this line to display the alert */}
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
@@ -108,7 +121,7 @@ const Edit = () => {
                   placeholder="Enter contact number"
                 />
 
-                {/*pIC */}
+                {/* PIC */}
                 <div className="mb-4">
                   <InputField
                     type="text"

@@ -16,12 +16,12 @@ import ConfirmationModal from "../../reusable/ConfirmationModal";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]); // State for user data
-  const [loading, setLoading] = useState(true); // State for loading status
-  const [error, setError] = useState(null); // State for error handling
-  const [isModalOpen, setIsModalOpen] = useState(false); // State untuk kontrol modal
-  const [selectedId, setSelectedId] = useState(null); // State untuk menyimpan ID pengguna yang akan dihapus
-  const [isDeleting, setIsDeleting] = useState(false); // State untuk loading saat menghapus
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const columns = [
     { title: "No", key: "no" },
@@ -56,39 +56,74 @@ const Dashboard = () => {
   };
 
   const confirmDelete = (id) => {
-    setSelectedId(id);
+    const userId = typeof id === "object" && id.id ? id.id : id;
+    const userExists = data.some((user) => user.id === userId);
+
+    if (!userExists) {
+      console.error("User ID not found in local data:", userId);
+      showAlert("User not found in current data", 404);
+      return;
+    }
+
+    setSelectedId(userId);
     setIsModalOpen(true);
   };
 
   const handleDelete = async () => {
-    setIsDeleting(true); // Mulai loading
+    if (!selectedId) {
+      console.error("Error: Selected ID is null or undefined.");
+      showAlert("No user selected for deletion.", 400);
+      return;
+    }
+
+    setIsDeleting(true);
     try {
       const headers = {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
 
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}users/${selectedId}`,
-        { headers }
-      );
+      console.log("Attempting to delete user with ID:", selectedId);
+      console.log("Headers:", headers);
 
-      showAlert(response.data.message, response.status);
-      setData(data.filter((user) => user.id !== selectedId)); // Perbarui data setelah penghapusan
-      setIsModalOpen(false); // Tutup modal setelah penghapusan berhasil
+      const apiUrl = `${import.meta.env.VITE_API_URL}users/${selectedId}`;
+      console.log("API URL:", apiUrl);
+
+      const response = await axios.delete(apiUrl, { headers });
+
+      console.log("Delete response:", response.data);
+
+      if (response.status === 200) {
+        showAlert(response.data.message, response.status);
+
+        const updatedData = data.filter((user) => user.id !== selectedId);
+        console.log("Updated data after deletion:", updatedData);
+
+        setData(updatedData);
+        setIsModalOpen(false);
+      } else {
+        showAlert("Failed to delete user.", response.status);
+      }
     } catch (err) {
-      showAlert("Waduh error..", err.response?.status || 500);
-      setIsModalOpen(false); // Tutup modal meskipun gagal
+      console.error("Delete error:", err.response?.data || err.message);
+
+      const errorMessage =
+        err.response?.data?.message ||
+        "An error occurred while deleting the user.";
+      showAlert(errorMessage, err.response?.status || 500);
     } finally {
-      setIsDeleting(false); // Selesai loading
+      setIsDeleting(false);
     }
   };
 
   const fetchUserData = async (token) => {
     try {
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}users`, {
-        headers,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}users?role=USER&isActive=true`,
+        {
+          headers,
+        }
+      );
 
       const users = response.data.data.users.map((user, index) => ({
         id: user.id,

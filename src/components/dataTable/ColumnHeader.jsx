@@ -1,7 +1,7 @@
 import React from "react";
 
 const ColumnHeader = ({ columns }) => (
-  <tr className="bg-blue-600 rounded-t-lg">
+  <tr className="bg-blue-600  rounded-t-l">
     {columns.map((column) => (
       <th
         key={column.key}
