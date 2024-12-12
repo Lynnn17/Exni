@@ -19,10 +19,6 @@ const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
     setEditModalOpen(true);
   };
 
-  const handleAdd = () => {
-    setAddModalOpen(true);
-  };
-
   const typeEdit = type === "Document" ? "documents" : "albums";
 
   const handleDelete = async () => {

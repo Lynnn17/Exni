@@ -15,11 +15,8 @@ const CardBuilding = ({
   deskripsi,
   harga,
   modalFile,
-  linkFile,
   keterangan,
   modalGambar,
-  linkGambar,
-  idData,
   modalDelete,
 }) => {
   return (
@@ -64,15 +61,15 @@ const CardBuilding = ({
             </p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
-            <FaRegFileImage onClick={() => modalGambar(linkGambar, idData)} />
-            <button onClick={() => modalFile(linkFile, idData)}>
+            <FaRegFileImage onClick={() => modalGambar()} />
+            <button onClick={() => modalFile()}>
               <FaRegFilePdf />
             </button>
             <Link to={link}>
               <BsPencilSquare />
             </Link>
             <FaRegTrashAlt
-              onClick={() => modalDelete(idData)}
+              onClick={() => modalDelete()}
               className="text-red-500"
             />
           </div>

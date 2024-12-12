@@ -1,20 +1,35 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
 import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
-import StatusAlert from "react-status-alert";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import axios from "axios";
 
 const Edit = () => {
+  const { id: idData } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const [initialValues, setInitialValues] = useState({
+    nama: "",
+    alamat: "",
+    alokasi: "",
+    luasGedung: "",
+    luasTanah: "",
+    harga: "",
+    deskripsi: "",
+    statusKetersediaan: "",
+  });
+
   const validationSchema = Yup.object({
     nama: Yup.string().required("Nama is required"),
     alamat: Yup.string().required("Alamat is required"),
-    kota: Yup.string().required("Kota is required"),
     alokasi: Yup.string().required("Alokasi is required"),
     luasGedung: Yup.number()
       .typeError("Luas Gedung must be a number")
@@ -22,45 +37,134 @@ const Edit = () => {
     luasTanah: Yup.number()
       .typeError("Luas Tanah must be a number")
       .required("Luas Tanah is required"),
-    fotoAset: Yup.mixed().required("Foto Aset is required"),
-    dokumenAset: Yup.mixed().required("Dokumen Aset is required"),
     harga: Yup.number()
       .typeError("Harga must be a number")
       .required("Harga is required"),
-    dekripsi: Yup.string(),
-    penghuni: Yup.string(),
+    deskripsi: Yup.string().required("Deskripsi is required"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Data submitted:", values);
+  const handleSubmit = async (values) => {
+    const data = {
+      name: values.nama,
+      address: values.alamat,
+      building: values.luasGedung,
+      floor: values.luasTanah,
+      price: values.harga,
+      description: values.deskripsi,
+      isAvailable: values.statusKetersediaan,
+      tenantdto: values.alokasi,
+    };
+    setIsSaving(true);
+    try {
+      let token = localStorage.getItem("token");
+      const endpoint = `${
+        import.meta.env.VITE_API_URL
+      }assets/tenants/${idData}`;
+
+      try {
+        await axios.put(endpoint, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        StatusAlertService.showSuccess("Data berhasil diupdate!");
+        setTimeout(() => navigate("/admin/building"), 2000);
+      } catch (error) {
+        if (error.response?.data?.message === "jwt expired") {
+          token = await handleTokenRefresh();
+          await axios.put(endpoint, filteredValues, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          StatusAlertService.showSuccess("Data berhasil disimpan!");
+          setTimeout(() => navigate("/admin/user"), 2000);
+        } else {
+          throw error;
+        }
+      }
+    } catch (error) {
+      console.error("Error updating information:", error);
+      StatusAlertService.showError("Gagal menyimpan data. Silakan coba lagi.");
+    } finally {
+      setIsSaving(false);
+    }
   };
   const handleCancel = () => {
     navigate("/admin/asset/building");
   };
 
   const options = [
-    { value: "available", label: "Tersedia" },
-    { value: "unavailable", label: "Tidak Tersedia" },
+    { value: true, label: "Tersedia" },
+    { value: false, label: "Tidak Tersedia" },
   ];
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      let token = localStorage.getItem("token");
+      const endpoint = `${import.meta.env.VITE_API_URL}assets/${idData}`;
+
+      try {
+        const response = await axios.get(endpoint, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = response.data.data.asset;
+        setInitialValues({
+          nama: data.name,
+          alamat: data.properties.address,
+          alokasi: data.properties.allocation,
+          luasGedung: data.properties.buildingArea,
+          luasTanah: data.properties.landArea,
+          harga: data.price,
+          deskripsi: data.description,
+          statusKetersediaan: data.isAvailable,
+        });
+      } catch (error) {
+        if (error.response?.data?.message === "jwt expired") {
+          token = await handleTokenRefresh();
+          const refreshedResponse = await axios.get(endpoint, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = refreshedResponse.data.data.user;
+          setInitialValues({
+            nama: data.name,
+            alamat: data.properties.address,
+            alokasi: data.properties.allocation,
+            luasGedung: data.properties.buildingArea,
+            luasTanah: data.properties.landArea,
+            harga: data.price,
+            deskripsi: data.description,
+            statusKetersediaan: data.isAvailable,
+          });
+          StatusAlertService.showSuccess("Data berhasil dimuat!");
+        } else {
+          throw error;
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [idData]);
 
   return (
     <Formik
-      initialValues={{
-        nama: "",
-        alamat: "",
-        kota: "",
-        alokasi: "",
-        luasGedung: "",
-        luasTanah: "",
-        fotoAset: null,
-        dokumenAset: null,
-        harga: "",
-        deskripsi: "",
-        penghuni: "",
-        statusKetersediaan: "available",
-      }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       {({ setFieldValue, values }) => (
         <Form>
@@ -83,13 +187,7 @@ const Edit = () => {
                   placeholder="Masukan Alamat"
                   aria-label="Alamat Gedung"
                 />
-                <InputField
-                  name="kota"
-                  label="Kota"
-                  type="text"
-                  placeholder="Masukan Nama Kota"
-                  aria-label="Kota Lokasi Gedung"
-                />
+
                 <InputField
                   name="alokasi"
                   label="Alokasi"
@@ -118,13 +216,7 @@ const Edit = () => {
                   placeholder="Masukan Harga Sewa"
                   aria-label="Harga Sewa Gedung"
                 />
-                <InputField
-                  name="penghuni"
-                  label="Penghuni"
-                  type="text"
-                  placeholder="Masukan Nama Penghuni/Penyewa (Optional)"
-                  aria-label="Nama Penghuni atau Penyewa Gedung"
-                />
+
                 <InputField
                   name="deskripsi"
                   label="Deskripsi"
@@ -143,31 +235,14 @@ const Edit = () => {
                     aria-label="Status Ketersediaan Gedung"
                   />
                 </div>
-                <div className="mb-4">
-                  <InputField
-                    type="file"
-                    label="Dokumen Aset"
-                    name="dokumenAset"
-                    maxFiles={3}
-                    onChange={(e) =>
-                      setFieldValue("dokumenAset", e.target.files[0])
-                    }
-                    aria-label="Unggah Dokumen Terkait Aset Gedung"
-                  />
-
-                  <InputField
-                    type="file"
-                    label="Foto Aset"
-                    name="fotoAset"
-                    maxFiles={8}
-                    onChange={(e) =>
-                      setFieldValue("fotoAset", e.target.files[0])
-                    }
-                  />
-                </div>
 
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
-                  <Button type="submit" label="Simpan" color="bg-exni" />
+                  <Button
+                    type="submit"
+                    color="bg-exni"
+                    label={isSaving ? "Loading..." : "Simpan"}
+                    disabled={isSaving}
+                  />
                   <Button
                     type="button"
                     label="Batal"

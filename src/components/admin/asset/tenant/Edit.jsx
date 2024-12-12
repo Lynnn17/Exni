@@ -144,12 +144,17 @@ const Edit = () => {
                   </div>
 
                   <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                    <Button type="submit" label="Simpan" color="bg-exni" />
+                    <Button
+                      type="submit"
+                      color="bg-exni"
+                      label={isSaving ? "Loading..." : "Simpan"}
+                      disabled={isSaving}
+                    />
                     <Button
                       type="button"
                       label="Batal"
                       color="bg-red-500"
-                      onClick={() => handleCancel(resetForm)}
+                      onClick={handleCancel}
                     />
                   </div>
                 </div>

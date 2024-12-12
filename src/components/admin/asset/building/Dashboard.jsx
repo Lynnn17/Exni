@@ -103,7 +103,6 @@ const Dashboard = () => {
                     deskripsi={item.description || "N/A"}
                     link={`edit/${item.id}`}
                     modalFile={() => handleModalFile(item.documents, item.id)}
-                    linkFile={item.documents || []}
                     keterangan={
                       item.isAvailable ? "Tersedia" : "Tidak Tersedia"
                     }
@@ -112,8 +111,6 @@ const Dashboard = () => {
                       setConfirmModalOpen(true);
                       setIdData(item.id);
                     }}
-                    linkGambar={item.albums || []}
-                    idData={item.id}
                   />
                 </div>
               ))

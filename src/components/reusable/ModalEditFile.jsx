@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { IoCloseSharp } from "react-icons/io5";
 import LogoExni from "../../assets/logo/exni.svg";
@@ -13,7 +13,6 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
   const history = useNavigate();
 
-  // Schema validasi dengan Yup berdasarkan tipe file
   const validationSchema = Yup.object().shape({
     file:
       type === "albums"
