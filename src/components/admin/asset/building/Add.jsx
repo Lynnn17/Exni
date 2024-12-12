@@ -128,7 +128,7 @@ const Add = () => {
             <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add Building" link="/admin/asset/building" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
                   name="nama"
                   label="Nama"
