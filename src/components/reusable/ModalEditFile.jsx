@@ -6,13 +6,29 @@ import LogoExni from "../../assets/logo/exni.svg";
 import axios from "axios";
 import InputField from "./InputField";
 import Button from "./Button";
+import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpen, onClose, data, type }) => {
-  if (!isOpen || !data) return null;
+const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
+  if (!isOpen || !idFile) return null;
+
+  const history = useNavigate();
 
   // Schema validasi dengan Yup
   const validationSchema = Yup.object({
-    image: Yup.mixed().required("File is required"),
+    image: Yup.array()
+      .min(1, "At least one image is required")
+      .of(
+        Yup.mixed().test("fileType", "Unsupported file format", (value) =>
+          [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "image/webp",
+            "image/jpg",
+          ].includes(value?.type)
+        )
+      )
+      .required("Images are required"),
   });
 
   const typeEdit = type === "Document" ? "documents" : "albums";
@@ -20,11 +36,13 @@ const Modal = ({ isOpen, onClose, data, type }) => {
   // Fungsi submit form
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
-    formData.append(typeEdit, values.image);
+    formData.append("deletedAlbumIds[0]", idFile);
+    formData.append(typeEdit, values.image[0]);
+    console.log("deletedAlbumIds[0]", formData.get(typeEdit));
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}assets/${data}/${typeEdit}`,
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}assets/${idData}/${typeEdit}`,
         formData,
         {
           headers: {
@@ -33,13 +51,16 @@ const Modal = ({ isOpen, onClose, data, type }) => {
           },
         }
       );
-      console.log("File uploaded successfully:", response.data);
 
-      // Reset form dan tutup modal setelah berhasil
+      console.log("Response", response.data);
       resetForm();
       onClose();
+      history(0);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error(
+        "Error uploading file:",
+        error.response?.data || error.message
+      );
     } finally {
       setSubmitting(false);
     }
@@ -58,7 +79,6 @@ const Modal = ({ isOpen, onClose, data, type }) => {
 
         {/* Header Modal */}
         <div className="flex justify-center items-center mb-4 pt-3 gap-5">
-          <span className="text-sm font-medium">{data.id}</span>
           <img src={LogoExni} alt="Logo Exni" />
         </div>
 

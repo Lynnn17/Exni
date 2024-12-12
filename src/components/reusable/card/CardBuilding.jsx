@@ -19,6 +19,7 @@ const CardBuilding = ({
   keterangan,
   modalGambar,
   linkGambar,
+  idData,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -30,12 +31,6 @@ const CardBuilding = ({
         rel="noopener noreferrer"
       ></iframe>
 
-      <img
-        src="https://drive.google.com/thumbnail?id=18lIBLxB0gddlObQaZS2guVLpeddaLU49&sz=s4000"
-        alt="asdasd"
-        srcset=""
-      />
-      <img src="https://lh3.google.com/u/0/d/18lIBLxB0gddlObQaZS2guVLpeddaLU49" />
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
@@ -68,8 +63,8 @@ const CardBuilding = ({
             </p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
-            <FaRegFileImage onClick={() => modalGambar(linkGambar)} />
-            <button onClick={() => modalFile(linkFile)}>
+            <FaRegFileImage onClick={() => modalGambar(linkGambar, idData)} />
+            <button onClick={() => modalFile(linkFile, idData)}>
               <FaRegFilePdf />
             </button>
             <Link to={link}>
