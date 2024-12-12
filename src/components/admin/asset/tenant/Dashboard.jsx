@@ -4,9 +4,47 @@ import Pagination from "../../Pagination";
 import React, { useState } from "react";
 import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
+import axios from "axios";
+import Modal from "../../../reusable/ModalFile";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+  const [data, setData] = useState([]);
+
+  const token = localStorage.getItem("token");
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
+        {
+          headers,
+        }
+      );
+      setData(response.data.data.assets);
+      // setData(response.data.data.assets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleModalFile = (item) => {
+    setSelectedData(item);
+    setModalOpen(true);
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <>
       <main>
@@ -23,18 +61,25 @@ const Dashboard = () => {
           </HeaderSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {Array.from(Array(10).keys()).map((_, i) => (
+            {data.map((item, i) => (
               <Card
                 key={i}
-                foto={Foto}
-                title={`Kabin Kapal Arunika Samudera ${i + 1}`}
-                address="PT Pelni JAKARTA"
-                alokasi="Kabin Kapal"
-                capacity="16568"
-                link={`edit/${i + 1}`}
+                foto={item.albums[0]}
+                title={item.name}
+                address={item.tenants.address}
+                building={item.tenants.building}
+                capacity={item.tenants.floor}
+                link={`edit/${item.id + 1}`}
+                modalFile={handleModalFile}
+                linkFile={item.document}
               />
             ))}
           </div>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            data={selectedData}
+          />
           <Pagination />
         </div>
       </main>
