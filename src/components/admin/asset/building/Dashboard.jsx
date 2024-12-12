@@ -5,6 +5,7 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
 import Modal from "../../../reusable/ModalFile";
+import ModalConfirm from "../../../reusable/ConfirmationModal";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 
 const Dashboard = () => {
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [idFile, setIdFile] = useState(null);
   const [idData, setIdData] = useState(null);
   const [typeModal, setTypeModal] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   // Retrieve token from localStorage
   const token = localStorage.getItem("token");
@@ -30,6 +32,20 @@ const Dashboard = () => {
       setData(response.data.data.assets);
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}assets/${idData}`, {
+        headers,
+      });
+      setConfirmModalOpen(false);
+      StatusAlertService.showSuccess("Data berhasil dihapus!");
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      StatusAlertService.showError("Data gagal dihapus!");
     }
   };
 
@@ -92,6 +108,10 @@ const Dashboard = () => {
                       item.isAvailable ? "Tersedia" : "Tidak Tersedia"
                     }
                     modalGambar={() => handleModalGambar(item.albums, item.id)}
+                    modalDelete={() => {
+                      setConfirmModalOpen(true);
+                      setIdData(item.id);
+                    }}
                     linkGambar={item.albums || []}
                     idData={item.id}
                   />
@@ -113,6 +133,11 @@ const Dashboard = () => {
             type={typeModal}
           />
 
+          <ModalConfirm
+            isOpen={confirmModalOpen}
+            onClose={() => setConfirmModalOpen(false)}
+            onConfirm={handleDelete}
+          />
           {/* Pagination */}
           <Pagination />
         </div>

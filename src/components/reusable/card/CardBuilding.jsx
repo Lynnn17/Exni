@@ -1,4 +1,4 @@
-import { FaRegFilePdf, FaRegFileImage } from "react-icons/fa";
+import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -20,6 +20,7 @@ const CardBuilding = ({
   modalGambar,
   linkGambar,
   idData,
+  modalDelete,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -70,6 +71,10 @@ const CardBuilding = ({
             <Link to={link}>
               <BsPencilSquare />
             </Link>
+            <FaRegTrashAlt
+              onClick={() => modalDelete(idData)}
+              className="text-red-500"
+            />
           </div>
         </div>
       </div>
