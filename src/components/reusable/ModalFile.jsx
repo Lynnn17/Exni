@@ -2,18 +2,58 @@ import React from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import LogoExni from "../../assets/logo/exni.svg";
 import ModalEdit from "./ModalEditFile";
-
+import ModalAdd from "./ModalAddFile";
+import ModalConfirm from "./ConfirmationModal";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
   const [editModalOpen, setEditModalOpen] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [addModalOpen, setAddModalOpen] = React.useState(false);
+  const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState("");
 
-  // // Fungsi untuk membuka modal edit
+  const navigate = useNavigate();
+
   const handleEdit = (id) => {
     setSelectedFile(id);
     setEditModalOpen(true);
   };
 
-  // Jika modal tidak terbuka atau data tidak ada, jangan render apa pun
+  const handleAdd = () => {
+    setAddModalOpen(true);
+  };
+
+  const typeEdit = type === "Document" ? "documents" : "albums";
+
+  const handleDelete = async () => {
+    const formData = new FormData();
+    if (typeEdit === "albums") {
+      formData.append("deletedAlbumIds[0]", selectedFile);
+    } else if (typeEdit === "documents") {
+      formData.append("deletedDocumentIds[0]", selectedFile);
+    } else {
+      console.error("Tipe file tidak valid");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}assets/${idData}/${typeEdit}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      onClose();
+      navigate(0);
+    } catch (error) {
+      console.error("Error deleting file:", error);
+    }
+  };
+
   if (!isOpen || !idFile) return null;
 
   return (
@@ -34,7 +74,18 @@ const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
 
         {/* Daftar Data */}
         <div className="mb-4">
-          <h3 className="font-semibold">Link {type}</h3>
+          <div className="flex justify-between items-center pb-2">
+            <h3 className="font-semibold">Link {type}</h3>
+            <button
+              className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
+              onClick={() => {
+                setAddModalOpen(true);
+                console.log(addModalOpen);
+              }}
+            >
+              Tambah
+            </button>
+          </div>
           <ul className="list-disc pl-4 pt-2 max-h-[13rem] overflow-y-scroll">
             {idFile.map((item, index) => (
               <li key={index}>
@@ -58,7 +109,13 @@ const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
                   </button>
 
                   {/* Tombol Delete */}
-                  <button className="text-sm bg-red-600 text-white px-2 py-1 rounded">
+                  <button
+                    className="text-sm bg-red-600 text-white px-2 py-1 rounded"
+                    onClick={() => {
+                      setConfirmModalOpen(true);
+                      setSelectedFile(item);
+                    }}
+                  >
                     Delete
                   </button>
                 </div>
@@ -74,7 +131,20 @@ const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
         onClose={() => setEditModalOpen(false)}
         idData={idData}
         idFile={selectedFile}
-        type={type}
+        type={typeEdit}
+      />
+
+      <ModalAdd
+        isOpenModal={addModalOpen}
+        onCloseModal={() => setAddModalOpen(false)}
+        idDataModal={idData}
+        type={typeEdit}
+      />
+
+      <ModalConfirm
+        isOpen={confirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleDelete}
       />
     </div>
   );

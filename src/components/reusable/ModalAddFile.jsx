@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { IoCloseSharp } from "react-icons/io5";
 import LogoExni from "../../assets/logo/exni.svg";
@@ -8,8 +8,8 @@ import InputField from "./InputField";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
-  if (!isOpen || !idFile) return null;
+const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
+  if (!isOpenModal || !idDataModal) return null;
 
   const history = useNavigate();
 
@@ -19,6 +19,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
       type === "albums"
         ? Yup.array()
             .min(1, "At least one image is required")
+            .max(8, "Maximum 8 images")
             .of(
               Yup.mixed().test("fileType", "Unsupported file format", (value) =>
                 [
@@ -33,6 +34,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
             .required("Images are required")
         : Yup.array()
             .min(1, "At least one document is required")
+            .max(3, "Maximum 3 documents")
             .of(
               Yup.mixed().test("fileType", "Unsupported file format", (value) =>
                 ["application/pdf"].includes(value?.type)
@@ -44,19 +46,13 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
   // Fungsi submit form
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
-    if (type === "albums") {
-      formData.append("deletedAlbumIds[0]", idFile);
-    } else if (type === "documents") {
-      formData.append("deletedDocumentIds[0]", idFile);
-    } else {
-      console.error("Tipe file tidak valid");
-      return;
-    }
-    formData.append(type, values.file[0]);
+    values.file.forEach((file) => {
+      formData.append(type, file);
+    });
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}assets/${idData}/${type}`,
+        `${import.meta.env.VITE_API_URL}assets/${idDataModal}/${type}`,
         formData,
         {
           headers: {
@@ -68,7 +64,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
       console.log("Response", response.data);
       resetForm();
-      onClose();
+      onCloseModal();
       history(0);
     } catch (error) {
       console.error(
@@ -86,7 +82,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
         {/* Tombol Close */}
         <button
           className="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl"
-          onClick={onClose}
+          onClick={onCloseModal}
         >
           <IoCloseSharp />
         </button>
@@ -111,6 +107,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
                   type="file"
                   label={type}
                   name="file"
+                  maxFiles={type === "albums" ? 8 : 3}
                   accept={type === "albums" ? "image/*" : ".pdf"}
                   onChange={(e) =>
                     setFieldValue("file", e.currentTarget.files[0])
@@ -130,7 +127,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
                   type="button"
                   label="Batal"
                   color="bg-red-500"
-                  onClick={onClose}
+                  onClick={onCloseModal}
                 />
               </div>
             </Form>

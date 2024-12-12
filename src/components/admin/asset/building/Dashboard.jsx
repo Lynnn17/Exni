@@ -35,7 +35,7 @@ const Dashboard = () => {
 
   // Handle opening the "File" modal
   const handleModalFile = (item, id) => {
-    setTypeModal("Dokumen");
+    setTypeModal("Document");
     setIdData(id);
     setIdFile(item);
     setModalOpen(true);
