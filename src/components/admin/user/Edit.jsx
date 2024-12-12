@@ -7,6 +7,8 @@ import InputField from "../../reusable/InputField";
 import HeaderForm from "../../reusable/HeaderForm";
 import axios from "axios";
 import { handleTokenRefresh } from "../../../utils/authUtils";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Edit = () => {
   const { id } = useParams();
@@ -64,12 +66,14 @@ const Edit = () => {
             newPassword: "",
             confirmPassword: "",
           });
+          StatusAlertService.showSuccess("Data berhasil dimuat!");
         } else {
           throw error;
         }
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+      StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
     } finally {
       setLoading(false);
     }
@@ -122,7 +126,8 @@ const Edit = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        navigate("/admin/user");
+        StatusAlertService.showSuccess("Data berhasil disimpan!");
+        setTimeout(() => navigate("/admin/user"), 2000);
       } catch (error) {
         if (error.response?.data?.message === "jwt expired") {
           token = await handleTokenRefresh();
@@ -131,13 +136,15 @@ const Edit = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          navigate("/admin/user");
+          StatusAlertService.showSuccess("Data berhasil disimpan!");
+          setTimeout(() => navigate("/admin/user"), 2000);
         } else {
           throw error;
         }
       }
     } catch (error) {
       console.error("Error updating information:", error);
+      StatusAlertService.showError("Gagal menyimpan data. Silakan coba lagi.");
     } finally {
       setIsSaving(false);
     }
@@ -152,106 +159,109 @@ const Edit = () => {
   }
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={
-        showLoginForm ? loginValidationSchema : infoValidationSchema
-      }
-      onSubmit={handleSave}
-      enableReinitialize
-    >
-      {() => (
-        <Form>
-          <main>
-            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
-              <HeaderForm title="Edit User" link="/admin/user" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
-                <div className="flex justify-end pr-4">
-                  <button
-                    type="button"
-                    className="bg-exni text-white py-2 px-4 rounded-md text-sm md:text-base"
-                    onClick={() => setShowLoginForm(!showLoginForm)}
-                  >
-                    {showLoginForm
-                      ? "Sembunyikan Form Login"
-                      : "Edit User Login"}
-                  </button>
-                </div>
+    <>
+      <StatusAlert /> {/* Komponen untuk menampilkan alert */}
+      <Formik
+        initialValues={initialValues}
+        validationSchema={
+          showLoginForm ? loginValidationSchema : infoValidationSchema
+        }
+        onSubmit={handleSave}
+        enableReinitialize
+      >
+        {() => (
+          <Form>
+            <main>
+              <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
+                <HeaderForm title="Edit User" link="/admin/user" />
+                <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
+                  <div className="flex justify-end pr-4">
+                    <button
+                      type="button"
+                      className="bg-exni text-white py-2 px-4 rounded-md text-sm md:text-base"
+                      onClick={() => setShowLoginForm(!showLoginForm)}
+                    >
+                      {showLoginForm
+                        ? "Sembunyikan Form Login"
+                        : "Edit User Login"}
+                    </button>
+                  </div>
 
-                {!showLoginForm && (
-                  <>
-                    <div className="flex items-center py-3 px-4 gap-2">
-                      <p className="text-sm">User Information</p>
-                      <div className="w-[10rem] h-[1px] bg-teks"></div>
-                    </div>
-                    <InputField
-                      name="pic"
-                      label="PIC"
-                      type="text"
-                      placeholder="Masukan Nama PIC"
-                    />
-                    <InputField
-                      name="address"
-                      label="Alamat"
-                      type="text"
-                      placeholder="Masukan Alamat"
-                    />
-                    <InputField
-                      name="contact"
-                      label="Kontak"
-                      type="text"
-                      placeholder="Masukan No.Kontak HP"
-                    />
-                    <InputField
-                      name="company"
-                      label="Nama Perusahan"
-                      type="text"
-                      placeholder="Masukan Nama Perusahaan"
-                    />
-                  </>
-                )}
+                  {!showLoginForm && (
+                    <>
+                      <div className="flex items-center py-3 px-4 gap-2">
+                        <p className="text-sm">User Information</p>
+                        <div className="w-[10rem] h-[1px] bg-teks"></div>
+                      </div>
+                      <InputField
+                        name="pic"
+                        label="PIC"
+                        type="text"
+                        placeholder="Masukan Nama PIC"
+                      />
+                      <InputField
+                        name="address"
+                        label="Alamat"
+                        type="text"
+                        placeholder="Masukan Alamat"
+                      />
+                      <InputField
+                        name="contact"
+                        label="Kontak"
+                        type="text"
+                        placeholder="Masukan No.Kontak HP"
+                      />
+                      <InputField
+                        name="company"
+                        label="Nama Perusahan"
+                        type="text"
+                        placeholder="Masukan Nama Perusahaan"
+                      />
+                    </>
+                  )}
 
-                {showLoginForm && (
-                  <div>
-                    <div className="flex items-center py-3 px-4 gap-2">
-                      <p className="text-sm">User Login</p>
-                      <div className="w-[10rem] h-[1px] bg-teks"></div>
+                  {showLoginForm && (
+                    <div>
+                      <div className="flex items-center py-3 px-4 gap-2">
+                        <p className="text-sm">User Login</p>
+                        <div className="w-[10rem] h-[1px] bg-teks"></div>
+                      </div>
+                      <InputField
+                        name="newPassword"
+                        label="Password"
+                        type="password"
+                        placeholder="Masukan Password"
+                      />
+                      <InputField
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        type="password"
+                        placeholder="Konfirmasi Password"
+                      />
                     </div>
-                    <InputField
-                      name="newPassword"
-                      label="Password"
-                      type="password"
-                      placeholder="Masukan Password"
+                  )}
+
+                  <div className="flex gap-3 justify-center pt-5 md:justify-end">
+                    <Button
+                      type="submit"
+                      color="bg-exni"
+                      label={isSaving ? "Loading..." : "Simpan"}
+                      disabled={isSaving}
                     />
-                    <InputField
-                      name="confirmPassword"
-                      label="Confirm Password"
-                      type="password"
-                      placeholder="Konfirmasi Password"
+                    <Button
+                      type="button"
+                      label="Batal"
+                      color="bg-red-500"
+                      onClick={handleCancel}
                     />
                   </div>
-                )}
-
-                <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                  <Button
-                    type="submit"
-                    color="bg-exni"
-                    label={isSaving ? "Loading..." : "Simpan"}
-                    disabled={isSaving}
-                  />
-                  <Button
-                    type="button"
-                    label="Batal"
-                    color="bg-red-500"
-                    onClick={handleCancel}
-                  />
                 </div>
               </div>
-            </div>
-          </main>
-        </Form>
-      )}
-    </Formik>
+            </main>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
 
