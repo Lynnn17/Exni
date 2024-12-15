@@ -48,6 +48,7 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
     const formData = new FormData();
     values.file.forEach((file) => {
       formData.append(type, file);
+      console.log(file);
     });
 
     try {

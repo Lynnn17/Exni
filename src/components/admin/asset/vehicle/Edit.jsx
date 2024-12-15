@@ -1,57 +1,119 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
+import axios from "axios";
 
-const Edit = () => {
+const EditVehicleAsset = () => {
   const navigate = useNavigate();
-  const validationSchema = Yup.object({
-    nama: Yup.string().required("Nama is required"),
-    noPlat: Yup.number()
-      .typeError("Nomor Plat must be a number")
-      .required("Nomor Plat is required"),
-    tahun: Yup.number()
-      .typeError(" Tahun must be a number")
-      .required(" Tahun is required"),
-    noMesin: Yup.string().required("Nomor Mesin is required"),
-    noRangka: Yup.string().required("Nomor Rangka is required"),
-    kondisi: Yup.string().required("Kondisi is required"),
-    fotoAset: Yup.mixed().required("Foto Aset is required"),
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState({
+    nama: "",
+    noPlat: "",
+    tahun: "",
+    noMesin: "",
+    noRangka: "",
+    harga: "",
+    deskripsi: "",
   });
 
-  const handleSubmit = (values) => {
-    console.log("Data submitted:", values);
+  const validationSchema = Yup.object({
+    nama: Yup.string().required("Nama is required"),
+    noPlat: Yup.string().required("Nomor Plat is required"),
+    tahun: Yup.number()
+      .typeError("Tahun must be a number")
+      .required("Tahun is required"),
+    noMesin: Yup.string().required("Nomor Mesin is required"),
+    noRangka: Yup.string().required("Nomor Rangka is required"),
+    harga: Yup.number()
+      .typeError("Harga must be a number")
+      .required("Harga is required"),
+    deskripsi: Yup.string().required("Deskripsi is required"),
+  });
+
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    const data = {
+      no_police: values.noPlat,
+      year: values.tahun,
+      no_machine: values.noMesin,
+      no_frame: values.noRangka,
+      name: values.nama,
+      description: values.deskripsi,
+      price: values.harga,
+    };
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}assets/vehicles/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      resetForm();
+      StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
+      navigate("/admin/asset/vehicle");
+    } catch (error) {
+      console.error("Error saving data:", error);
+      StatusAlertService.showError("Data Vehicle gagal disimpan!");
+    } finally {
+      setSubmitting(false);
+    }
   };
+
   const handleCancel = () => {
     navigate("/admin/asset/vehicle");
   };
 
-  const options = [
-    { value: "baik", label: "Baik" },
-    { value: "butuh perbaikan", label: "Butuh Perbaikan" },
-  ];
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const endpoint = `${import.meta.env.VITE_API_URL}assets/${id}`;
+
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data.data.asset);
+      const data = response.data.data.asset;
+      setInitialValues({
+        nama: data.name,
+        noPlat: data.vehicles.no_police,
+        tahun: data.vehicles.year,
+        noMesin: data.vehicles.no_machine,
+        noRangka: data.vehicles.no_frame,
+        harga: data.price,
+        deskripsi: data.description,
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
   return (
     <Formik
-      initialValues={{
-        nama: "",
-        noPlat: "",
-        tahun: "",
-        noMesin: "",
-        noRangka: "",
-        kondisi: "baik",
-        fotoAset: null,
-      }}
+      enableReinitialize
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue, values }) => (
+      {({ isSubmitting }) => (
         <Form>
           <main>
+            <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm
                 title="Edit Vehicle Asset"
@@ -88,27 +150,26 @@ const Edit = () => {
                   type="text"
                   placeholder="Masukan Nomor Rangka"
                 />
-                <div className="px-3 pb-3">
-                  <SingleSelectCheckboxGroup
-                    label="Kondisi"
-                    options={options}
-                    selectedValue={values.kondisi}
-                    onChange={(value) => setFieldValue("kondisi", value)}
-                  />
-                </div>
-                <div className="mb-4">
-                  <InputField
-                    type="file"
-                    label="Foto Aset"
-                    name="fotoAset"
-                    onChange={(e) =>
-                      setFieldValue("fotoAset", e.target.files[0])
-                    }
-                  />
-                </div>
+                <InputField
+                  name="harga"
+                  label="Harga"
+                  type="text"
+                  placeholder="Masukan Harga"
+                />
+                <InputField
+                  name="deskripsi"
+                  label="Deskripsi"
+                  type="text"
+                  placeholder="Masukan Deskripsi"
+                />
 
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
-                  <Button type="submit" label="Simpan" color="bg-exni" />
+                  <Button
+                    type="submit"
+                    label={isSubmitting ? "Saving..." : "Save"}
+                    color="bg-exni"
+                    disabled={isSubmitting}
+                  />
                   <Button
                     type="button"
                     label="Batal"
@@ -125,4 +186,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default EditVehicleAsset;

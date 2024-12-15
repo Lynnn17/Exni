@@ -32,6 +32,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
             .required("Images are required")
         : Yup.array()
             .min(1, "At least one document is required")
+            .max(3, "Maximum 3 documents")
             .of(
               Yup.mixed().test("fileType", "Unsupported file format", (value) =>
                 ["application/pdf"].includes(value?.type)
@@ -45,7 +46,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
     const formData = new FormData();
     if (type === "albums") {
       formData.append("deletedAlbumIds[0]", idFile);
-    } else if (type === "documents") {
+    } else if (type === "document") {
       formData.append("deletedDocumentIds[0]", idFile);
     } else {
       console.error("Tipe file tidak valid");

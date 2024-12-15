@@ -19,13 +19,13 @@ const Modal = ({ isOpen, onClose, idData, type, idFile }) => {
     setEditModalOpen(true);
   };
 
-  const typeEdit = type === "Document" ? "documents" : "albums";
+  const typeEdit = type === "Document" ? "document" : "albums";
 
   const handleDelete = async () => {
     const formData = new FormData();
     if (typeEdit === "albums") {
       formData.append("deletedAlbumIds[0]", selectedFile);
-    } else if (typeEdit === "documents") {
+    } else if (typeEdit === "document") {
       formData.append("deletedDocumentIds[0]", selectedFile);
     } else {
       console.error("Tipe file tidak valid");

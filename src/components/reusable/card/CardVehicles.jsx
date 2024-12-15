@@ -1,8 +1,9 @@
-import { FaRegFilePdf } from "react-icons/fa";
+import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
 const CardTenant = ({
+  type,
   foto,
   title,
   plat,
@@ -12,6 +13,9 @@ const CardTenant = ({
   condition,
   link,
   nameTenant,
+  modalFile,
+  modalGambar,
+  modalDelete,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -25,7 +29,7 @@ const CardTenant = ({
         <p className="text-sm">{plat}</p>
         <p className="pt-1 text-sm font-medium">{year}</p>
         <div className="pt-4">
-          <p className=" text-md font-medium">Mobil</p>
+          <p className=" text-md font-medium">{type}</p>
           <div className="pt-3 grid grid-cols-2">
             <div>
               <p className="text-sm font-medium">Nomor Mesin</p>
@@ -52,10 +56,18 @@ const CardTenant = ({
           ) : (
             <div className="flex justify-between items-center  gap-2  pt-6">
               <div className="text-sm font-medium">Kondisi {condition}</div>
-              <div className="text-exni text-2xl">
+              <div className="text-exni text-2xl flex gap-2">
+                <FaRegFileImage onClick={() => modalGambar()} />
+                <button onClick={() => modalFile()}>
+                  <FaRegFilePdf />
+                </button>
                 <Link to={link}>
                   <BsPencilSquare />
                 </Link>
+                <FaRegTrashAlt
+                  onClick={() => modalDelete()}
+                  className="text-red-500"
+                />
               </div>
             </div>
           )}
