@@ -47,8 +47,11 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
     values.file.forEach((file) => {
-      formData.append(type, file);
-      console.log(file);
+      if (type === "document") {
+        formData.append("documents", file);
+      } else {
+        formData.append(type, file);
+      }
     });
 
     try {

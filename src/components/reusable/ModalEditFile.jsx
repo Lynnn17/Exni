@@ -43,6 +43,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
   // Fungsi submit form
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log("Form values", type);
     const formData = new FormData();
     if (type === "albums") {
       formData.append("deletedAlbumIds[0]", idFile);
@@ -52,7 +53,11 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
       console.error("Tipe file tidak valid");
       return;
     }
-    formData.append(type, values.file[0]);
+    if (type === "document") {
+      formData.append("documents", values.file[0]);
+    } else {
+      formData.append(type, values.file[0]);
+    }
 
     try {
       const response = await axios.put(
