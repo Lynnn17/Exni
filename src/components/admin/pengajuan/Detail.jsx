@@ -40,10 +40,10 @@ const Detail = () => {
 
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <StatusAlert />
         <HeaderForm title="Detail Pengajuan" link="/admin/submission" />
-        <div className="bg-white border border-gray-200 mt-5 p-4">
+        <div className="bg-white border border-gray-200 mt-5 p-4 rounded-lg">
           <div className="w-[95%] mx-auto grid grid-cols-2 md:flex gap-4 md:gap-10 lg:gap-12 xl:gap-24">
             <DetailInfo label="ID Pengajuan" value="132312323" />
             <DetailInfo

@@ -1,154 +1,203 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+import axios from "axios";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Add = () => {
-  const initialValues = {
-    nama: "",
-    alamat: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    fotoAvatar: null,
-    statusKetersediaan: "available",
-    lokasi: "",
-    lantai: "",
-    harga: "",
-    deskripsi: "",
-    dokumenAset: null,
-    fotoAset: null,
-  };
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    nama: Yup.string(),
-    alamat: Yup.string(),
-    lokasi: Yup.string().required("Lokasi Gedung is required"),
-    lantai: Yup.string().required("Lantai Gedung is required"),
+    nama: Yup.string().required("Nama is required"),
+    alamat: Yup.string().required("Alamat is required"),
+    bangunan: Yup.string().required("bangunan is required"),
+    tenant: Yup.string().required("tenant is required"),
+    lantai: Yup.number()
+      .typeError("Luas Gedung must be a number")
+      .required("Luas Gedung is required"),
+    fotoAset: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file foto",
+          (value) =>
+            value &&
+            ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+              value.type
+            )
+        )
+      )
+      .min(1, "Minimal 1 foto")
+      .max(8, "Maksimal 8 foto")
+      .required("Foto Aset is required"),
+    dokumenAset: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file pdf",
+          (value) => value && ["application/pdf"].includes(value.type)
+        )
+      )
+      .min(1, "Minimal 1 dokumen")
+      .max(3, "Maksimal 3 dokumen")
+      .required("Dokumen Aset is required"),
     harga: Yup.number()
       .typeError("Harga must be a number")
-      .required("Harga Sewa is required"),
-    dokumenAset: Yup.mixed().required("Dokumen Aset is required"),
-    fotoAset: Yup.mixed().required("Foto Aset is required"),
+      .required("Harga is required"),
+    deskripsi: Yup.string().required("Deskripsi is required"),
   });
 
-  const handleSave = (values) => {
-    console.log("Data disimpan:", values);
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    console.log("Data submitted:", values);
+
+    try {
+      // Buat objek FormData
+      const formData = new FormData();
+
+      // Append semua field ke FormData
+      formData.append("name", values.nama);
+      formData.append("address", values.alamat);
+      formData.append("building", values.bangunan);
+      formData.append("tenantdto", values.tenant);
+      formData.append("floor", values.lantai);
+      formData.append("price", values.harga);
+      formData.append("description", values.deskripsi);
+      values.fotoAset.forEach((file) => {
+        formData.append("albums", file);
+      });
+      values.dokumenAset.forEach((file) => formData.append("documents", file));
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}assets/tenants`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      resetForm();
+      StatusAlertService.showSuccess("Data Tenant berhasil disimpan!");
+      navigate("/admin/asset/tenant");
+    } catch (error) {
+      StatusAlertService.showError("Data Tenant gagal disimpan!");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCancel = (resetForm) => {
-    console.log("Batal simpan");
     resetForm();
+    navigate("/admin/asset/tenant");
   };
-
-  const options = [
-    { value: "available", label: "Tersedia" },
-    { value: "unavailable", label: "Tidak Tersedia" },
-  ];
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{
+        nama: "",
+        alamat: "",
+        bangunan: "",
+        tenant: "",
+        lantai: "",
+        fotoAset: [],
+        dokumenAset: [],
+        harga: "",
+        deskripsi: "",
+      }}
       validationSchema={validationSchema}
-      onSubmit={handleSave}
+      onSubmit={handleSubmit}
     >
-      {({ setFieldValue, resetForm, values }) => (
+      {({ resetForm, isSubmitting, setFieldValue }) => (
         <Form>
           <main>
+            <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
-              <HeaderForm title="Add Tenant Asset" link="/admin/asset/tenant" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
-                <div className="flex items-center py-3 px-4 gap-2">
-                  <p className="text-sm">User Information</p>
-                  <div className="w-[10rem] h-[1px] bg-teks"></div>
-                </div>
-
+              <HeaderForm title="Add Tenant" link="/admin/asset/tenant" />
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
                   name="nama"
-                  label="Nama Penyewa"
+                  label="Nama"
                   type="text"
-                  placeholder="Masukan Nama Tenant (Optional)"
+                  placeholder="Masukan Nama"
                 />
                 <InputField
                   name="alamat"
-                  label="Alamat Penyewa"
+                  label="Alamat"
                   type="text"
-                  placeholder="Masukan Alamat Tenant (Optional)"
+                  placeholder="Masukan Alamat"
+                />
+                <InputField
+                  name="bangunan"
+                  label="Bangunan"
+                  type="text"
+                  placeholder="Masukan Nama Bangunan"
+                />
+                <InputField
+                  name="tenant"
+                  label="Tenant"
+                  type="text"
+                  placeholder="Masukan Nama Tenant"
+                />
+                <InputField
+                  name="lantai"
+                  label="Lantai"
+                  type="text"
+                  placeholder="Masukan Jumlah Lantai"
+                />
+                <InputField
+                  name="harga"
+                  label="Harga Sewa"
+                  type="text"
+                  placeholder="Masukan Harga Sewa"
+                />
+                <InputField
+                  name="deskripsi"
+                  label="Deskripsi"
+                  type="text"
+                  placeholder="Masukan Deskripsi"
                 />
 
-                <div className="pt-4">
-                  <div className="flex items-center py-3 px-4 gap-2">
-                    <p className="text-sm">Asset Information</p>
-                    <div className="w-[10rem] h-[1px] bg-teks"></div>
-                  </div>
-
+                <div className="mb-4">
                   <InputField
-                    name="lokasi"
-                    label="Lokasi Gedung"
-                    type="text"
-                    placeholder="Masukan Nama Gedung"
+                    type="file"
+                    label="Dokumen Aset"
+                    name="dokumenAset"
+                    maxFiles={3}
+                    onChange={(e) =>
+                      setFieldValue("dokumenAset", Array.from(e.target.files))
+                    }
                   />
                   <InputField
-                    name="lantai"
-                    label="Lantai"
-                    type="text"
-                    placeholder="Masukan Lantai Gedung"
+                    type="file"
+                    label="Foto Aset"
+                    name="fotoAset"
+                    maxFiles={8}
+                    onChange={(e) =>
+                      setFieldValue("fotoAset", Array.from(e.target.files))
+                    }
                   />
-                  <InputField
-                    name="harga"
-                    label="Harga"
-                    type="text"
-                    placeholder="Tentukan Harga Sewa"
+                </div>
+
+                <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
+                  <Button
+                    type="submit"
+                    label={isSubmitting ? "Saving..." : "Save"}
+                    color="bg-exni"
+                    disabled={isSubmitting}
                   />
-                  <InputField
-                    name="deskripsi"
-                    label="Deskripsi"
-                    type="text"
-                    placeholder="Masukan Deskripsi (Optional)"
+                  <Button
+                    type="button"
+                    label="Batal"
+                    color="bg-red-500"
+                    onClick={() => handleCancel(resetForm)}
                   />
-
-                  <div className="px-3 pb-3">
-                    <SingleSelectCheckboxGroup
-                      label="Status Ketersediaan"
-                      options={options}
-                      selectedValue={values.statusKetersediaan}
-                      onChange={(value) =>
-                        setFieldValue("statusKetersediaan", value)
-                      }
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <InputField
-                      type="file"
-                      label="Dokumen Aset"
-                      name="dokumenAset"
-                      onChange={(e) =>
-                        setFieldValue("dokumenAset", e.target.files[0])
-                      }
-                    />
-                    <InputField
-                      type="file"
-                      label="Foto Aset"
-                      name="fotoAset"
-                      onChange={(e) =>
-                        setFieldValue("fotoAset", e.target.files[0])
-                      }
-                    />
-                  </div>
-
-                  <div className="flex gap-3 justify-center pt-5 md:justify-end">
-                    <Button type="submit" label="Simpan" color="bg-exni" />
-                    <Button
-                      type="button"
-                      label="Batal"
-                      color="bg-red-500"
-                      onClick={() => handleCancel(resetForm)}
-                    />
-                  </div>
                 </div>
               </div>
             </div>

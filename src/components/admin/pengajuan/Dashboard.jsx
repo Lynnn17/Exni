@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
-import { FaCircleInfo } from "react-icons/fa6";
 import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
+import { BsPencilSquare } from "react-icons/bs";
 
 const Dashboard = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const columns = [
     { title: "No", key: "no" },
     { title: "Nama PT", key: "name" },
     { title: "Properti", key: "properti" },
     { title: "Nominal", key: "nominal" },
     { title: "Waktu", key: "waktu" },
-    { title: "Status", key: "status" },
+    { title: "Status", key: "ValueStatus" },
   ];
 
   const data = [...Array(10)].map((_, index) => ({
@@ -24,19 +22,17 @@ const Dashboard = () => {
     properti: "Cargo Ship",
     nominal: "Rp 100.000.000,-",
     waktu: "01 Oktober 2024 - 30 Desember 2024",
-    status: "Pengajuan",
+    ValueStatus: (
+      <span className="bg-blue-500 text-white font-medium px-2 py-1 rounded">
+        Pengajuan
+      </span>
+    ),
   }));
-
-  const options = [
-    { value: "pengajuan", label: "Pengajuan" },
-    { value: "Tidak Aktif", label: "Tidak Aktif" },
-    { value: "Pending", label: "Pending" },
-  ];
 
   const actions = [
     {
       link: (id) => `/admin/submission/detail/${id}`,
-      icon: <FaCircleInfo />,
+      icon: <BsPencilSquare />,
       className: "text-exni text-[1.5rem] text-center",
     },
   ];
@@ -44,21 +40,11 @@ const Dashboard = () => {
   return (
     <>
       <main>
-        <div className="w-full px-3 py-5 bg-white mt-4 h-full">
-          <HeaderSection
-            title="Pengajuan"
-            subtitle=""
-            isOpen={isOpen}
-            onToggle={() => setIsOpen(!isOpen)}
-          >
+        <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
+          <HeaderSection title="Pengajuan" subtitle="">
             <Search />
           </HeaderSection>
-          <DataTable
-            columns={columns}
-            data={data}
-            actions={actions}
-            options={options}
-          />
+          <DataTable columns={columns} data={data} actions={actions} />
           <Pagination />
         </div>
       </main>

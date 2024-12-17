@@ -1,66 +1,52 @@
 import React from "react";
-import { GrFormViewHide } from "react-icons/gr";
-import { FaRegEye } from "react-icons/fa";
-import { ErrorMessage, Field } from "formik";
+import { Field, ErrorMessage } from "formik";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
-const Input = ({
-  type,
-  label,
-  name,
-  placeholder,
-  value,
-  onChange,
-  showPasswordToggle,
-  onToggle,
-}) => {
+const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
+  const handleFileChange = (event, field, form) => {
+    const files = Array.from(event.target.files);
+
+    // Validasi jumlah file
+    if (files.length > maxFiles) {
+      StatusAlertService.showError(
+        `Maksimal ${maxFiles} file yang dapat diunggah.`
+      );
+
+      return;
+    }
+
+    // Simpan file ke Formik state
+    form.setFieldValue(name, files);
+  };
+
   return (
-    <div className="px-4 py-1 flex items-center">
-      <p className="w-[13rem]">{label}</p>
+    <div className="mb-4 px-2">
+      <label htmlFor={name} className="block text-black pl-1">
+        {label}
+      </label>
       {type === "file" ? (
-        <>
-          <Field
-            type="file"
-            name={name}
-            accept="image/*"
-            onChange={onChange}
-            className="border border-gray-200 text-black px-4 py-3 w-[100%]"
-          />
-          <ErrorMessage
-            name={name}
-            component="div"
-            className="text-red-500 pl-4"
-          />
-        </>
-      ) : (
-        <div className="relative flex w-full ">
-          <Field
-            type={type}
-            name={name}
-            placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            className="border border-gray-200 text-black px-4 py-2 flex-grow rounded-l-md w-[90%]"
-          />
-          {showPasswordToggle && (
-            <button
-              type="button"
-              onClick={onToggle}
-              className="absolute right-0 top-0 h-full px-2 text-gray-500 rounded-r-md border border-l-0 border-gray-200 flex items-center"
-            >
-              {type === "password" ? (
-                <FaRegEye className="mr-1" />
-              ) : (
-                <GrFormViewHide className="mr-1" />
-              )}
-            </button>
+        <Field name={name}>
+          {({ field, form }) => (
+            <input
+              id={name}
+              type="file"
+              placeholder={placeholder}
+              onChange={(e) => handleFileChange(e, field, form)}
+              multiple={maxFiles > 1} // Izinkan multi-upload jika batas lebih dari 1
+              className="mt-2 block w-full border border-gray-300 p-2 rounded"
+            />
           )}
-          <ErrorMessage
-            name={name}
-            component="div"
-            className="text-red-500 pl-4"
-          />
-        </div>
+        </Field>
+      ) : (
+        <Field
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          className="mt-2 block w-full border border-gray-300 p-2 rounded"
+        />
       )}
+      <ErrorMessage name={name} component="div" className="text-red-500 " />
     </div>
   );
 };

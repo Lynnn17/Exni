@@ -5,8 +5,11 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+
 import axios from "axios";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
+
 
 const Add = () => {
   const navigate = useNavigate();
@@ -23,16 +26,39 @@ const Add = () => {
       .typeError("Luas Tanah must be a number")
       .required("Luas Tanah is required"),
     fotoAset: Yup.array()
+
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file foto",
+          (value) =>
+            value &&
+            ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+              value.type
+            )
+        )
+      )
+      .min(1, "Minimal 1 foto")
       .max(8, "Maksimal 8 foto")
       .required("Foto Aset is required"),
     dokumenAset: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file pdf",
+          (value) => value && ["application/pdf"].includes(value.type)
+        )
+      )
+      .min(1, "Minimal 1 dokumen")
       .max(3, "Maksimal 3 dokumen")
       .required("Dokumen Aset is required"),
     harga: Yup.number()
       .typeError("Harga must be a number")
       .required("Harga is required"),
-    deskripsi: Yup.string(),
-    penghuni: Yup.string(),
+
+    deskripsi: Yup.string().required("Deskripsi is required"),
+    sertifikat: Yup.string().required("Sertifikat is required"),
+
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -47,29 +73,34 @@ const Add = () => {
       formData.append("address", values.alamat);
       formData.append("city", values.kota);
       formData.append("allocation", values.alokasi);
-      formData.append("ground", values.luasTanah);
-      formData.append("building", values.luasGedung);
+
+      formData.append("landArea", values.luasTanah);
+      formData.append("buildingArea", values.luasGedung);
       formData.append("price", values.harga);
-      values.fotoAset.forEach((file) => formData.append("albums", file));
-      values.dokumenAset.forEach((file) => formData.append("document", file));
+      formData.append("description", values.deskripsi);
+      formData.append("certificate", values.sertifikat);
+      values.fotoAset.forEach((file) => {
+        formData.append("albums", file);
+      });
+      values.dokumenAset.forEach((file) => formData.append("documents", file));
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}auth/register`,
+        `${import.meta.env.VITE_API_URL}assets/properties`,
         formData,
         {
           headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "multipart/form-data",
           },
         }
       );
 
-      console.log("Data saved successfully:", response.data);
-      alert("User registered successfully!");
+
       resetForm();
-      navigate("/admin/user");
+      StatusAlertService.showSuccess("Data Gedung berhasil disimpan!");
+      navigate("/admin/asset/building");
     } catch (error) {
-      console.error("Error saving data:", error.response || error.message);
-      alert("Failed to register user. Please try again.");
+      StatusAlertService.showError("Data Gedung gagal disimpan!");
     } finally {
       setSubmitting(false);
     }
@@ -79,11 +110,6 @@ const Add = () => {
     resetForm();
     navigate("/admin/asset/building");
   };
-
-  const options = [
-    { value: "available", label: "Tersedia" },
-    { value: "unavailable", label: "Tidak Tersedia" },
-  ];
 
   return (
     <Formik
@@ -98,18 +124,20 @@ const Add = () => {
         dokumenAset: [],
         harga: "",
         deskripsi: "",
-        penghuni: "",
-        statusKetersediaan: "available", // Set default selected option
+        sertifikat: "",
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ resetForm, isSubmitting, setFieldValue, values }) => (
+
+      {({ resetForm, isSubmitting, setFieldValue }) => (
+
         <Form>
           <main>
+            <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add Building" link="/admin/asset/building" />
-              <div className="border border-gray-200 mt-4 py-4 md:px-6">
+              <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
                   name="nama"
                   label="Nama"
@@ -153,10 +181,12 @@ const Add = () => {
                   placeholder="Masukan Harga Sewa"
                 />
                 <InputField
-                  name="penghuni"
-                  label="Penghuni"
+                  name="sertifikat"
+                  label="Nomor Sertifikat"
                   type="text"
-                  placeholder="Masukan Nama Penghuni/Penyewa "
+
+                  placeholder="Masukan Nomor Sertifikat"
+
                 />
                 <InputField
                   name="deskripsi"
@@ -164,33 +194,28 @@ const Add = () => {
                   type="text"
                   placeholder="Masukan Deskripsi"
                 />
-                <div className="px-3 pb-3">
-                  <SingleSelectCheckboxGroup
-                    label="Status Ketersediaan"
-                    options={options}
-                    selectedValue={values.statusKetersediaan} // Bind to Formik value
-                    onChange={(value) =>
-                      setFieldValue("statusKetersediaan", value)
-                    } // Update Formik field value
-                  />
-                </div>
+
                 <div className="mb-4">
                   <InputField
                     type="file"
                     label="Dokumen Aset"
                     name="dokumenAset"
-                    multiple
-                    onChange={
-                      (e) => console.log(Array.from(e.target.files))
-                      // setFieldValue("dokumenAset", Array.from(e.target.files))
+                    maxFiles={3}
+                    onChange={(e) =>
+                      setFieldValue("dokumenAset", Array.from(e.target.files))
+
                     }
                   />
                   <InputField
                     type="file"
                     label="Foto Aset"
                     name="fotoAset"
-                    multiple
-                    onChange={(e) => console.log(Array.from(e.target.files))}
+
+                    maxFiles={8}
+                    onChange={(e) =>
+                      setFieldValue("fotoAset", Array.from(e.target.files))
+                    }
+
                   />
                 </div>
 

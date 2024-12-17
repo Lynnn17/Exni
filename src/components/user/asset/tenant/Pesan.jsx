@@ -6,9 +6,35 @@ import Foto from "../../../../assets/gedung.png";
 import FormPesan from "../../../reusable/FormPesan";
 
 const Pesan = () => {
+  const data = [
+    {
+      id: "1223354",
+      date: "01 Oktober 2024",
+      type: "Cicilan",
+      progress: "Pembayaran ke-1",
+      status: "Bayar",
+      isPaid: false,
+    },
+    {
+      id: "1223355",
+      date: "01 Oktober 2024",
+      type: "Cicilan",
+      progress: "Pembayaran ke-1",
+      status: "Bayar",
+      isPaid: false,
+    },
+    {
+      id: "1223356",
+      date: "01 Oktober 2024",
+      type: "Non-Cicilan",
+      progress: "-",
+      status: "Lunas",
+      isPaid: true,
+    },
+  ];
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderForm title="Pengajuan" link="/user/asset/building" />
         <div className="flex flex-wrap gap-2">
           <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4">

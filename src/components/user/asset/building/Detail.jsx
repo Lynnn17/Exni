@@ -15,7 +15,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 const Pesan = () => {
   return (
     <main>
-      <div className=" px-3 py-5 bg-white mt-4 ">
+      <div className="px-3 py-5 bg-white mt-4 rounded-lg">
         {/* Header */}
         <HeaderForm title="Detail Properti" link="/user/asset/building" />
 

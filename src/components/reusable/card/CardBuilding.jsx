@@ -1,7 +1,7 @@
-import { FaRegFilePdf } from "react-icons/fa";
+import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import React, { useEffect } from "react";
+import React from "react";
 import { NumericFormat } from "react-number-format";
 
 const CardBuilding = ({
@@ -14,17 +14,20 @@ const CardBuilding = ({
   link,
   deskripsi,
   harga,
+  modalFile,
+  keterangan,
+  modalGambar,
+  modalDelete,
 }) => {
-  const fileId = "1ihoej9r8Ase-i3ToB10XSWpdlyZBJ0XZ"; // Ganti dengan ID file Anda
-  const imageUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
-      <img
-        src="https://drive.google.com/thumbnail?id=1ihoej9r8Ase-i3ToB10XSWpdlyZBJ0XZ&sz=w1000"
-        alt="Image"
-        // crossOrigin="anonymous"
-      />
+      <iframe
+        src={`https://drive.google.com/file/d/${foto}/preview`}
+        frameborder="0"
+        className="w-full h-48 object-cover rounded-t-lg"
+        allowFullScreen
+        rel="noopener noreferrer"
+      ></iframe>
 
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
@@ -44,8 +47,12 @@ const CardBuilding = ({
           <p className="pt-2 font-medium">Luas Tanah & Bangunan</p>
           <div className="pt-1 text-sm">
             <p>
-              {landSize} x {buildingSize}
+              {landSize} m2 x {buildingSize} m2
             </p>
+          </div>
+          <p className="pt-2 font-medium">Keterangan</p>
+          <div className="pt-1 text-sm">
+            <p>{keterangan ? "Tersedia" : "Tidak Tersedia"}</p>
           </div>
           <div>
             <p className="pt-4 font-medium  ">Deskripsi</p>
@@ -54,10 +61,17 @@ const CardBuilding = ({
             </p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
-            <FaRegFilePdf />
+            <FaRegFileImage onClick={() => modalGambar()} />
+            <button onClick={() => modalFile()}>
+              <FaRegFilePdf />
+            </button>
             <Link to={link}>
               <BsPencilSquare />
             </Link>
+            <FaRegTrashAlt
+              onClick={() => modalDelete()}
+              className="text-red-500"
+            />
           </div>
         </div>
       </div>

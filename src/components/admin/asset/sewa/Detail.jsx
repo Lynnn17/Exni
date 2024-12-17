@@ -8,10 +8,10 @@ import Foto from "../../../../assets/gedung.png";
 const Detail = () => {
   return (
     <main>
-      <div className="w-full px-3 py-5 bg-white mt-4 h-full">
+      <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderForm title="Detail Aset Sewa" link="/admin/asset/sewa-aset" />
         <div className="flex flex-wrap gap-2">
-          <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4">
+          <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4 rounded-lg">
             <div className="md:flex md:gap-3">
               <div className="w-full">
                 <SectionDivider title="Properti" />
@@ -50,7 +50,7 @@ const Detail = () => {
               srcset=""
             />
           </div>
-          <div className="bg-white border border-gray-200 mt-5 p-4 w-full">
+          <div className="bg-white border border-gray-200 mt-5 p-4 w-full rounded-lg">
             <div className="w-full h-[10rem]">
               <SectionDivider title="Riwayat Transaksi" />
               {/* <div className="pt-2 flex flex-col gap-2">
@@ -68,7 +68,6 @@ const Detail = () => {
             </div>
           </div>
         </div>
-        <Pagination />
       </div>
     </main>
   );
