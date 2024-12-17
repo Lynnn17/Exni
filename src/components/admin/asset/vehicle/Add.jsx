@@ -5,7 +5,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+
+import axios from "axios";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -20,20 +21,80 @@ const Add = () => {
     noMesin: Yup.string().required("Nomor Mesin is required"),
     noRangka: Yup.string().required("Nomor Rangka is required"),
     kondisi: Yup.string().required("Kondisi is required"),
-    fotoAset: Yup.mixed().required("Foto Aset is required"),
+    deskripsi: Yup.string().required("Deskripsi is required"),
+    harga: Yup.number()
+      .typeError("Harga must be a number")
+      .required("Harga is required"),
+    fotoAset: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file foto",
+          (value) =>
+            value &&
+            ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
+              value.type
+            )
+        )
+      )
+      .min(1, "Minimal 1 foto")
+      .max(8, "Maksimal 8 foto")
+      .required("Foto Aset is required"),
+    dokumenAset: Yup.array()
+      .of(
+        Yup.mixed().test(
+          "type",
+          "Harus berupa file pdf",
+          (value) => value && ["application/pdf"].includes(value.type)
+        )
+      )
+      .min(1, "Minimal 1 dokumen")
+      .max(3, "Maksimal 3 dokumen")
+      .required("Dokumen Aset is required"),
   });
 
-  const handleSubmit = (values) => {
-    console.log("Data submitted:", values);
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      // Buat objek FormData
+      const formData = new FormData();
+
+      // Append semua field ke FormData
+      formData.append("name", values.nama);
+      formData.append("no_police", values.noPlat);
+      formData.append("year", values.tahun);
+      formData.append("no_machine", values.noMesin);
+      formData.append("no_frame", values.noRangka);
+      formData.append("description", values.deskripsi);
+      formData.append("price", values.harga);
+
+      values.fotoAset.forEach((file) => {
+        formData.append("albums", file);
+      });
+      values.dokumenAset.forEach((file) => formData.append("documents", file));
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}assets/vehicles`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      resetForm();
+      StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
+      navigate("/admin/asset/vehicle");
+    } catch (error) {
+      StatusAlertService.showError("Data Vehicle gagal disimpan!");
+    } finally {
+      setSubmitting(false);
+    }
   };
   const handleCancel = () => {
     navigate("/admin/asset/vehicle");
   };
-
-  const options = [
-    { value: "baik", label: "Baik" },
-    { value: "butuh perbaikan", label: "Butuh Perbaikan" },
-  ];
 
   return (
     <Formik
@@ -44,12 +105,15 @@ const Add = () => {
         noMesin: "",
         noRangka: "",
         kondisi: "baik",
-        fotoAset: null,
+        fotoAset: [],
+        dokumenAset: [],
+        harga: "",
+        deskripsi: "",
       }}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ setFieldValue, values }) => (
+      {({ resetForm, isSubmitting, setFieldValue }) => (
         <Form>
           <main>
             <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
@@ -88,32 +152,51 @@ const Add = () => {
                   type="text"
                   placeholder="Masukan Nomor Rangka"
                 />
-                <div className="px-3 pb-3">
-                  <SingleSelectCheckboxGroup
-                    label="Kondisi"
-                    options={options}
-                    selectedValue={values.kondisi}
-                    onChange={(value) => setFieldValue("kondisi", value)}
-                  />
-                </div>
+                <InputField
+                  name="harga"
+                  label="Harga"
+                  type="text"
+                  placeholder="Masukan Harga"
+                />
+                <InputField
+                  name="deskripsi"
+                  label="Deskripsi"
+                  type="text"
+                  placeholder="Masukan Deskripsi"
+                />
                 <div className="mb-4">
+                  <InputField
+                    type="file"
+                    label="Dokumen Aset"
+                    name="dokumenAset"
+                    maxFiles={3}
+                    onChange={(e) =>
+                      setFieldValue("dokumenAset", Array.from(e.target.files))
+                    }
+                  />
                   <InputField
                     type="file"
                     label="Foto Aset"
                     name="fotoAset"
+                    maxFiles={8}
                     onChange={(e) =>
-                      setFieldValue("fotoAset", e.target.files[0])
+                      setFieldValue("fotoAset", Array.from(e.target.files))
                     }
                   />
                 </div>
 
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
-                  <Button type="submit" label="Simpan" color="bg-exni" />
+                  <Button
+                    type="submit"
+                    label={isSubmitting ? "Saving..." : "Save"}
+                    color="bg-exni"
+                    disabled={isSubmitting}
+                  />
                   <Button
                     type="button"
                     label="Batal"
                     color="bg-red-500"
-                    onClick={handleCancel}
+                    onClick={() => handleCancel(resetForm)}
                   />
                 </div>
               </div>

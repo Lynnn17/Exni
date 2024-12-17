@@ -5,9 +5,11 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
+
 import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+
 
 const Add = () => {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ const Add = () => {
       .typeError("Luas Tanah must be a number")
       .required("Luas Tanah is required"),
     fotoAset: Yup.array()
+
       .of(
         Yup.mixed().test(
           "type",
@@ -122,9 +125,13 @@ const Add = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
+
+
       {({ resetForm, isSubmitting, setFieldValue }) => (
+
         <Form>
           <main>
+            <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Add Building" link="/admin/asset/building" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
@@ -174,7 +181,9 @@ const Add = () => {
                   name="sertifikat"
                   label="Nomor Sertifikat"
                   type="text"
+
                   placeholder="Masukan Nomor Sertifikat"
+
                 />
                 <InputField
                   name="deskripsi"
@@ -191,6 +200,7 @@ const Add = () => {
                     maxFiles={3}
                     onChange={(e) =>
                       setFieldValue("dokumenAset", Array.from(e.target.files))
+
                     }
                   />
                   <InputField
@@ -201,6 +211,7 @@ const Add = () => {
                     onChange={(e) =>
                       setFieldValue("fotoAset", Array.from(e.target.files))
                     }
+
                   />
                 </div>
 

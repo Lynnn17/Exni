@@ -1,4 +1,6 @@
-import { FaRegFilePdf, FaRegFileImage } from "react-icons/fa";
+
+import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
+
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -15,10 +17,10 @@ const CardBuilding = ({
   deskripsi,
   harga,
   modalFile,
-  linkFile,
   keterangan,
   modalGambar,
-  linkGambar,
+  modalDelete,
+
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -29,13 +31,6 @@ const CardBuilding = ({
         allowFullScreen
         rel="noopener noreferrer"
       ></iframe>
-
-      <img
-        src="https://drive.google.com/thumbnail?id=18lIBLxB0gddlObQaZS2guVLpeddaLU49&sz=s4000"
-        alt="asdasd"
-        srcset=""
-      />
-      <img src="https://lh3.google.com/u/0/d/18lIBLxB0gddlObQaZS2guVLpeddaLU49" />
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>
@@ -68,13 +63,17 @@ const CardBuilding = ({
             </p>
           </div>
           <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
-            <FaRegFileImage onClick={() => modalGambar(linkGambar)} />
-            <button onClick={() => modalFile(linkFile)}>
+            <FaRegFileImage onClick={() => modalGambar()} />
+            <button onClick={() => modalFile()}>
               <FaRegFilePdf />
             </button>
             <Link to={link}>
               <BsPencilSquare />
             </Link>
+            <FaRegTrashAlt
+              onClick={() => modalDelete()}
+              className="text-red-500"
+            />
           </div>
         </div>
       </div>

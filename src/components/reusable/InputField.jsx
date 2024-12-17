@@ -7,6 +7,7 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
   const handleFileChange = (event, field, form) => {
     const files = Array.from(event.target.files);
 
+
     // Validasi jumlah file
     if (files.length > maxFiles) {
       StatusAlertService.showError(
@@ -51,4 +52,4 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
   );
 };
 
-export default InputField;
+export default Input;
