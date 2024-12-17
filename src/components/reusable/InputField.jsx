@@ -51,4 +51,4 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
   );
 };
 
-export default InputField;
+export default Input;

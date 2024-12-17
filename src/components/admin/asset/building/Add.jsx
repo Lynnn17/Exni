@@ -5,9 +5,11 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
+
 import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+
 
 const Add = () => {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ const Add = () => {
       .typeError("Luas Tanah must be a number")
       .required("Luas Tanah is required"),
     fotoAset: Yup.array()
+
       .of(
         Yup.mixed().test(
           "type",
@@ -52,8 +55,10 @@ const Add = () => {
     harga: Yup.number()
       .typeError("Harga must be a number")
       .required("Harga is required"),
+
     deskripsi: Yup.string().required("Deskripsi is required"),
     sertifikat: Yup.string().required("Sertifikat is required"),
+
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -68,6 +73,7 @@ const Add = () => {
       formData.append("address", values.alamat);
       formData.append("city", values.kota);
       formData.append("allocation", values.alokasi);
+
       formData.append("landArea", values.luasTanah);
       formData.append("buildingArea", values.luasGedung);
       formData.append("price", values.harga);
@@ -88,6 +94,7 @@ const Add = () => {
           },
         }
       );
+
 
       resetForm();
       StatusAlertService.showSuccess("Data Gedung berhasil disimpan!");
@@ -122,7 +129,9 @@ const Add = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
+
       {({ resetForm, isSubmitting, setFieldValue }) => (
+
         <Form>
           <main>
             <StatusAlert />
@@ -175,7 +184,9 @@ const Add = () => {
                   name="sertifikat"
                   label="Nomor Sertifikat"
                   type="text"
+
                   placeholder="Masukan Nomor Sertifikat"
+
                 />
                 <InputField
                   name="deskripsi"
@@ -192,16 +203,19 @@ const Add = () => {
                     maxFiles={3}
                     onChange={(e) =>
                       setFieldValue("dokumenAset", Array.from(e.target.files))
+
                     }
                   />
                   <InputField
                     type="file"
                     label="Foto Aset"
                     name="fotoAset"
+
                     maxFiles={8}
                     onChange={(e) =>
                       setFieldValue("fotoAset", Array.from(e.target.files))
                     }
+
                   />
                 </div>
 

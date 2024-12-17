@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "../../../reusable/InputField";
+import InputField from "../../../reusable/InputFieldbackup";
 import HeaderForm from "../../../reusable/HeaderForm";
 import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+
 import axios from "axios";
 
 const Edit = () => {
@@ -100,6 +102,7 @@ const Edit = () => {
   ];
 
   const fetchData = async () => {
+
     setLoading(true);
     try {
       let token = localStorage.getItem("token");
@@ -152,12 +155,14 @@ const Edit = () => {
       StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
     } finally {
       setLoading(false);
+
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [idData]);
+
 
   return (
     <Formik

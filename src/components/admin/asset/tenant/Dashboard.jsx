@@ -1,7 +1,7 @@
 import Foto from "../../../../assets/ruangan.png";
 import Card from "../../../reusable/card/CardTenant";
 import Pagination from "../../Pagination";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
@@ -10,7 +10,10 @@ import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import ModalConfirm from "../../../reusable/ConfirmationModal";
 
+
 const Dashboard = () => {
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
@@ -25,6 +28,7 @@ const Dashboard = () => {
     Authorization: `Bearer ${token}`,
   };
 
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -33,13 +37,16 @@ const Dashboard = () => {
           headers,
         }
       );
+
       console.log("data", response.data.data.assets);
       setData(response.data.data.assets);
       // setData(response.data.data.assets);
+
     } catch (error) {
       console.error(error);
     }
   };
+
 
   const handleModalFile = (item, id, type) => {
     setTypeModal(type);
@@ -66,6 +73,7 @@ const Dashboard = () => {
   };
 
   React.useEffect(() => {
+
     fetchData();
   }, []);
 
