@@ -8,6 +8,7 @@ import axios from "axios";
 import Modal from "../../../reusable/ModalFile";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+
 import ModalConfirm from "../../../reusable/ConfirmationModal";
 
 
@@ -17,11 +18,11 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+
   const [selectedId, setSelectedId] = useState(null);
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
-
 
 
   const fetchData = async () => {
@@ -33,6 +34,7 @@ const Dashboard = () => {
         }
       );
 
+
       console.log("data", response.data.data.assets);
       setData(response.data.data.assets);
       // setData(response.data.data.assets);
@@ -41,6 +43,7 @@ const Dashboard = () => {
       console.error(error);
     }
   };
+
 
 
   const handleModalFile = (item, id, type) => {
@@ -92,6 +95,7 @@ const Dashboard = () => {
               <Card
                 key={i}
                 foto={item.albums[0]}
+
                 name={item.name}
                 address={item.tenants.address}
                 building={item.tenants.building}
@@ -112,6 +116,7 @@ const Dashboard = () => {
                   setConfirmModalOpen(true);
                   setSelectedId(item.id);
                 }}
+
               />
             ))}
           </div>
@@ -119,6 +124,7 @@ const Dashboard = () => {
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
             data={selectedData}
+
             idFile={selectedData}
             idData={selectedId}
             type={typeModal}

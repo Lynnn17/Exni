@@ -1,4 +1,6 @@
+
 import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
+
 import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -18,6 +20,7 @@ const CardBuilding = ({
   keterangan,
   modalGambar,
   modalDelete,
+
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
@@ -28,7 +31,6 @@ const CardBuilding = ({
         allowFullScreen
         rel="noopener noreferrer"
       ></iframe>
-
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
         <p className="text-sm">{address}</p>

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { IoCloseSharp } from "react-icons/io5";
@@ -6,6 +7,7 @@ import LogoExni from "../../assets/logo/exni.svg";
 import axios from "axios";
 import InputField from "./InputField";
 import Button from "./Button";
+
 import { useNavigate } from "react-router-dom";
 
 const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
@@ -62,6 +64,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}assets/${idData}/${type}`,
+
         formData,
         {
           headers: {
@@ -80,6 +83,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
         "Error uploading file:",
         error.response?.data || error.message
       );
+
     } finally {
       setSubmitting(false);
     }
@@ -98,6 +102,7 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
         {/* Header Modal */}
         <div className="flex justify-center items-center mb-4 pt-3 gap-5">
+
           <img src={LogoExni} alt="Logo Exni" />
         </div>
 
@@ -114,11 +119,13 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
                 <h3 className="font-semibold">Upload {type}</h3>
                 <InputField
                   type="file"
+
                   label={type}
                   name="file"
                   accept={type === "albums" ? "image/*" : ".pdf"}
                   onChange={(e) =>
                     setFieldValue("file", e.currentTarget.files[0])
+
                   }
                 />
               </div>

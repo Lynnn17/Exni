@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import InputField from "../../../reusable/InputFieldbackup";
 import HeaderForm from "../../../reusable/HeaderForm";
 import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
+import StatusAlert from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
@@ -174,6 +176,7 @@ const Edit = () => {
       {({ setFieldValue, values }) => (
         <Form>
           <main>
+
             <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Edit Building" link="/admin/asset/building" />
@@ -221,7 +224,6 @@ const Edit = () => {
                   placeholder="Masukan Harga Sewa"
                   aria-label="Harga Sewa Gedung"
                 />
-
                 <InputField
                   name="deskripsi"
                   label="Deskripsi"
@@ -236,6 +238,7 @@ const Edit = () => {
                     selectedValue={values.statusKetersediaan}
                     onChange={(value) =>
                       setFieldValue("statusKetersediaan", value)
+
                     }
                     aria-label="Status Ketersediaan Gedung"
                   />

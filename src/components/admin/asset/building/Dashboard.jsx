@@ -5,7 +5,9 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
 import Modal from "../../../reusable/ModalFile";
+
 import ModalConfirm from "../../../reusable/ConfirmationModal";
+
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 
 const Dashboard = () => {
@@ -49,7 +51,7 @@ const Dashboard = () => {
     }
   };
 
-  // Handle opening the "File" modal
+
   const handleModalFile = (item, id) => {
     setTypeModal("Document");
     setIdData(id);
@@ -65,7 +67,7 @@ const Dashboard = () => {
     setModalOpen(true);
   };
 
-  // Fetch data on component mount
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -73,9 +75,11 @@ const Dashboard = () => {
   return (
     <>
       <main>
+
         <StatusAlert />
         <div className="w-full p-4 bg-white mt-4 h-full">
           {/* Header Section */}
+
           <HeaderSection
             title="Aset"
             subtitle="Gedung"
@@ -89,6 +93,7 @@ const Dashboard = () => {
 
           {/* Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+
             {data.length > 0 ? (
               data.map((item, i) => (
                 <div key={item.id || i}>

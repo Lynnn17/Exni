@@ -18,6 +18,7 @@ const CardTenant = ({
   keterangan,
   modalGambar,
   modalDelete,
+
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">

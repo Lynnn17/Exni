@@ -55,10 +55,8 @@ const Add = () => {
     harga: Yup.number()
       .typeError("Harga must be a number")
       .required("Harga is required"),
-
     deskripsi: Yup.string().required("Deskripsi is required"),
     sertifikat: Yup.string().required("Sertifikat is required"),
-
   });
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -73,7 +71,6 @@ const Add = () => {
       formData.append("address", values.alamat);
       formData.append("city", values.kota);
       formData.append("allocation", values.alokasi);
-
       formData.append("landArea", values.luasTanah);
       formData.append("buildingArea", values.luasGedung);
       formData.append("price", values.harga);
@@ -94,7 +91,6 @@ const Add = () => {
           },
         }
       );
-
 
       resetForm();
       StatusAlertService.showSuccess("Data Gedung berhasil disimpan!");
@@ -129,6 +125,7 @@ const Add = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
+
 
       {({ resetForm, isSubmitting, setFieldValue }) => (
 
@@ -210,7 +207,6 @@ const Add = () => {
                     type="file"
                     label="Foto Aset"
                     name="fotoAset"
-
                     maxFiles={8}
                     onChange={(e) =>
                       setFieldValue("fotoAset", Array.from(e.target.files))
