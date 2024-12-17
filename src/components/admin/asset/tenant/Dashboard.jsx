@@ -22,11 +22,6 @@ const Dashboard = () => {
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
-  const token = localStorage.getItem("token");
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-  };
 
 
   const fetchData = async () => {
