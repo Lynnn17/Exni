@@ -88,11 +88,11 @@ const Dashboard = () => {
                 foto={item.albums[0]}
                 title={item.name}
                 plat={item.vehicles.no_police}
-                type={"Mobil backend"}
-                year="2018 backend"
-                machine="JM51E1055436 backend"
-                frame="MH1jM511897070 backend"
-                condition="Baik backend"
+                type={""}
+                year={item.vehicles.year}
+                machine={item.vehicles.no_police}
+                frame={item.vehicles.no_frame}
+                condition=""
                 link={`edit/${item.id}`}
                 modalFile={() =>
                   handleModalFile(item.documents, item.id, "Document")

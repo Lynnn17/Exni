@@ -5,19 +5,22 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
 
 const Add = () => {
   const navigate = useNavigate();
+
+  // Skema validasi dengan Yup
   const validationSchema = Yup.object({
     nama: Yup.string().required("Nama is required"),
     noPlat: Yup.number()
       .typeError("Nomor Plat must be a number")
       .required("Nomor Plat is required"),
     tahun: Yup.number()
-      .typeError(" Tahun must be a number")
-      .required(" Tahun is required"),
+      .typeError("Tahun must be a number")
+      .required("Tahun is required"),
     noMesin: Yup.string().required("Nomor Mesin is required"),
     noRangka: Yup.string().required("Nomor Rangka is required"),
     kondisi: Yup.string().required("Kondisi is required"),
@@ -53,12 +56,11 @@ const Add = () => {
       .required("Dokumen Aset is required"),
   });
 
+  // Handle Submit
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       // Buat objek FormData
       const formData = new FormData();
-
-      // Append semua field ke FormData
       formData.append("name", values.nama);
       formData.append("no_police", values.noPlat);
       formData.append("year", values.tahun);
@@ -67,11 +69,11 @@ const Add = () => {
       formData.append("description", values.deskripsi);
       formData.append("price", values.harga);
 
-      values.fotoAset.forEach((file) => {
-        formData.append("albums", file);
-      });
+      // Append file fotoAset dan dokumenAset
+      values.fotoAset.forEach((file) => formData.append("albums", file));
       values.dokumenAset.forEach((file) => formData.append("documents", file));
 
+      // API POST request
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}assets/vehicles`,
         formData,
@@ -83,16 +85,25 @@ const Add = () => {
         }
       );
 
+      console.log("Success Response:", response.data);
       resetForm();
       StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
-      navigate("/admin/asset/vehicle");
+      setTimeout(() => {
+        navigate("/admin/asset/vehicle");
+      }, 1000);
     } catch (error) {
-      StatusAlertService.showError("Data Vehicle gagal disimpan!");
+      console.error("Error:", error);
+      setTimeout(() => {
+        StatusAlertService.showError("Data Vehicle gagal disimpan!");
+      }, 500);
     } finally {
       setSubmitting(false);
     }
   };
-  const handleCancel = () => {
+
+  // Handle Cancel
+  const handleCancel = (resetForm) => {
+    resetForm();
     navigate("/admin/asset/vehicle");
   };
 
@@ -116,11 +127,15 @@ const Add = () => {
       {({ resetForm, isSubmitting, setFieldValue }) => (
         <Form>
           <main>
+            {/* StatusAlert Component */}
+            <StatusAlert />
+
             <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm
                 title="Add Vehicle Asset"
                 link="/admin/asset/vehicle"
               />
+
               <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
                   name="nama"
@@ -164,6 +179,8 @@ const Add = () => {
                   type="text"
                   placeholder="Masukan Deskripsi"
                 />
+
+                {/* Input File */}
                 <div className="mb-4">
                   <InputField
                     type="file"
@@ -185,6 +202,7 @@ const Add = () => {
                   />
                 </div>
 
+                {/* Button */}
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
                   <Button
                     type="submit"

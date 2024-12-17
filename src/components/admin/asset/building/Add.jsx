@@ -10,7 +10,6 @@ import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 
-
 const Add = () => {
   const navigate = useNavigate();
 
@@ -89,6 +88,7 @@ const Add = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "multipart/form-data",
           },
+          timeout: 60000, // 30 detik (atur sesuai kebutuhan)
         }
       );
 
@@ -125,10 +125,7 @@ const Add = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-
-
       {({ resetForm, isSubmitting, setFieldValue }) => (
-
         <Form>
           <main>
             <StatusAlert />
@@ -181,9 +178,7 @@ const Add = () => {
                   name="sertifikat"
                   label="Nomor Sertifikat"
                   type="text"
-
                   placeholder="Masukan Nomor Sertifikat"
-
                 />
                 <InputField
                   name="deskripsi"
@@ -200,7 +195,6 @@ const Add = () => {
                     maxFiles={3}
                     onChange={(e) =>
                       setFieldValue("dokumenAset", Array.from(e.target.files))
-
                     }
                   />
                   <InputField
@@ -211,7 +205,6 @@ const Add = () => {
                     onChange={(e) =>
                       setFieldValue("fotoAset", Array.from(e.target.files))
                     }
-
                   />
                 </div>
 

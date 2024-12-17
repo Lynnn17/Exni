@@ -5,10 +5,9 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
 import Modal from "../../../reusable/ModalFile";
-
 import ModalConfirm from "../../../reusable/ConfirmationModal";
-
 import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,38 +18,52 @@ const Dashboard = () => {
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
-  // Retrieve token from localStorage
+  // Token dari localStorage
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  // Fetch data from API
+  // Fetch data dari API
   const fetchData = async () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
         { headers }
       );
-      console.log(response.data.data.assets);
       setData(response.data.data.assets);
     } catch (error) {
       console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
     }
   };
 
+  // Fungsi untuk menghapus data
   const handleDelete = async () => {
+    if (!idData) {
+      StatusAlertService.showError("ID data tidak valid!");
+      return;
+    }
+
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}assets/${idData}`, {
-        headers,
-      });
-      setConfirmModalOpen(false);
-      StatusAlertService.showSuccess("Data berhasil dihapus!");
-      fetchData();
+      // Lakukan request delete
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}assets/${idData}`,
+        { headers }
+      );
+
+      if (response.status === 200 || response.status === 204) {
+        StatusAlertService.showSuccess("Data berhasil dihapus!");
+        fetchData(); // Refresh data setelah penghapusan
+      } else {
+        throw new Error("Gagal menghapus data");
+      }
     } catch (error) {
       console.error("Error deleting data:", error);
       StatusAlertService.showError("Data gagal dihapus!");
+    } finally {
+      setConfirmModalOpen(false);
+      setIdData(null);
     }
   };
-
 
   const handleModalFile = (item, id) => {
     setTypeModal("Document");
@@ -59,14 +72,12 @@ const Dashboard = () => {
     setModalOpen(true);
   };
 
-  // Handle opening the "Image" modal
   const handleModalGambar = (item, id) => {
     setTypeModal("Gambar");
     setIdData(id);
     setIdFile(item);
     setModalOpen(true);
   };
-
 
   useEffect(() => {
     fetchData();
@@ -75,11 +86,11 @@ const Dashboard = () => {
   return (
     <>
       <main>
-
+        {/* StatusAlert Component */}
         <StatusAlert />
+
         <div className="w-full p-4 bg-white mt-4 h-full">
           {/* Header Section */}
-
           <HeaderSection
             title="Aset"
             subtitle="Gedung"
@@ -93,7 +104,6 @@ const Dashboard = () => {
 
           {/* Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-
             {data.length > 0 ? (
               data.map((item, i) => (
                 <div key={item.id || i}>
@@ -126,7 +136,7 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Modal */}
+          {/* Modal File */}
           <Modal
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
@@ -135,11 +145,13 @@ const Dashboard = () => {
             type={typeModal}
           />
 
+          {/* Modal Konfirmasi Hapus */}
           <ModalConfirm
             isOpen={confirmModalOpen}
             onClose={() => setConfirmModalOpen(false)}
             onConfirm={handleDelete}
           />
+
           {/* Pagination */}
           <Pagination />
         </div>

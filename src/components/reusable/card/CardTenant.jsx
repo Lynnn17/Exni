@@ -18,61 +18,92 @@ const CardTenant = ({
   keterangan,
   modalGambar,
   modalDelete,
-
 }) => {
   return (
-    <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
-      <iframe
-        src={`https://drive.google.com/file/d/${foto}/preview`}
-        frameborder="0"
-        className="w-full h-48 object-cover rounded-t-lg"
-        allowFullScreen
-        rel="noopener noreferrer"
-      ></iframe>
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300">
+      {/* Foto Gedung */}
+      <img
+        src={foto}
+        alt={name}
+        className="w-full h-48 object-cover rounded-t-xl"
+      />
 
-      <div className="p-4">
-        <p className="text-base font-bold">{name}</p>
-        <p className="text-sm">{address}</p>
-        <p className="pt-2 font-medium">Gedung</p>
-        <p className="text-sm">{building}</p>
-        <div className="pt-2">
-          <p className="font-medium">Tenant</p>
-          <p className="text-sm">{tenant}</p>
-          <p className="pt-2 font-medium">Harga</p>
-          <p className="text-sm">
-            <NumericFormat
-              value={harga}
-              displayType={"text"}
-              thousandSeparator={true}
-              prefix={"Rp "}
-            />
-          </p>
-          <p className="pt-2 font-medium">Jumlah Lantai</p>
-          <div className="pt-1 text-sm">
-            <p>{capacity} Lantai</p>
-          </div>
-          <p className="pt-2 font-medium">Keterangan</p>
-          <div className="pt-1 text-sm">
-            <p>{keterangan ? "Tersedia" : "Tidak Tersedia"}</p>
+      {/* Konten Card */}
+      <div className="p-5 space-y-3">
+        {/* Nama dan Alamat */}
+        <div>
+          <h3 className="text-lg font-bold text-gray-800">{name}</h3>
+          <p className="text-sm text-gray-500">{address}</p>
+        </div>
+
+        {/* Informasi Gedung */}
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div>
+            <p className="font-semibold text-gray-600">Gedung</p>
+            <p className="text-gray-700">{building}</p>
           </div>
           <div>
-            <p className="pt-4 font-medium  ">Deskripsi</p>
-            <p className="mt-2 text-sm w-full border border-gray-300 rounded-md px-3 pt-2 text-justify h-[12vh] overflow-y-scroll resize-none no-scrollbar">
-              {deskripsi ? deskripsi : "-"}
+            <p className="font-semibold text-gray-600">Tenant</p>
+            <p className="text-gray-700">{tenant}</p>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-600">Harga</p>
+            <p className="text-gray-700">
+              <NumericFormat
+                value={harga}
+                displayType={"text"}
+                thousandSeparator={true}
+                prefix={"Rp "}
+              />
             </p>
           </div>
-          <div className="flex justify-end text-2xl gap-2 text-exni pt-5">
-            <FaRegFileImage onClick={() => modalGambar()} />
-            <button onClick={() => modalFile()}>
+          <div>
+            <p className="font-semibold text-gray-600">Jumlah Lantai</p>
+            <p className="text-gray-700">{capacity} Lantai</p>
+          </div>
+          <div>
+            <p className="font-semibold text-gray-600">Keterangan</p>
+            <p
+              className={`${
+                keterangan ? "text-green-600" : "text-red-600"
+              } font-medium`}
+            >
+              {keterangan ? "Tersedia" : "Tidak Tersedia"}
+            </p>
+          </div>
+        </div>
+
+        {/* Deskripsi */}
+        <div>
+          <p className="font-semibold text-gray-600">Deskripsi</p>
+          <div className="mt-1 text-sm text-gray-700 h-24 overflow-y-auto border border-gray-200 rounded-lg p-2">
+            {deskripsi ? deskripsi : "-"}
+          </div>
+        </div>
+
+        {/* Ikon Aksi */}
+        <div className="flex justify-between items-center mt-4">
+          {/* Ikon File dan Gambar */}
+          <div className="flex space-x-4 text-xl text-gray-600">
+            <button onClick={modalGambar} className="hover:text-blue-500">
+              <FaRegFileImage />
+            </button>
+            <button onClick={modalFile} className="hover:text-blue-500">
               <FaRegFilePdf />
             </button>
-            <Link to={link}>
+          </div>
+
+          {/* Edit dan Hapus */}
+          <div className="flex space-x-4 text-xl">
+            <Link to={link} className="text-yellow-500 hover:text-yellow-600">
               <BsPencilSquare />
             </Link>
-            <FaRegTrashAlt
-              onClick={() => modalDelete()}
-              className="text-red-500"
-            />
+            <button
+              onClick={modalDelete}
+              className="text-red-500 hover:text-red-600"
+            >
+              <FaRegTrashAlt />
+            </button>
           </div>
         </div>
       </div>
