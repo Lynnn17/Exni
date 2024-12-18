@@ -56,10 +56,15 @@ const EditVehicleAsset = () => {
           },
         }
       );
-
+      // console.log("Success Response:", response.data);
       resetForm();
       StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
-      navigate("/admin/asset/vehicle");
+      setTimeout(() => {
+        navigate("/admin/asset/vehicle");
+      }, 1000);
+      // resetForm();
+      // StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
+      // navigate("/admin/asset/vehicle");
     } catch (error) {
       console.error("Error saving data:", error);
       StatusAlertService.showError("Data Vehicle gagal disimpan!");

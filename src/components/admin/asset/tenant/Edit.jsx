@@ -3,151 +3,67 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button from "../../../reusable/Button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "../../../reusable/InputFieldbackup";
+import InputField from "../../../reusable/InputField";
 import HeaderForm from "../../../reusable/HeaderForm";
-import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
 
 const Edit = () => {
-  const { id: idData } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-
   const [initialValues, setInitialValues] = useState({
-    nama: "",
-    alamat: "",
+    name: "",
+    address: "",
+    building: "",
+    floor: "",
     tenant: "",
-    bangunan: "",
-    lantai: "",
-    harga: "",
-    deskripsi: "",
-    statusKetersediaan: "",
+    price: "",
+    description: "",
+    isAvailable: false,
   });
+  const [loading, setLoading] = useState(true);
 
+  // Validation schema
   const validationSchema = Yup.object({
-    nama: Yup.string().required("Nama is required"),
-    alamat: Yup.string().required("Alamat is required"),
-    tenant: Yup.string().required("Tenant is required"),
-    bangunan: Yup.string().required("Bangunan is required"),
-    lantai: Yup.number()
-      .typeError("Luas Tanah must be a number")
-      .required("Luas Tanah is required"),
-    harga: Yup.number()
-      .typeError("Harga must be a number")
-      .required("Harga is required"),
-    deskripsi: Yup.string().required("Deskripsi is required"),
+    name: Yup.string().required("Nama tenant wajib diisi."),
+    address: Yup.string().required("Alamat wajib diisi."),
+    building: Yup.string().required("Nama gedung wajib diisi."),
+    floor: Yup.string().required("Lantai wajib diisi."),
+    tenant: Yup.string().required("Nama tenant wajib diisi."),
+    price: Yup.number()
+      .typeError("Harga harus berupa angka.")
+      .required("Harga wajib diisi."),
+    description: Yup.string().required("Deskripsi wajib diisi."),
   });
 
-  const handleSubmit = async (values) => {
-    const data = {
-      name: values.nama,
-      address: values.alamat,
-      tenant: values.bangunan,
-      floor: values.lantai,
-      building: values.bangunan,
-      price: values.harga,
-      description: values.deskripsi,
-      isAvailable: values.statusKetersediaan,
-    };
-    setIsSaving(true);
-    try {
-      let token = localStorage.getItem("token");
-      const endpoint = `${
-        import.meta.env.VITE_API_URL
-      }assets/tenants/${idData}`;
-
-      try {
-        await axios.put(endpoint, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        StatusAlertService.showSuccess("Data berhasil diupdate!");
-        setTimeout(() => navigate("/admin/tenant"), 2000);
-      } catch (error) {
-        if (error.response?.data?.message === "jwt expired") {
-          token = await handleTokenRefresh();
-          await axios.put(endpoint, filteredValues, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          StatusAlertService.showSuccess("Data berhasil disimpan!");
-          setTimeout(() => navigate("/admin/user"), 2000);
-        } else {
-          throw error;
-        }
-      }
-    } catch (error) {
-      console.error("Error updating information:", error);
-      StatusAlertService.showError("Gagal menyimpan data. Silakan coba lagi.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-  const handleCancel = () => {
-    navigate("/admin/asset/tenant");
-  };
-
-  const options = [
-    { value: true, label: "Tersedia" },
-    { value: false, label: "Tidak Tersedia" },
-  ];
-
+  // Fetch data from API
   const fetchData = async () => {
-    setLoading(true);
     try {
-      let token = localStorage.getItem("token");
-      const endpoint = `${import.meta.env.VITE_API_URL}assets/${idData}`;
+      const token = localStorage.getItem("token");
+      const endpoint = `${import.meta.env.VITE_API_URL}assets/${id}`;
 
-      try {
-        const response = await axios.get(endpoint, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = response.data.data.asset;
-        console.log(response);
-        setInitialValues({
-          nama: data.name,
-          alamat: data.tenants.address,
-          tenant: data.tenants.tenant,
-          bangunan: data.tenants.building,
-          lantai: data.tenants.floor,
-          harga: data.price,
-          deskripsi: data.description,
-          statusKetersediaan: data.isAvailable,
-        });
-      } catch (error) {
-        if (error.response?.data?.message === "jwt expired") {
-          token = await handleTokenRefresh();
-          const refreshedResponse = await axios.get(endpoint, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+      const response = await axios.get(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-          const data = refreshedResponse.data.data.user;
-          setInitialValues({
-            nama: data.name,
-            alamat: data.tenants.address,
-            tenant: data.tenants.allocation,
-            bangunan: data.tenants.building,
-            lantai: data.tenants.landArea,
-            harga: data.price,
-            deskripsi: data.description,
-            statusKetersediaan: data.isAvailable,
-          });
-          StatusAlertService.showSuccess("Data berhasil dimuat!");
-        } else {
-          throw error;
-        }
-      }
+      console.log(response.data.data.asset); // Log API response for debugging
+      const data = response.data.data.asset;
+
+      setInitialValues({
+        name: data.name || "",
+        address: data.tenants?.address || "",
+        building: data.tenants?.building || "",
+        floor: data.tenants?.floor || "",
+        tenant: data.tenants?.tenant || "",
+        price: data.price || "",
+        description: data.description || "",
+        isAvailable: data.isAvailable || false,
+      });
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
     } finally {
       setLoading(false);
@@ -156,7 +72,40 @@ const Edit = () => {
 
   useEffect(() => {
     fetchData();
-  }, [idData]);
+  }, [id]);
+
+  // Handle form submission
+  const handleSubmit = async (values) => {
+    const data = {
+      name: values.name,
+      address: values.address,
+      building: values.building,
+      floor: values.floor,
+      tenantdto: values.tenant,
+      price: values.price,
+      description: values.description,
+      isAvailable: values.isAvailable,
+    };
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}assets/tenants/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      StatusAlertService.showSuccess("Data tenant berhasil diupdate!");
+      setTimeout(() => navigate("/admin/asset/tenant"), 1000);
+    } catch (error) {
+      console.error("Error updating tenant data:", error);
+      StatusAlertService.showError("Gagal mengupdate data tenant.");
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <Formik
@@ -165,7 +114,7 @@ const Edit = () => {
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      {({ setFieldValue, values }) => (
+      {({ values, setFieldValue }) => (
         <Form>
           <main>
             <StatusAlert />
@@ -173,80 +122,66 @@ const Edit = () => {
               <HeaderForm title="Edit Tenant" link="/admin/asset/tenant" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 <InputField
-                  name="nama"
+                  name="name"
                   label="Nama"
                   type="text"
-                  placeholder="Masukan Nama"
-                  aria-label="Nama Gedung"
+                  placeholder="Masukkan Nama Tenant"
                 />
                 <InputField
-                  name="alamat"
+                  name="address"
                   label="Alamat"
                   type="text"
-                  placeholder="Masukan Alamat"
-                  aria-label="Alamat Gedung"
+                  placeholder="Masukkan Alamat Tenant"
                 />
-
+                <InputField
+                  name="building"
+                  label="Gedung"
+                  type="text"
+                  placeholder="Masukkan Nama Gedung"
+                />
+                <InputField
+                  name="floor"
+                  label="Lantai"
+                  type="text"
+                  placeholder="Masukkan Lantai"
+                />
                 <InputField
                   name="tenant"
                   label="Tenant"
                   type="text"
-                  placeholder="Masukan Tenant Gedung"
-                  aria-label="Tenant"
+                  placeholder="Masukkan Nama Tenant"
                 />
                 <InputField
-                  name="bangunan"
-                  label="Nama Bangunan"
+                  name="price"
+                  label="Harga"
                   type="text"
-                  placeholder="Masukan Nama Bangunan"
-                  aria-label="Nama Bangunan Gedung"
+                  placeholder="Masukkan Harga Tenant"
                 />
                 <InputField
-                  name="lantai"
-                  label="Luas Tanah"
-                  type="text"
-                  placeholder="Masukan Luas Tanah"
-                  aria-label="Luas Tanah dalam Meter Persegi"
-                />
-                <InputField
-                  name="harga"
-                  label="Harga Sewa"
-                  type="text"
-                  placeholder="Masukan Harga Sewa"
-                  aria-label="Harga Sewa Gedung"
-                />
-
-                <InputField
-                  name="deskripsi"
+                  name="description"
                   label="Deskripsi"
                   type="text"
-                  placeholder="Masukan Deskripsi (Optional)"
-                  aria-label="Deskripsi Singkat tentang Gedung"
+                  placeholder="Masukkan Deskripsi"
                 />
                 <div className="px-3 pb-3">
-                  <SingleSelectCheckboxGroup
-                    label="Status Ketersediaan"
-                    options={options}
-                    selectedValue={values.statusKetersediaan}
-                    onChange={(value) =>
-                      setFieldValue("statusKetersediaan", value)
+                  <label>Status Ketersediaan</label>
+                  <select
+                    value={values.isAvailable}
+                    onChange={(e) =>
+                      setFieldValue("isAvailable", e.target.value === "true")
                     }
-                    aria-label="Status Ketersediaan Gedung"
-                  />
+                  >
+                    <option value="true">Tersedia</option>
+                    <option value="false">Tidak Tersedia</option>
+                  </select>
                 </div>
-
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
-                  <Button
-                    type="submit"
-                    color="bg-exni"
-                    label={isSaving ? "Loading..." : "Simpan"}
-                    disabled={isSaving}
-                  />
+                  <Button type="submit" color="bg-exni" label="Simpan" />
                   <Button
                     type="button"
                     label="Batal"
                     color="bg-red-500"
-                    onClick={handleCancel}
+                    onClick={() => navigate("/admin/asset/tenant")}
                   />
                 </div>
               </div>

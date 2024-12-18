@@ -93,8 +93,8 @@ const Add = () => {
       );
 
       resetForm();
-      StatusAlertService.showSuccess("Data Gedung berhasil disimpan!");
-      navigate("/admin/asset/building");
+      StatusAlertService.showSuccess("Data tenant berhasil diupdate!");
+      setTimeout(() => navigate("/admin/asset/tenant"), 1000);
     } catch (error) {
       StatusAlertService.showError("Data Gedung gagal disimpan!");
     } finally {
