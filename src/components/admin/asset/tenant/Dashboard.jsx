@@ -6,45 +6,34 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
 import Modal from "../../../reusable/ModalFile";
+import ModalConfirm from "../../../reusable/ConfirmationModal";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
-
-import ModalConfirm from "../../../reusable/ConfirmationModal";
-
 
 const Dashboard = () => {
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
+
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
-
   const [selectedId, setSelectedId] = useState(null);
   const [data, setData] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
-
   const fetchData = async () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
-        {
-          headers,
-        }
+        { headers }
       );
-
-
-      console.log("data", response.data.data.assets);
       setData(response.data.data.assets);
-      // setData(response.data.data.assets);
-
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
     }
   };
-
-
 
   const handleModalFile = (item, id, type) => {
     setTypeModal(type);
@@ -63,15 +52,14 @@ const Dashboard = () => {
       );
       setConfirmModalOpen(false);
       StatusAlertService.showSuccess("Data berhasil dihapus!");
-      fetchData();
+      fetchData(); // Refresh data setelah penghapusan
     } catch (error) {
       console.error("Error deleting data:", error);
       StatusAlertService.showError("Data gagal dihapus!");
     }
   };
 
-  React.useEffect(() => {
-
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -95,7 +83,6 @@ const Dashboard = () => {
               <Card
                 key={i}
                 foto={item.albums[0]}
-
                 name={item.name}
                 address={item.tenants.address}
                 building={item.tenants.building}
@@ -116,25 +103,29 @@ const Dashboard = () => {
                   setConfirmModalOpen(true);
                   setSelectedId(item.id);
                 }}
-
               />
             ))}
           </div>
+
+          {/* Modal untuk File */}
           <Modal
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
             data={selectedData}
-
             idFile={selectedData}
             idData={selectedId}
             type={typeModal}
           />
 
+          {/* Modal Konfirmasi Hapus */}
           <ModalConfirm
             isOpen={confirmModalOpen}
             onClose={() => setConfirmModalOpen(false)}
             onConfirm={handleDelete}
           />
+
+          {/* Notifikasi */}
+          <StatusAlert />
 
           <Pagination />
         </div>

@@ -6,12 +6,8 @@ import * as Yup from "yup";
 import InputField from "../../../reusable/InputFieldbackup";
 import HeaderForm from "../../../reusable/HeaderForm";
 import SingleSelectCheckboxGroup from "../../../reusable/SingleSelectCheckboxGroup";
-import StatusAlert from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
-
 import StatusAlert, { StatusAlertService } from "react-status-alert";
-import "react-status-alert/dist/status-alert.css";
-
 import axios from "axios";
 
 const Edit = () => {
@@ -58,6 +54,8 @@ const Edit = () => {
       isAvailable: values.statusKetersediaan,
       tenantdto: values.alokasi,
     };
+    console.log(data);
+
     setIsSaving(true);
     try {
       let token = localStorage.getItem("token");
@@ -104,7 +102,6 @@ const Edit = () => {
   ];
 
   const fetchData = async () => {
-
     setLoading(true);
     try {
       let token = localStorage.getItem("token");
@@ -157,14 +154,12 @@ const Edit = () => {
       StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
     } finally {
       setLoading(false);
-
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [idData]);
-
 
   return (
     <Formik
@@ -176,7 +171,6 @@ const Edit = () => {
       {({ setFieldValue, values }) => (
         <Form>
           <main>
-
             <StatusAlert />
             <div className="w-full p-4 bg-white mt-4 h-full">
               <HeaderForm title="Edit Building" link="/admin/asset/building" />
@@ -238,7 +232,6 @@ const Edit = () => {
                     selectedValue={values.statusKetersediaan}
                     onChange={(value) =>
                       setFieldValue("statusKetersediaan", value)
-
                     }
                     aria-label="Status Ketersediaan Gedung"
                   />

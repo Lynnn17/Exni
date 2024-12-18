@@ -87,6 +87,7 @@ const Add = () => {
       StatusAlertService.showSuccess("Data Tenant berhasil disimpan!");
       navigate("/admin/asset/tenant");
     } catch (error) {
+      console.log("ERROR", error);
       StatusAlertService.showError("Data Tenant gagal disimpan!");
     } finally {
       setSubmitting(false);
