@@ -163,20 +163,42 @@ const Edit = () => {
                   type="text"
                   placeholder="Masukkan Deskripsi"
                 />
-                <div className="px-3 pb-3">
-                  <label>Status Ketersediaan</label>
-                  <select
-                    value={values.isAvailable}
-                    onChange={(e) =>
-                      setFieldValue("isAvailable", e.target.value === "true")
-                    }
-                  >
-                    <option value="true">Tersedia</option>
-                    <option value="false">Tidak Tersedia</option>
-                  </select>
+                <div className="px-2 pb-3">
+                  <label className="block mb-2 font-medium">
+                    Status Ketersediaan:
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <button
+                      type="button"
+                      className={`py-2 px-4 rounded-md text-sm ${
+                        values.isAvailable
+                          ? "bg-green-500 text-white"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                      onClick={() => setFieldValue("isAvailable", true)}
+                    >
+                      Tersedia
+                    </button>
+                    <button
+                      type="button"
+                      className={`py-2 px-4 rounded-md text-sm ${
+                        !values.isAvailable
+                          ? "bg-red-500 text-white"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                      onClick={() => setFieldValue("isAvailable", false)}
+                    >
+                      Tidak Tersedia
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
-                  <Button type="submit" color="bg-exni" label="Simpan" />
+
+                <div className="flex gap-3 justify-center md:justify-end pt-10 pb-2 pr-5">
+                  <Button
+                    type="submit"
+                    color={`bg-exni active:bg-blue-700`}
+                    label="Simpan"
+                  />
                   <Button
                     type="button"
                     label="Batal"

@@ -1,5 +1,5 @@
 import Foto from "../../../../assets/rumah.png";
-import Card from "../../../reusable/card/CardUserAsset";
+import Card from "../../../reusable/card/CardUserBuilding";
 import Pagination from "../../Pagination";
 import React, { useState } from "react";
 import HeaderSection from "../../../reusable/HeaderSection";
