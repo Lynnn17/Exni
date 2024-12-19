@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import React from "react";
-const CardUserAsset = ({ foto, title, deskripsi, linkPesan, linkDetail }) => {
+const CardUserBuilding = ({
+  foto,
+  title,
+  deskripsi,
+  linkPesan,
+  linkDetail,
+}) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2 ">
       <img
@@ -28,4 +34,4 @@ const CardUserAsset = ({ foto, title, deskripsi, linkPesan, linkDetail }) => {
   );
 };
 
-export default CardUserAsset;
+export default CardUserBuilding;
