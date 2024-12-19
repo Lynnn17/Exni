@@ -3,6 +3,7 @@ import React from "react";
 const CardUserBuilding = ({
   foto,
   title,
+  address,
   deskripsi,
   linkPesan,
   linkDetail,
@@ -16,8 +17,9 @@ const CardUserBuilding = ({
       />
       <div className="p-4">
         <p className="text-base font-bold">{title}</p>
-        <p className="text-sm">{deskripsi}</p>
-        <div className="py-4">
+        <p className="pb-4 text-gray-600 text-sm">{address}</p>
+        <p className="text-xs">{deskripsi}</p>
+        <div className="py-4 pt-6">
           <Link
             className="bg-[#404C58] text-white px-4 py-2 font-bold text-xs  rounded-2xl"
             to={linkPesan}
@@ -25,8 +27,8 @@ const CardUserBuilding = ({
             PESAN SEKARANG
           </Link>
         </div>
-        <div className="w-full h-[1px] bg-teks mt-2"></div>
-        <div className="pt-3 text-center">
+        {/* <div className="w-full h-[1px] bg-teks mt-2"></div> */}
+        <div className="pt-3 text-center text-sm">
           <Link to={linkDetail}>Lihat Selengkapnya</Link>
         </div>
       </div>

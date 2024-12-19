@@ -12,12 +12,12 @@ import "swiper/css/pagination";
 import { Pagination, Navigation } from "swiper/modules";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const Pesan = () => {
+const Detail = () => {
   return (
     <main>
       <div className="px-3 py-5 bg-white mt-4 rounded-lg">
         {/* Header */}
-        <HeaderForm title="Detail Properti" link="/user/asset/building" />
+        <HeaderForm title="Detail Properti" link="/user/asset/tenant" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
           <div className="w-full md:col-span-2 mt-5 ">
@@ -112,7 +112,7 @@ const Pesan = () => {
                 </p>
                 <div className="flex gap-2">
                   <button className="bg-red-500 py-2 px-4 text-white rounded-2xl">
-                    <Link to={"/user/asset/building"}>Keluar</Link>
+                    <Link to={"/user/asset/tenant"}>Keluar</Link>
                   </button>
                   <button className="bg-[#404C58] py-2 px-4 text-white rounded-2xl">
                     <Link>PESAN SEKARANG</Link>
@@ -127,4 +127,4 @@ const Pesan = () => {
   );
 };
 
-export default Pesan;
+export default Detail;
