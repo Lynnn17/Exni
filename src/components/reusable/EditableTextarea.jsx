@@ -10,6 +10,7 @@ const EditableTextarea = ({ isReadOnly, onToggleReadOnly, defaultValue }) => (
       defaultValue={defaultValue}
     />
     <button
+      type="button"
       className="absolute bottom-2 right-2 text-gray-500"
       onClick={onToggleReadOnly}
     >

@@ -19,7 +19,7 @@ const Dashboard = () => {
     { title: "Status", key: "ValueStatus" },
   ];
 
-  const datas = data.map((item, index) => ({
+  const datas = data?.applications?.map((item, index) => ({
     id: item.id,
     no: index + 1,
     name: item.user.company,
@@ -47,7 +47,7 @@ const Dashboard = () => {
             ? "bg-red-500 text-white"
             : item.status === "APPROVE"
             ? "bg-green-500 text-white"
-            : "bg-gray-500 text-white" // Default jika status tidak dikenali
+            : "bg-gray-500 text-white"
         }`}
       >
         {item.status}

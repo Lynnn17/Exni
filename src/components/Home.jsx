@@ -106,7 +106,7 @@ const Home = () => {
       </div>
 
       {/* Tentang Kami Section */}
-      <div className="pt-3 px-4 md:px-6 lg:px-10 h-50 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] relative z-100">
+      <div className="pt-3 px-4 md:px-6 lg:px-10 h-50 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] relative z-[-100]">
         {/* First About Section with top rounded corners */}
         <AboutSection
           onPesanSekarangClick={handlePesanSekarangClick}
