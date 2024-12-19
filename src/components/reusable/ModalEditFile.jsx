@@ -10,9 +10,8 @@ import Button from "./Button";
 
 import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
+const Modal = ({ isOpen, onClose, idData, idFile, type, style }) => {
   if (!isOpen || !idFile) return null;
-
   const history = useNavigate();
 
   const validationSchema = Yup.object().shape({
@@ -45,34 +44,56 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
   // Fungsi submit form
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    console.log("Form values", type);
     const formData = new FormData();
-    if (type === "albums") {
-      formData.append("deletedAlbumIds[0]", idFile);
-    } else if (type === "document") {
-      formData.append("deletedDocumentIds[0]", idFile);
+    if (style === "assets") {
+      if (type === "albums") {
+        formData.append("deletedAlbumIds[0]", idFile);
+      } else if (type === "document") {
+        formData.append("deletedDocumentIds[0]", idFile);
+      } else {
+        console.error("Tipe file tidak valid");
+        return;
+      }
+      if (type === "document") {
+        formData.append("documents", values.file[0]);
+      } else {
+        formData.append(type, values.file[0]);
+      }
     } else {
-      console.error("Tipe file tidak valid");
-      return;
-    }
-    if (type === "document") {
-      formData.append("documents", values.file[0]);
-    } else {
-      formData.append(type, values.file[0]);
+      if (type === "proposal") {
+        formData.append("proposal", values.file[0]);
+      } else {
+        formData.append("minutesOfMeeting", values.file[0]);
+      }
     }
 
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}assets/${idData}/${type}`,
+      let response;
+      if (style === "assets") {
+        response = await axios.put(
+          `${import.meta.env.VITE_API_URL}assets/${idData}/${type}`,
 
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        response = await axios.put(
+          `${import.meta.env.VITE_API_URL}applications/${idData}`,
+
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
 
       console.log("Response", response.data);
       resetForm();
@@ -83,7 +104,6 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
         "Error uploading file:",
         error.response?.data || error.message
       );
-
     } finally {
       setSubmitting(false);
     }
@@ -102,7 +122,6 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
 
         {/* Header Modal */}
         <div className="flex justify-center items-center mb-4 pt-3 gap-5">
-
           <img src={LogoExni} alt="Logo Exni" />
         </div>
 
@@ -119,13 +138,11 @@ const Modal = ({ isOpen, onClose, idData, idFile, type }) => {
                 <h3 className="font-semibold">Upload {type}</h3>
                 <InputField
                   type="file"
-
                   label={type}
                   name="file"
                   accept={type === "albums" ? "image/*" : ".pdf"}
                   onChange={(e) =>
                     setFieldValue("file", e.currentTarget.files[0])
-
                   }
                 />
               </div>

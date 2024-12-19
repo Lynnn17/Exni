@@ -1,5 +1,5 @@
 import Foto from "../../../../assets/gedung.png";
-import Card from "../../../reusable/card/CardSewa";
+import CardSewa from "../../../reusable/card/CardSewaBuilding";
 import CardTenant from "../../../reusable/card/CardTenant";
 import Pagination from "../../Pagination";
 import React, { useState } from "react";
@@ -30,7 +30,7 @@ const Dashboard = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 ">
             {Array.from(Array(3).keys()).map((_, i) => (
-              <Card
+              <CardSewa
                 key={i}
                 foto={Foto}
                 title={`Gedung Pelni ${i + 1}`}

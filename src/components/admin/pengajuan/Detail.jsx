@@ -14,12 +14,19 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
+import Modal from "../../reusable/ModalFile";
+import ModalConfirm from "../../reusable/ConfirmationModal";
 
 const Detail = () => {
   const { id } = useParams();
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
+
+  const [selectedId, setSelectedId] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [typeModal, setTypeModal] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const optionsPengajuan = [
     { value: "PROCESS", label: "Process" },
@@ -29,6 +36,23 @@ const Detail = () => {
   ];
 
   const handleToggleReadOnly = () => setIsReadOnly(!isReadOnly);
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}assets/${selectedId}`,
+        {
+          headers,
+        }
+      );
+      setConfirmModalOpen(false);
+      StatusAlertService.showSuccess("Data berhasil dihapus!");
+      fetchData();
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      StatusAlertService.showError("Data gagal dihapus!");
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -40,6 +64,7 @@ const Detail = () => {
           },
         }
       );
+      console.log(response.data.data.application);
       setData(response.data.data.application);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -56,10 +81,9 @@ const Detail = () => {
   });
 
   const handleSimpan = async (values, { setSubmitting }) => {
-    console.log("values", values);
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}applications/${id}`,
+        `${import.meta.env.VITE_API_URL}applications/${id}/status`,
         values,
         {
           headers: {
@@ -67,8 +91,8 @@ const Detail = () => {
           },
         }
       );
-      StatusAlertService.showSuccess("Data berhasil disimpan!");
       fetchData();
+      StatusAlertService.showSuccess("Data berhasil disimpan!");
     } catch (error) {
       console.error("Error saving data:", error);
       StatusAlertService.showError("Terjadi kesalahan saat menyimpan data.");
@@ -194,8 +218,8 @@ const Detail = () => {
           <Formik
             enableReinitialize
             initialValues={{
-              note: "",
-              status: "",
+              note: data?.note || "",
+              status: data?.status || "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleSimpan}
@@ -241,18 +265,29 @@ const Detail = () => {
                       <div className="flex gap-5">
                         <div>
                           <p>Proposal</p>
-                          <Link
-                            to={`https://drive.google.com/file/d/${data.proposal}/view`}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setTypeModal("proposal");
+                            }}
                             className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
                           >
                             Lihat <FaArrowRight />
-                          </Link>
+                          </button>
                         </div>
                         <div>
                           <p>Berita Acara</p>
-                          <Link className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setTypeModal("minutesOfMeeting");
+                            }}
+                            className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
+                          >
                             Lihat <FaArrowRight />
-                          </Link>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -277,6 +312,21 @@ const Detail = () => {
               </Form>
             )}
           </Formik>
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            idFile={[data.proposal]}
+            idData={data.id}
+            type={typeModal}
+            style="applications"
+          />
+
+          <ModalConfirm
+            isOpen={confirmModalOpen}
+            onClose={() => setConfirmModalOpen(false)}
+            onConfirm={handleDelete}
+          />
         </div>
       </div>
     </main>

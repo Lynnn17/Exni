@@ -1,5 +1,3 @@
-import { FaRegFilePdf } from "react-icons/fa";
-import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
 const CardTenant = ({
