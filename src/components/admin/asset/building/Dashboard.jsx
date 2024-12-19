@@ -104,8 +104,8 @@ const Dashboard = () => {
 
           {/* Cards Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {data.length > 0 ? (
-              data.map((item, i) => (
+            {data?.assets?.length > 0 ? (
+              data?.assets?.map((item, i) => (
                 <div key={item.id || i}>
                   <Card
                     foto={item.albums?.[0] || ""}

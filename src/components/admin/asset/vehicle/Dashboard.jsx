@@ -82,7 +82,7 @@ const Dashboard = () => {
           </HeaderSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {data.map((item, i) => (
+            {data?.assets?.map((item, i) => (
               <Card
                 key={i}
                 foto={item.albums[0]}

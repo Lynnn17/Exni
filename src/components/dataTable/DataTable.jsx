@@ -15,8 +15,8 @@ const DataTable = ({
       <table className="w-full table-auto">
         <ColumnHeader columns={columns} actions={actions} actionLabel={aksi} />
         <tbody>
-          {data.length > 0 ? (
-            data.map((item) => (
+          {data?.length > 0 ? (
+            data?.map((item) => (
               <DataRow
                 key={item.no}
                 item={item}
