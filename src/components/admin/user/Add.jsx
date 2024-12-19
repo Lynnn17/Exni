@@ -88,7 +88,7 @@ const Edit = () => {
         <Form>
           <main>
             <StatusAlert /> {/* Add this line to display the alert */}
-            <div className="w-full p-4 bg-white mt-4 h-full">
+            <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
               <HeaderForm title="Add User" link="/admin/user" />
               <div className="border border-gray-200 mt-4 py-4 md:px-6 rounded-lg">
                 {/* User Information Section */}

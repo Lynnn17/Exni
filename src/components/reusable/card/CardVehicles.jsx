@@ -44,48 +44,31 @@ const CardVehicles = ({
             <p className="font-semibold text-gray-600">Nomor Rangka</p>
             <p className="text-gray-700">{frame}</p>
           </div>
-          <div className="col-span-2">
-            <p className="font-semibold text-gray-600">Tipe: </p>
-            <p className="text-gray-700">{type}</p>
+        </div>
+
+        <div className="flex gap-4 text-xl text-gray-600 justify-between pt-6">
+          <div className="flex gap-4">
+            <button onClick={modalGambar} className="hover:text-blue-500">
+              <FaRegFileImage />
+            </button>
+            <button onClick={modalFile} className="hover:text-blue-500">
+              <FaRegFilePdf />
+            </button>
+          </div>
+          <div className="flex flex-row gap-4">
+            <Link to={link} className="hover:text-yellow-500">
+              <BsPencilSquare />
+            </Link>
+            <button
+              onClick={modalDelete}
+              className="text-red-500 hover:text-red-600"
+            >
+              <FaRegTrashAlt />
+            </button>
           </div>
         </div>
 
-        {/* Penyewa */}
-        {nameTenant ? (
-          <div className="border-t pt-3">
-            <h4 className="text-sm font-semibold text-gray-600">Penyewa</h4>
-            <div className="flex justify-between text-sm">
-              <p className="text-gray-700">{nameTenant}</p>
-              <Link
-                to={link}
-                className="text-blue-500 font-medium hover:text-blue-600"
-              >
-                Lihat Selengkapnya
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className="flex justify-between items-center pt-3 text-sm">
-            <p className="font-semibold text-gray-600">Kondisi: {condition}</p>
-            <div className="flex gap-4 text-xl text-gray-600">
-              <button onClick={modalGambar} className="hover:text-blue-500">
-                <FaRegFileImage />
-              </button>
-              <button onClick={modalFile} className="hover:text-blue-500">
-                <FaRegFilePdf />
-              </button>
-              <Link to={link} className="hover:text-yellow-500">
-                <BsPencilSquare />
-              </Link>
-              <button
-                onClick={modalDelete}
-                className="text-red-500 hover:text-red-600"
-              >
-                <FaRegTrashAlt />
-              </button>
-            </div>
-          </div>
-        )}
+        {/* )} */}
       </div>
     </div>
   );

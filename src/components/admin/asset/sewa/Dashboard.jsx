@@ -68,7 +68,7 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className="pt-5">
+          {/* <div className="pt-5">
             <SectionDivider
               title="Aset Kendaraan"
               classText="text-sm font-semibold uppercase text-teks"
@@ -90,7 +90,7 @@ const Dashboard = () => {
                 link={`edit/${i + 1}`}
               />
             ))}
-          </div>
+          </div> */}
           <Pagination />
         </div>
       </main>
