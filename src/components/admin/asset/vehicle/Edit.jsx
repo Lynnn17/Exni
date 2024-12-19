@@ -171,7 +171,7 @@ const EditVehicleAsset = () => {
                 <div className="flex gap-3 justify-center md:justify-end pt-5 pr-5">
                   <Button
                     type="submit"
-                    label={isSubmitting ? "Saving..." : "Save"}
+                    label={isSubmitting ? "Menyimpan.." : "Simpan"}
                     color="bg-exni"
                     disabled={isSubmitting}
                   />
