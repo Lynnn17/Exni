@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
 import { BsPencilSquare } from "react-icons/bs";
+import axios from "axios";
+import { NumericFormat } from "react-number-format";
+import Moment from "moment";
 
 const Dashboard = () => {
+  const [data, setData] = useState([]);
   const columns = [
     { title: "No", key: "no" },
     { title: "Nama PT", key: "name" },
@@ -15,16 +19,38 @@ const Dashboard = () => {
     { title: "Status", key: "ValueStatus" },
   ];
 
-  const data = [...Array(10)].map((_, index) => ({
-    id: index + 1,
+  const datas = data.map((item, index) => ({
+    id: item.id,
     no: index + 1,
-    name: "PT. SAMPOERNA Tbk.",
-    properti: "Cargo Ship",
-    nominal: "Rp 100.000.000,-",
-    waktu: "01 Oktober 2024 - 30 Desember 2024",
+    name: item.user.company,
+    properti: item.asset.name,
+    nominal: (
+      <NumericFormat
+        value={item.proposed_price} // Nilai yang ingin diformat
+        displayType={"text"} // Menampilkan sebagai teks
+        thousandSeparator={true} // Menambahkan pemisah ribuan
+        prefix={"Rp "} // Menambahkan prefix Rupiah
+        renderText={(value) => <div>{value} </div>} // Menampilkan hasilnya
+      />
+    ),
+    waktu:
+      Moment(item.rent_start_date).format("D MMM YYYY") +
+      " - " +
+      Moment(item.rent_end_date).format("D MMM YYYY"),
     ValueStatus: (
-      <span className="bg-blue-500 text-white font-medium px-2 py-1 rounded">
-        Pengajuan
+      <span
+        key={index}
+        className={`font-medium px-2 py-1 rounded ${
+          item.status === "PENDING"
+            ? "bg-yellow-500 text-white"
+            : item.status === "REJECT"
+            ? "bg-red-500 text-white"
+            : item.status === "APPROVE"
+            ? "bg-green-500 text-white"
+            : "bg-gray-500 text-white" // Default jika status tidak dikenali
+        }`}
+      >
+        {item.status}
       </span>
     ),
   }));
@@ -37,6 +63,23 @@ const Dashboard = () => {
     },
   ];
 
+  useEffect(() => {
+    try {
+      axios
+        .get(`${import.meta.env.VITE_API_URL}applications`, {
+          headers: {
+            "Authorization ": `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((res) => {
+          console.log(res.data.data.applications);
+          setData(res.data.data.applications);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   return (
     <>
       <main>
@@ -44,7 +87,7 @@ const Dashboard = () => {
           <HeaderSection title="Pengajuan" subtitle="">
             <Search />
           </HeaderSection>
-          <DataTable columns={columns} data={data} actions={actions} />
+          <DataTable columns={columns} data={datas} actions={actions} />
           <Pagination />
         </div>
       </main>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Pagination from "../Pagination";
 import HeaderForm from "../../reusable/HeaderForm";
 import StatusSelect from "../../reusable/StatusSelect";
@@ -9,22 +9,24 @@ import EditableTextarea from "../../reusable/EditableTextarea";
 import { FaArrowRight } from "react-icons/fa";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { NumericFormat } from "react-number-format";
+import Moment from "moment";
 
 const Detail = () => {
+  const { id } = useParams();
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [statusPengajuan, setStatusPengajuan] = useState("pengajuan");
   const [statusPembayaran, setStatusPembayaran] = useState("cicilan");
 
-  const optionsPengajuan = [
-    { value: "pengajuan", label: "Pengajuan" },
-    { value: "tidak_aktif", label: "Tidak Aktif" },
-    { value: "pending", label: "Pending" },
-  ];
+  const [data, setData] = useState({});
 
-  const optionsPembayaran = [
-    { value: "cicilan", label: "Cicilan" },
-    { value: "lunas", label: "Lunas" },
+  const optionsPengajuan = [
+    { value: "PROCESS", label: "Process" },
+    { value: "APPROVED", label: "Disetujui" },
+    { value: "PENDING", label: "Pending" },
+    { value: "REJECTED", label: "Ditolak" },
   ];
 
   const handleToggleReadOnly = () => setIsReadOnly(!isReadOnly);
@@ -38,6 +40,26 @@ const Detail = () => {
     navigate(`/admin/submission/`);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}applications/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response.data.data.application);
+        setData(response.data.data.application);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <main>
       <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
@@ -45,40 +67,110 @@ const Detail = () => {
         <HeaderForm title="Detail Pengajuan" link="/admin/submission" />
         <div className="bg-white border border-gray-200 mt-5 p-4 rounded-lg">
           <div className="w-[95%] mx-auto grid grid-cols-2 md:flex gap-4 md:gap-10 lg:gap-12 xl:gap-24">
-            <DetailInfo label="ID Pengajuan" value="132312323" />
+            <DetailInfo label="ID Pengajuan" value={data?.id} />
             <DetailInfo
               label="Jangka Waktu"
-              value="05 Agustus 2024 - 09 Oktober 2024"
+              value={
+                Moment(data?.rent_start_date).format("D MMM YYYY") +
+                " - " +
+                Moment(data?.rent_end_date).format("D MMM YYYY")
+              }
             />
-            <DetailInfo label="Nominal" value="Rp. 144.000.000,-" />
+            <DetailInfo
+              label="Nominal"
+              value={
+                <NumericFormat
+                  value={data?.proposed_price}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  prefix={"Rp "}
+                  renderText={(value) => value}
+                />
+              }
+            />
           </div>
 
-          <div className="p-4 bg-white border border-gray-200 mt-5 rounded-lg md:flex md:justify-center md:gap-60 xl:gap-92">
+          <div className="p-4 bg-white border border-gray-200 mt-5 rounded-lg md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-2 xl:gap-92">
             <div>
               <SectionDivider title="Penyewa" />
               <div className="pt-2 flex flex-col gap-2">
-                <TenantInfo label="Nama PT" value="PT. SAMPOERNA Tbk." />
-                <TenantInfo label="PIC" value="Aryeswara Jaya" />
-                <TenantInfo label="Kontak" value="08123456789" />
-                <TenantInfo
-                  label="Alamat"
-                  value="Jl. Masjid besar Banda Neira 323823"
-                />
+                <TenantInfo label="Nama PT" value={data?.user?.company} />
+                <TenantInfo label="PIC" value={data?.user?.pic} />
+                <TenantInfo label="Kontak" value={data?.user?.contact} />
+                <TenantInfo label="Alamat" value={data?.user?.address} />
               </div>
             </div>
-            <div>
+            <div className="md:pt-0 pt-4">
               <SectionDivider title="Properti" />
               <div className="pt-2 flex flex-col gap-2">
-                <TenantInfo label="Tenant" value="Cv. Gracia Blue Logistic" />
-                <TenantInfo label="Alokasi" value="Kantor Penjualan Ticket" />
+                <TenantInfo label="Tenant" value={data?.asset?.name} />
+                <TenantInfo
+                  label={data?.asset?.type === "TENANT" ? "Gedung" : "Alokasi"}
+                  value={
+                    data?.asset?.type === "TENANT"
+                      ? data?.asset?.tenants?.building
+                      : data?.asset?.properties?.allocation
+                  }
+                />
                 <TenantInfo
                   label="Alamat"
-                  value="Graha Pelni, Jl Pahlawan No.18, Surabaya"
+                  value={
+                    data?.asset?.type === "TENANT"
+                      ? data?.asset?.tenants?.address
+                      : data?.asset?.properties?.address
+                  }
                 />
-                <div className="flex gap-8">
-                  <TenantInfo label="Luas Gedung" value="16303 m" />
-                  <TenantInfo label="Luas Tanah" value="23194 m" />
-                </div>
+                {data?.asset?.type === "TENANT" ? (
+                  <TenantInfo
+                    label="Lantai"
+                    value={data?.asset?.tenants?.floor}
+                  />
+                ) : (
+                  <div className="flex gap-8">
+                    <TenantInfo
+                      label="Luas Gedung"
+                      value={data?.asset?.properties?.buildingArea}
+                    />
+                    <TenantInfo
+                      label="Luas Tanah"
+                      value={data?.asset?.properties?.landArea}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="md:pt-0 pt-4">
+              <SectionDivider title="Pengajuan" />
+
+              <div className="pt-2 flex flex-col gap-2">
+                <TenantInfo
+                  label="Tipe Pembayaran"
+                  value={data?.payment_type}
+                />
+                <TenantInfo
+                  label="Jumlah Cicilan"
+                  value={data?.installment_count}
+                />
+                <TenantInfo
+                  label="Harga Pengajuan"
+                  value={
+                    <NumericFormat
+                      value={data?.proposed_price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"Rp "}
+                      renderText={(value) => value}
+                    />
+                  }
+                />
+                <TenantInfo
+                  label="Tanggal Pengajuan"
+                  value={Moment(data?.createdAt).format("D MMM YYYY")}
+                />
+                <TenantInfo
+                  label="Tanggal Update"
+                  value={Moment(data?.updatedAt).format("D MMM YYYY")}
+                />
               </div>
             </div>
           </div>
@@ -91,7 +183,7 @@ const Detail = () => {
               <EditableTextarea
                 isReadOnly={isReadOnly}
                 onToggleReadOnly={handleToggleReadOnly}
-                defaultValue="Pembayaran per tahun (Proses) Peralihan Sewa"
+                defaultValue={data?.note}
               />
             </div>
             <div className="flex flex-col gap-3">
@@ -102,34 +194,27 @@ const Detail = () => {
                       Status Pengajuan
                     </label>
                     <StatusSelect
-                      value={statusPengajuan}
+                      value={data.status}
                       onChange={(e) => setStatusPengajuan(e.target.value)}
                       options={optionsPengajuan}
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="block text-gray-700 font-medium">
-                      Status Pembayaran
-                    </label>
-                    <StatusSelect
-                      value={statusPembayaran}
-                      onChange={(e) => setStatusPembayaran(e.target.value)}
-                      options={optionsPembayaran}
                     />
                   </div>
                 </div>
                 <div className="flex gap-5">
                   <div>
                     <p>Proposal</p>
-                    <button className="px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2">
+                    <Link
+                      to={`https://drive.google.com/file/d/${data.proposal}/view`}
+                      className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
+                    >
                       Lihat <FaArrowRight />
-                    </button>
+                    </Link>
                   </div>
                   <div>
                     <p>Berita Acara</p>
-                    <button className="px-4 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2">
+                    <Link className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2">
                       Lihat <FaArrowRight />
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>
