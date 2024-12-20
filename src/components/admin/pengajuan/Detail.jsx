@@ -15,7 +15,6 @@ import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
 import Modal from "../../reusable/ModalFile";
-import ModalConfirm from "../../reusable/ConfirmationModal";
 
 const Detail = () => {
   const { id } = useParams();
@@ -36,23 +35,6 @@ const Detail = () => {
   ];
 
   const handleToggleReadOnly = () => setIsReadOnly(!isReadOnly);
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}assets/${selectedId}`,
-        {
-          headers,
-        }
-      );
-      setConfirmModalOpen(false);
-      StatusAlertService.showSuccess("Data berhasil dihapus!");
-      fetchData();
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      StatusAlertService.showError("Data gagal dihapus!");
-    }
-  };
 
   const fetchData = async () => {
     try {
@@ -82,6 +64,7 @@ const Detail = () => {
 
   const handleSimpan = async (values, { setSubmitting }) => {
     try {
+      // Update status aplikasi
       await axios.put(
         `${import.meta.env.VITE_API_URL}applications/${id}/status`,
         values,
@@ -91,12 +74,39 @@ const Detail = () => {
           },
         }
       );
+
+      // Refresh data setelah status diperbarui
       fetchData();
-      StatusAlertService.showSuccess("Data berhasil disimpan!");
+      // Jika status adalah "APPROVED", buat data penyewaan
+      if (values.status === "APPROVED") {
+        try {
+          await axios.post(
+            `${import.meta.env.VITE_API_URL}rents`,
+            {
+              applicationId: id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          StatusAlertService.showSuccess("Data berhasil disimpan!");
+        } catch (error) {
+          if (error.response?.data?.message !== "Application already rented") {
+            StatusAlertService.showError(
+              "Terjadi kesalahan saat menyimpan data."
+            );
+          }
+        }
+      } else {
+        StatusAlertService.showSuccess("Status berhasil diperbarui!");
+      }
     } catch (error) {
-      console.error("Error saving data:", error);
+      console.error("Error updating application status:", error);
       StatusAlertService.showError("Terjadi kesalahan saat menyimpan data.");
     } finally {
+      // Pastikan setSubmitting selalu dipanggil untuk mengakhiri loading
       setSubmitting(false);
     }
   };
@@ -306,7 +316,7 @@ const Detail = () => {
                     className="px-4 py-2 bg-blue-600 text-white rounded-lg"
                     disabled={isSubmitting}
                   >
-                    Simpan
+                    {isSubmitting ? "Menyimpan..." : "Simpan"}
                   </button>
                 </div>
               </Form>
@@ -320,12 +330,6 @@ const Detail = () => {
             idData={data.id}
             type={typeModal}
             style="applications"
-          />
-
-          <ModalConfirm
-            isOpen={confirmModalOpen}
-            onClose={() => setConfirmModalOpen(false)}
-            onConfirm={handleDelete}
           />
         </div>
       </div>

@@ -8,7 +8,13 @@ import InputField from "./InputField";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpenModal, onCloseModal, idDataModal, type, style }) => {
+const Modal = ({
+  isOpenModal,
+  onCloseModal,
+  idDataModal,
+  type,
+  style = "assets",
+}) => {
   if (!isOpenModal || !idDataModal) return null;
 
   const history = useNavigate();
@@ -65,6 +71,7 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type, style }) => {
     try {
       let response;
       if (style === "assets") {
+        console.log("idDataModal", idDataModal);
         response = await axios.put(
           `${import.meta.env.VITE_API_URL}assets/${idDataModal}/${type}`,
           formData,

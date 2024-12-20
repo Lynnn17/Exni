@@ -90,15 +90,22 @@ const Modal = ({
         <div className="mb-4">
           <div className="flex justify-between items-center pb-2">
             <h3 className="font-semibold">Link {type}</h3>
-            <button
-              className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
-              onClick={() => {
-                setAddModalOpen(true);
-                console.log(addModalOpen);
-              }}
-            >
-              Tambah
-            </button>
+            {style === "assets" && (
+              <button
+                className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
+                onClick={() => setAddModalOpen(true)}
+              >
+                Tambah
+              </button>
+            )}
+            {idFile.length === 0 && style !== "assets" && (
+              <button
+                className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
+                onClick={() => setAddModalOpen(true)}
+              >
+                Tambah
+              </button>
+            )}
           </div>
           <ul className="list-disc pl-4 pt-2 max-h-[13rem] overflow-y-scroll">
             {idFile.map((item, index) => (
@@ -114,6 +121,7 @@ const Modal = ({
                   </a>
 
                   {/* Tombol Edit */}
+
                   <button
                     className="text-sm bg-blue-600 text-white px-2 py-1 rounded"
                     onClick={() => handleEdit(item)}
