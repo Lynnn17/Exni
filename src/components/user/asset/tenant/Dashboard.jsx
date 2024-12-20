@@ -48,7 +48,7 @@ const Dashboard = () => {
               <CardUserTenant
                 foto={item.albums?.[0] || "https://via.placeholder.com/150"}
                 title={item.name || "N/A"}
-                address={item.properties?.address || "N/A"}
+                address={item.tenants.address || "N/A"}
                 deskripsi={item.description || "Tidak ada deskripsi"}
                 idAset={item.id}
                 linkDetail={`detail/${item.id}`}

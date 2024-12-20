@@ -54,8 +54,8 @@ const Detail = () => {
               modules={[Pagination, Navigation]}
               className="w-full h-full rounded-lg"
             >
-              {buildingData.images && buildingData.images.length > 0 ? (
-                buildingData.images.map((image, index) => (
+              {buildingData?.albums && buildingData.albums.length > 0 ? (
+                buildingData.albums.map((image, index) => (
                   <SwiperSlide key={index}>
                     <img
                       className="w-full h-full object-cover rounded-lg"
@@ -76,10 +76,8 @@ const Detail = () => {
               <div className="w-full">
                 <SectionDivider title="Properti" />
                 <div className="pt-2 flex flex-col gap-2">
-                  <TenantInfo
-                    label="Tenant"
-                    value={buildingData.tenant || "-"}
-                  />
+                  <TenantInfo label="Nama" value={buildingData?.name || "-"} />
+                  <TenantInfo label="Tipe" value={buildingData?.type || "-"} />
                   <TenantInfo
                     label="Alokasi"
                     value={buildingData.properties?.allocation || "-"}
