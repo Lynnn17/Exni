@@ -9,11 +9,22 @@ const StatusSelect = ({
   customStyles = {}, // Custom styles prop
   name, // Add name prop
 }) => {
-  const { setFieldValue } = useFormikContext(); // Mengambil setFieldValue dari Formik context
+  const formikContext = useFormikContext();
+  const isFormik = !!formikContext;
 
+  // Handle perubahan nilai
   const handleChange = (e) => {
-    setFieldValue(name, e.target.value); // Mengupdate nilai field di Formik
+    const selectedValue = e.target.value;
+
+    if (isFormik) {
+      // Jika digunakan dengan Formik
+      formikContext.setFieldValue(name, selectedValue);
+    } else if (onChange) {
+      // Jika digunakan tanpa Formik
+      onChange(selectedValue);
+    }
   };
+
   return (
     <div className="relative inline-block w-fit">
       <select
