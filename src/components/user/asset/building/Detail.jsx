@@ -6,6 +6,7 @@ import TenantInfo from "../../../reusable/TenantInfo";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/navigation";
 import { Pagination, Navigation } from "swiper/modules";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
@@ -47,10 +48,13 @@ const Detail = () => {
         <HeaderForm title="Detail Properti" link="/user/asset/building" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
-          <div className="w-full md:col-span-2 mt-5">
+          <div className="w-full md:col-span-2 mt-5 relative">
             <Swiper
               pagination={{ clickable: true }}
-              navigation={true}
+              navigation={{
+                prevEl: ".swiper-button-prev",
+                nextEl: ".swiper-button-next",
+              }}
               modules={[Pagination, Navigation]}
               className="w-full h-full rounded-lg"
             >
@@ -68,6 +72,14 @@ const Detail = () => {
                 <div className="text-center">Tidak ada gambar tersedia.</div>
               )}
             </Swiper>
+
+            {/* Custom navigation buttons */}
+            <button className="swiper-button-prev absolute text-white p-3 rounded-full z-10 ">
+              <FaChevronLeft size={5} />
+            </button>
+            <button className="swiper-button-next absolute text-white p-3 rounded-full z-10 ">
+              <FaChevronRight size={5} />
+            </button>
           </div>
 
           {/* Informasi Properti */}

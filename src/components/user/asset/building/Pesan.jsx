@@ -38,6 +38,18 @@ const Pesan = () => {
       <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderForm title="Pengajuan" link="/user/asset/building" />
         <div className="flex flex-wrap gap-2">
+          {/* Gambar Properti */}
+          <div className="w-full md:w-[33.8%] mt-5">
+            {buildingData?.albums && buildingData.albums.length > 0 ? (
+              <img
+                className="w-full h-full object-cover rounded-lg"
+                src={buildingData.albums[0]} // Ambil gambar pertama
+                alt={buildingData.name || "Properti"}
+              />
+            ) : (
+              <div className="text-center">Tidak ada gambar tersedia.</div>
+            )}
+          </div>
           {/* Informasi Properti */}
           <div className="w-full md:w-[65%] bg-white border border-gray-200 mt-5 p-4">
             <div className="md:flex md:gap-3">
@@ -78,19 +90,6 @@ const Pesan = () => {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Gambar Properti */}
-          <div className="w-full md:w-[33.8%] mt-5">
-            {buildingData?.albums && buildingData.albums.length > 0 ? (
-              <img
-                className="w-full h-full object-cover rounded-lg"
-                src={buildingData.albums[0]} // Ambil gambar pertama
-                alt={buildingData.name || "Properti"}
-              />
-            ) : (
-              <div className="text-center">Tidak ada gambar tersedia.</div>
-            )}
           </div>
 
           {/* Form Pesan */}
