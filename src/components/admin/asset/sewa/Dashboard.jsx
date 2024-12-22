@@ -9,25 +9,7 @@ import SectionDivider from "../../../reusable/SectionDivider";
 import axios from "axios";
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}rent`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      console.log(response.data);
-      setData(response.data.data.assets);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
   return (
     <>
       <main>

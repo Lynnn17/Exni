@@ -1,9 +1,10 @@
 import React from "react";
 
 const statusStyles = {
-  paid: { className: "bg-gray-200", text: "Paid" },
-  unpaid: { className: "bg-red-500 text-white", text: "Unpaid" },
-  process: { className: "bg-blue-500 text-white", text: "Process" },
+  INITIATE: { className: "bg-gray-200", text: "Diajukan" },
+  PENDING: { className: "bg-blue-500 text-white", text: "Diproses" },
+  APPROVED: { className: "bg-green-500 text-white", text: "Disetujui" },
+  REJECTED: { className: "bg-red-500 text-white", text: "Ditolak" },
 };
 
 const StatusButton = ({ status }) => {
@@ -11,7 +12,7 @@ const StatusButton = ({ status }) => {
 
   return (
     <button
-      className={`px-3 py-1 text-sm rounded-md w-[5rem] ${className}`}
+      className={`px-3 py-1 text-sm rounded-md w-max ${className}`}
       disabled
     >
       {text}

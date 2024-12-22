@@ -9,6 +9,10 @@ import StatusButton from "../../reusable/StatusButton";
 import Modal from "../../reusable/Modal";
 import axios from "axios";
 import Moment from "moment";
+import { NumericFormat } from "react-number-format";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
+import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,37 +48,22 @@ const Dashboard = () => {
       " - " +
       Moment(item.rent.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
     statusValue: <StatusButton status={item.status} />,
-    // name: item.user.company,
-    // properti: item.asset.name,
-    // nominal: (
-    //   <NumericFormat
-    //     value={item.proposed_price} // Nilai yang ingin diformat
-    //     displayType={"text"} // Menampilkan sebagai teks
-    //     thousandSeparator={true} // Menambahkan pemisah ribuan
-    //     prefix={"Rp "} // Menambahkan prefix Rupiah
-    //     renderText={(value) => <div>{value} </div>} // Menampilkan hasilnya
-    //   />
-    // ),
-    // waktu:
-    //   Moment(item.rent_start_date).format("D MMM YYYY") +
-    //   " - " +
-    //   Moment(item.rent_end_date).format("D MMM YYYY"),
-    // ValueStatus: (
-    //   <span
-    //     key={index}
-    //     className={`font-medium px-2 py-1 rounded ${
-    //       item.status === "PENDING"
-    //         ? "bg-yellow-500 text-white"
-    //         : item.status === "REJECT"
-    //         ? "bg-red-500 text-white"
-    //         : item.status === "APPROVE"
-    //         ? "bg-green-500 text-white"
-    //         : "bg-gray-500 text-white"
-    //     }`}
-    //   >
-    //     {item.status}
-    //   </span>
-    // ),
+    status: item.status,
+    lamaCicilan: item.rent.application.installment_count,
+    tipePembayaran: item.rent.application.payment_type,
+    update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
+    nominalPengajuan: (
+      <NumericFormat
+        value={item.amount}
+        displayType="text"
+        thousandSeparator
+        prefix="Rp "
+        renderText={(value) => <div readOnly>{value} </div>}
+      />
+    ),
+    buktiTransfer: item.receipt,
+    beritaAcara: item.rent.application.minutesOfMeeting,
+    catatan: item.note,
   }));
 
   const fetchData = async () => {
@@ -99,6 +88,7 @@ const Dashboard = () => {
   }, []);
 
   const handleOpenModal = (item) => {
+    console.log(item);
     setSelectedData(item);
     setModalOpen(true);
   };
@@ -114,15 +104,16 @@ const Dashboard = () => {
         </button>
       ),
     },
-    {
-      icon: <LuPenSquare />,
-      link: (item) => `/admin/transaction/detail/${item}`,
-      className: "text-exni text-2xl pt-1",
-    },
+    // {
+    //   icon: <LuPenSquare />,
+    //   link: (item) => `/admin/transaction/detail/${item}`,
+    //   className: "text-exni text-2xl pt-1",
+    // },
   ];
 
   return (
     <main>
+      <StatusAlert />
       <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
         <HeaderSection
           title="Transaksi"
@@ -137,6 +128,7 @@ const Dashboard = () => {
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           data={selectedData}
+          fetchData={fetchData}
         />
 
         <DataTable columns={columns} data={datas} actions={actions} />

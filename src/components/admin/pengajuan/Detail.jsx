@@ -275,6 +275,7 @@ const Detail = () => {
                       <div className="flex gap-5">
                         <div>
                           <p>Proposal</p>
+
                           <button
                             type="button"
                             onClick={() => {
@@ -304,20 +305,24 @@ const Detail = () => {
                   </div>
                 </div>
                 <div className="flex justify-end gap-4 mt-4">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-300 rounded-lg"
-                    onClick={handleBatal}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Menyimpan..." : "Simpan"}
-                  </button>
+                  {data.status !== "APPROVED" && data.status !== "REJECTED" && (
+                    <>
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-300 rounded-lg"
+                        onClick={handleBatal}
+                      >
+                        Batal
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Menyimpan..." : "Simpan"}
+                      </button>
+                    </>
+                  )}
                 </div>
               </Form>
             )}
