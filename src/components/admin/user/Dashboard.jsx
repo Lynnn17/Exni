@@ -56,22 +56,12 @@ const Dashboard = () => {
   };
 
   const confirmDelete = (id) => {
-    const userId = typeof id === "object" && id.id ? id.id : id;
-    const userExists = data.some((user) => user.id === userId);
-
-    if (!userExists) {
-      console.error("User ID not found in local data:", userId);
-      showAlert("User not found in current data", 404);
-      return;
-    }
-
-    setSelectedId(userId);
+    setSelectedId(id);
     setIsModalOpen(true);
   };
 
   const handleDelete = async () => {
     if (!selectedId) {
-      console.error("Error: Selected ID is null or undefined.");
       showAlert("No user selected for deletion.", 400);
       return;
     }
@@ -82,63 +72,57 @@ const Dashboard = () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       };
 
-      console.log("Attempting to delete user with ID:", selectedId);
-      console.log("Headers:", headers);
-
-      const apiUrl = `${import.meta.env.VITE_API_URL}users/${selectedId}`;
-      console.log("API URL:", apiUrl);
-
-      const response = await axios.delete(apiUrl, { headers });
-
-      console.log("Delete response:", response.data);
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}users/${selectedId}`,
+        { headers }
+      );
 
       if (response.status === 200) {
-        showAlert(response.data.message, response.status);
+        showAlert("User deleted successfully!", 200);
 
-        const updatedData = data.filter((user) => user.id !== selectedId);
-        console.log("Updated data after deletion:", updatedData);
-
-        setData(updatedData);
+        setData((prevData) =>
+          prevData.filter((user) => user.id !== selectedId)
+        );
         setIsModalOpen(false);
       } else {
         showAlert("Failed to delete user.", response.status);
       }
     } catch (err) {
-      console.error("Delete error:", err.response?.data || err.message);
-
-      const errorMessage =
-        err.response?.data?.message ||
-        "An error occurred while deleting the user.";
-      showAlert(errorMessage, err.response?.status || 500);
+      showAlert("An error occurred while deleting the user.", 500);
     } finally {
       setIsDeleting(false);
     }
   };
 
-  const fetchUserData = async (token) => {
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("token");
+    const headers = { Authorization: `Bearer ${token}` };
+
     try {
-      const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}users?role=USER&isActive=true`,
-        {
-          headers,
-        }
+        { headers }
       );
 
-      const users = response.data.data.users.map((user, index) => ({
-        id: user.id,
+      // Mengambil data users yang benar dari struktur data
+      const usersData = response?.data?.data?.users?.users || [];
+      const formattedData = usersData.map((user, index) => ({
         no: index + 1,
-        iconUser: IconUser,
-        pic: user.pic,
+        id: user.id,
+        namaPT: user.company,
+        pic: user.pic || "-",
         address: user.address,
         email: user.email,
-        noHP: user.contact,
-        namaPT: user.company,
+        noHP: user.contact || "-",
+        iconUser: IconUser,
       }));
 
-      setData(users);
-    } catch (err) {
-      showAlert("Error fetching user data. Please refresh the page.");
+      setData(formattedData);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      showAlert("Error fetching user data.", 500);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,12 +143,11 @@ const Dashboard = () => {
       }
 
       try {
-        await fetchUserData(token);
+        await fetchUserData();
       } catch (err) {
         if (err.response?.data?.message === "jwt expired") {
           try {
             const newToken = await handleTokenRefresh(navigate);
-            console.log("token", newToken);
             await fetchUserData(newToken);
           } catch (refreshError) {
             setError("Session expired. Please login again.");
@@ -194,13 +177,12 @@ const Dashboard = () => {
         >
           <Search />
         </HeaderSection>
-        {/* Modal Konfirmasi */}
         <ConfirmationModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)} // Tutup modal
-          onConfirm={handleDelete} // Konfirmasi penghapusan
+          onClose={() => setIsModalOpen(false)}
+          onConfirm={handleDelete}
           message={
-            isDeleting ? "Mohon tunggu sebentar..." : "Yakin nih dihapus?"
+            isDeleting ? "Mohon tunggu sebentar..." : "Yakin ingin menghapus?"
           }
         />
 
