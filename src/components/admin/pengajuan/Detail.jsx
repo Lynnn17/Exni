@@ -14,12 +14,18 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
+import Modal from "../../reusable/ModalFile";
 
 const Detail = () => {
   const { id } = useParams();
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
+
+  const [selectedId, setSelectedId] = useState(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [typeModal, setTypeModal] = useState(null);
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const optionsPengajuan = [
     { value: "PROCESS", label: "Process" },
@@ -40,6 +46,7 @@ const Detail = () => {
           },
         }
       );
+      console.log(response.data.data.application);
       setData(response.data.data.application);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -56,10 +63,10 @@ const Detail = () => {
   });
 
   const handleSimpan = async (values, { setSubmitting }) => {
-    console.log("values", values);
     try {
+      // Update status aplikasi
       await axios.put(
-        `${import.meta.env.VITE_API_URL}applications/${id}`,
+        `${import.meta.env.VITE_API_URL}applications/${id}/status`,
         values,
         {
           headers: {
@@ -67,12 +74,39 @@ const Detail = () => {
           },
         }
       );
-      StatusAlertService.showSuccess("Data berhasil disimpan!");
+
+      // Refresh data setelah status diperbarui
       fetchData();
+      // Jika status adalah "APPROVED", buat data penyewaan
+      if (values.status === "APPROVED") {
+        try {
+          await axios.post(
+            `${import.meta.env.VITE_API_URL}rents`,
+            {
+              applicationId: id,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          StatusAlertService.showSuccess("Data berhasil disimpan!");
+        } catch (error) {
+          if (error.response?.data?.message !== "Application already rented") {
+            StatusAlertService.showError(
+              "Terjadi kesalahan saat menyimpan data."
+            );
+          }
+        }
+      } else {
+        StatusAlertService.showSuccess("Status berhasil diperbarui!");
+      }
     } catch (error) {
-      console.error("Error saving data:", error);
+      console.error("Error updating application status:", error);
       StatusAlertService.showError("Terjadi kesalahan saat menyimpan data.");
     } finally {
+      // Pastikan setSubmitting selalu dipanggil untuk mengakhiri loading
       setSubmitting(false);
     }
   };
@@ -194,8 +228,8 @@ const Detail = () => {
           <Formik
             enableReinitialize
             initialValues={{
-              note: "",
-              status: "",
+              note: data?.note || "",
+              status: data?.status || "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleSimpan}
@@ -241,42 +275,67 @@ const Detail = () => {
                       <div className="flex gap-5">
                         <div>
                           <p>Proposal</p>
-                          <Link
-                            to={`https://drive.google.com/file/d/${data.proposal}/view`}
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setTypeModal("proposal");
+                            }}
                             className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
                           >
                             Lihat <FaArrowRight />
-                          </Link>
+                          </button>
                         </div>
                         <div>
                           <p>Berita Acara</p>
-                          <Link className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setModalOpen(true);
+                              setTypeModal("minutesOfMeeting");
+                            }}
+                            className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
+                          >
                             Lihat <FaArrowRight />
-                          </Link>
+                          </button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-end gap-4 mt-4">
-                  <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-300 rounded-lg"
-                    onClick={handleBatal}
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg"
-                    disabled={isSubmitting}
-                  >
-                    Simpan
-                  </button>
+                  {data.status !== "APPROVED" && data.status !== "REJECTED" && (
+                    <>
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-300 rounded-lg"
+                        onClick={handleBatal}
+                      >
+                        Batal
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Menyimpan..." : "Simpan"}
+                      </button>
+                    </>
+                  )}
                 </div>
               </Form>
             )}
           </Formik>
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
+            idFile={[data.proposal]}
+            idData={data.id}
+            type={typeModal}
+            style="applications"
+          />
         </div>
       </div>
     </main>

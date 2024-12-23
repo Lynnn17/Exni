@@ -8,10 +8,20 @@ import InputField from "./InputField";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
 
-const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
+const Modal = ({
+  isOpenModal,
+  onCloseModal,
+  idDataModal,
+  type,
+  style = "assets",
+}) => {
   if (!isOpenModal || !idDataModal) return null;
 
   const history = useNavigate();
+
+  const maxFiles = style === "assets" ? (type === "albums" ? 8 : 3) : 1;
+  const accept =
+    style === "assets" ? (type === "albums" ? "image/*" : ".pdf") : ".pdf";
 
   // Schema validasi dengan Yup berdasarkan tipe file
   const validationSchema = Yup.object().shape({
@@ -46,25 +56,44 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
   // Fungsi submit form
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
-    values.file.forEach((file) => {
-      if (type === "document") {
-        formData.append("documents", file);
-      } else {
-        formData.append(type, file);
-      }
-    });
+    if (style === "assets") {
+      values.file.forEach((file) => {
+        if (type === "document") {
+          formData.append("documents", file);
+        } else {
+          formData.append(type, file);
+        }
+      });
+    } else {
+      formData.append(type, values.file[0]);
+    }
 
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_API_URL}assets/${idDataModal}/${type}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      let response;
+      if (style === "assets") {
+        console.log("idDataModal", idDataModal);
+        response = await axios.put(
+          `${import.meta.env.VITE_API_URL}assets/${idDataModal}/${type}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        response = await axios.put(
+          `${import.meta.env.VITE_API_URL}applications/${idDataModal}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      }
 
       console.log("Response", response.data);
       resetForm();
@@ -98,7 +127,7 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
 
         {/* Form */}
         <Formik
-          initialValues={{ image: null }}
+          initialValues={{ file: [] }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -111,8 +140,8 @@ const Modal = ({ isOpenModal, onCloseModal, idDataModal, type }) => {
                   type="file"
                   label={type}
                   name="file"
-                  maxFiles={type === "albums" ? 8 : 3}
-                  accept={type === "albums" ? "image/*" : ".pdf"}
+                  maxFiles={maxFiles}
+                  accept={accept}
                   onChange={(e) =>
                     setFieldValue("file", e.currentTarget.files[0])
                   }

@@ -6,6 +6,7 @@ import StatusSelect from "./reusable/StatusSelect";
 import CardHome from "./reusable/card/CardHome";
 import FotoKapal4 from "../assets/kapal4.png";
 import Pagination from "./admin/Pagination";
+import { Formik, Form } from "formik";
 
 // Komponen untuk menampilkan bagian Tentang Kami
 const AboutSection = ({ onPesanSekarangClick, className }) => (
@@ -147,7 +148,11 @@ const Home = () => {
         <StatusSelect
           value={status}
           onChange={handleStatusChange}
-          options={options}
+          options={[
+            { value: "active", label: "Active" },
+            { value: "inactive", label: "Inactive" },
+            { value: "pending", label: "Pending" },
+          ]}
           customStyles={customStyles}
         />
       </div>
