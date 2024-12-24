@@ -105,13 +105,22 @@ const Detail = () => {
                 </p>
                 <div className="flex gap-2">
                   <button className="bg-red-500 py-2 px-4 text-white rounded-2xl">
-                    <Link to={"/user/asset/tenant"}>Keluar</Link>
+                    <Link to={"/user/asset/building"}>Keluar</Link>
                   </button>
-                  <button className="bg-[#404C58] py-2 px-4 text-white rounded-2xl">
-                    <Link to={`/user/asset/tenant/pesan/${id}`}>
-                      PESAN SEKARANG
-                    </Link>
-                  </button>
+                  {buildingData.isAvailable ? ( // Kondisi untuk tombol aktif/nonaktif
+                    <button className="bg-[#404C58] py-2 px-4 text-white rounded-2xl">
+                      <Link to={`/user/asset/building/pesan/${id}`}>
+                        PESAN SEKARANG
+                      </Link>
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-gray-400 py-2 px-4 text-white rounded-2xl cursor-not-allowed"
+                      disabled
+                    >
+                      TIDAK TERSEDIA
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

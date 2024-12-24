@@ -7,6 +7,7 @@ const CardUserBuilding = ({
   deskripsi,
   linkPesan,
   linkDetail,
+  isAvailable, 
 }) => {
   return (
     <div className="bg-white rounded-lg shadow-xl w-full mb-2">
@@ -31,12 +32,21 @@ const CardUserBuilding = ({
           {deskripsi}
         </div>
         <div className="py-4 pt-6">
-          <Link
-            className="bg-[#404C58] text-white px-4 py-2 font-bold text-xs rounded-2xl"
-            to={linkPesan}
-          >
-            PESAN SEKARANG
-          </Link>
+          {isAvailable ? ( // Kondisi untuk tombol aktif/nonaktif
+            <Link
+              className="bg-[#404C58] text-white px-4 py-2 font-bold text-xs rounded-2xl"
+              to={linkPesan}
+            >
+              PESAN SEKARANG
+            </Link>
+          ) : (
+            <button
+              className="bg-gray-400 text-white px-4 py-2 font-bold text-xs rounded-2xl cursor-not-allowed"
+              disabled
+            >
+              TIDAK TERSEDIA
+            </button>
+          )}
         </div>
         <div className="pt-3 text-center text-sm">
           <Link to={linkDetail}>Lihat Selengkapnya</Link>

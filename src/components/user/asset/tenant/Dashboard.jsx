@@ -51,6 +51,7 @@ const Dashboard = () => {
                 address={item.tenants.address || "N/A"}
                 deskripsi={item.description || "Tidak ada deskripsi"}
                 idAset={item.id}
+                isAvailable={item.isAvailable}
                 linkDetail={`detail/${item.id}`}
                 linkPesan={`pesan/${item.id}`}
               />
