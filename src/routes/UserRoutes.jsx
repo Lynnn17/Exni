@@ -7,7 +7,7 @@ import TransaksiDashboardRoutes from "./UserRoutes/TransactionDashboardRoutes";
 const UserRoutes = () => {
   return (
     <Routes>
-      <Route path="/dashboard" element={<DashboardHome />} />
+      <Route path="/dashboard/:id" element={<DashboardHome />} />
       <Route path="/asset/*" element={<AssetDashboardRoutes />} />
       <Route path="/submission/*" element={<SubmissionDashboardRoutes />} />\
       <Route path="/transaction/*" element={<TransaksiDashboardRoutes />} />
