@@ -118,9 +118,7 @@ const Dashboard = () => {
                     deskripsi={item.description || "N/A"}
                     link={`edit/${item.id}`}
                     modalFile={() => handleModalFile(item.documents, item.id)}
-                    keterangan={
-                      item.isAvailable ? "Tersedia" : "Tidak Tersedia"
-                    }
+                    keterangan={item.isAvailable}
                     modalGambar={() => handleModalGambar(item.albums, item.id)}
                     modalDelete={() => {
                       setConfirmModalOpen(true);
