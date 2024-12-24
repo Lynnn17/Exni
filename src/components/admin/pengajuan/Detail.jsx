@@ -28,9 +28,7 @@ const Detail = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const optionsPengajuan = [
-    { value: "PROCESS", label: "Process" },
     { value: "APPROVED", label: "Disetujui" },
-    { value: "PENDING", label: "Pending" },
     { value: "REJECTED", label: "Ditolak" },
   ];
 
@@ -221,6 +219,7 @@ const Detail = () => {
                   label="Tanggal Update"
                   value={Moment(data?.updatedAt).format("D MMM YYYY")}
                 />
+                <TenantInfo label="Status Pengajuan" value={data?.status} />
               </div>
             </div>
           </div>
