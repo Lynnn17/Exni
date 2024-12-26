@@ -97,31 +97,33 @@ const Dashboard = () => {
                   Data tidak ditemukan
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                  {data?.assets?.map((item, i) => (
-                    <Card
-                      key={item.id || i} // Use unique key for better re-rendering
-                      foto={item.albums?.[0] || ""}
-                      title={item.name || "N/A"}
-                      plat={item.vehicles?.no_police || "N/A"}
-                      type={""} // Placeholder for type
-                      year={item.vehicles?.year || "N/A"}
-                      machine={item.vehicles?.no_police || "N/A"}
-                      frame={item.vehicles?.no_frame || "N/A"}
-                      condition={""} // Placeholder for condition
-                      link={`edit/${item.id}`}
-                      modalFile={() =>
-                        handleModalFile(item.documents, item.id, "Document")
-                      }
-                      modalGambar={() =>
-                        handleModalFile(item.albums, item.id, "Gambar")
-                      }
-                      modalDelete={() => {
-                        setConfirmModalOpen(true);
-                        setSelectedId(item.id);
-                      }}
-                    />
-                  ))}
+                <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                    {data?.assets?.map((item, i) => (
+                      <Card
+                        key={item.id || i} // Use unique key for better re-rendering
+                        foto={item.albums?.[0] || ""}
+                        title={item.name || "N/A"}
+                        plat={item.vehicles?.no_police || "N/A"}
+                        type={""} // Placeholder for type
+                        year={item.vehicles?.year || "N/A"}
+                        machine={item.vehicles?.no_police || "N/A"}
+                        frame={item.vehicles?.no_frame || "N/A"}
+                        condition={""} // Placeholder for condition
+                        link={`edit/${item.id}`}
+                        modalFile={() =>
+                          handleModalFile(item.documents, item.id, "Document")
+                        }
+                        modalGambar={() =>
+                          handleModalFile(item.albums, item.id, "Gambar")
+                        }
+                        modalDelete={() => {
+                          setConfirmModalOpen(true);
+                          setSelectedId(item.id);
+                        }}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
 

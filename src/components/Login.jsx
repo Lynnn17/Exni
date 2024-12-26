@@ -6,6 +6,8 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import InputField from "./reusable/InputFieldbackup";
 import { useNavigate } from "react-router-dom";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,16 +38,16 @@ const Login = () => {
         }
       );
 
-      console.log("Login successful:", response.data);
-      const token = response.data.access_token;
-
+      const token = response.data.data.access_token;
       localStorage.setItem("token", token);
-      alert("Login successful!");
-      // resetForm();
-      // navigate("/user/dashboard");
+      StatusAlertService.showSuccess("Login successful!");
+      resetForm();
+      navigate("/user/dashboard");
     } catch (error) {
       console.error("Login failed:", error.response || error.message);
-      alert("Login failed. Please check your credentials.");
+      StatusAlertService.showError(
+        "Login failed. Please check your credentials."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -56,6 +58,7 @@ const Login = () => {
       className="w-full h-screen bg-cover bg-no-repeat bg-center"
       style={{ backgroundImage: `url(${bgLogin})` }}
     >
+      <StatusAlert />
       <div className="h-full flex justify-center items-center">
         <div className="flex">
           {/* Card */}
@@ -126,7 +129,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          {/* End Image Section */}
         </div>
       </div>
     </div>

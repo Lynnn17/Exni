@@ -112,41 +112,43 @@ const Dashboard = () => {
             <Loading />
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                {data?.assets?.length > 0 ? (
-                  data?.assets?.map((item, i) => (
-                    <div key={item.id || i}>
-                      <Card
-                        foto={item.albums?.[0] || ""}
-                        title={item.name || "N/A"}
-                        address={item.properties?.address || "N/A"}
-                        alokasi={item.properties?.allocation || "N/A"}
-                        landSize={item.properties?.landArea || "N/A"}
-                        buildingSize={item.properties?.buildingArea || "N/A"}
-                        harga={item.price || "N/A"}
-                        deskripsi={item.description || "N/A"}
-                        link={`edit/${item.id}`}
-                        modalFile={() =>
-                          handleModalFile(item.documents, item.id)
-                        }
-                        keterangan={
-                          item.isAvailable ? "Tersedia" : "Tidak Tersedia"
-                        }
-                        modalGambar={() =>
-                          handleModalGambar(item.albums, item.id)
-                        }
-                        modalDelete={() => {
-                          setConfirmModalOpen(true);
-                          setIdData(item.id);
-                        }}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p className="col-span-full text-center text-gray-500">
-                    Tidak ada data tersedia.
-                  </p>
-                )}
+              <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                  {data?.assets?.length > 0 ? (
+                    data?.assets?.map((item, i) => (
+                      <div key={item.id || i}>
+                        <Card
+                          foto={item.albums?.[0] || ""}
+                          title={item.name || "N/A"}
+                          address={item.properties?.address || "N/A"}
+                          alokasi={item.properties?.allocation || "N/A"}
+                          landSize={item.properties?.landArea || "N/A"}
+                          buildingSize={item.properties?.buildingArea || "N/A"}
+                          harga={item.price || "N/A"}
+                          deskripsi={item.description || "N/A"}
+                          link={`edit/${item.id}`}
+                          modalFile={() =>
+                            handleModalFile(item.documents, item.id)
+                          }
+                          keterangan={
+                            item.isAvailable ? "Tersedia" : "Tidak Tersedia"
+                          }
+                          modalGambar={() =>
+                            handleModalGambar(item.albums, item.id)
+                          }
+                          modalDelete={() => {
+                            setConfirmModalOpen(true);
+                            setIdData(item.id);
+                          }}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="col-span-full text-center text-gray-500">
+                      Tidak ada data tersedia.
+                    </p>
+                  )}
+                </div>
               </div>
 
               {/* Modal File */}

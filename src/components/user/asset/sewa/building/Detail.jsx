@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import HeaderForm from "../../../reusable/HeaderForm";
-import SectionDivider from "../../../reusable/SectionDivider";
-import TenantInfo from "../../../reusable/TenantInfo";
+import HeaderForm from "../../../../reusable/HeaderForm";
+import SectionDivider from "../../../../reusable/SectionDivider";
+import TenantInfo from "../../../../reusable/TenantInfo";
 import Foto from "../../../../assets/gedung.png";
-import PaymentTable from "../../../reusable/PaymentTable";
+import PaymentTable from "../../../../reusable/PaymentTable";
 
 const Detail = () => {
   const data = [

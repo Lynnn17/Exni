@@ -12,6 +12,7 @@ import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const Detail = () => {
   const { id } = useParams();
@@ -38,7 +39,7 @@ const Detail = () => {
     fetchData();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (!buildingData) return <div>Data tidak ditemukan.</div>;
 
   return (

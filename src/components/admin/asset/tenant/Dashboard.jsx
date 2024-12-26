@@ -94,33 +94,35 @@ const Dashboard = () => {
                 </p>
               ) : (
                 <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                    {data?.assets?.map((item, i) => (
-                      <Card
-                        key={i}
-                        foto={item.albums[0]}
-                        name={item.name}
-                        address={item.tenants.address}
-                        building={item.tenants.building}
-                        capacity={item.tenants.floor}
-                        tenant={item.tenants.tenant}
-                        link={`edit/${item.id}`}
-                        harga={item.price}
-                        keterangan={item.isAvailable}
-                        linkFile={item.document}
-                        deskripsi={item.description}
-                        modalFile={() =>
-                          handleModalFile(item.documents, item.id, "Document")
-                        }
-                        modalGambar={() =>
-                          handleModalFile(item.albums, item.id, "Gambar")
-                        }
-                        modalDelete={() => {
-                          setConfirmModalOpen(true);
-                          setSelectedId(item.id);
-                        }}
-                      />
-                    ))}
+                  <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                      {data?.assets?.map((item, i) => (
+                        <Card
+                          key={i}
+                          foto={item.albums[0]}
+                          name={item.name}
+                          address={item.tenants.address}
+                          building={item.tenants.building}
+                          capacity={item.tenants.floor}
+                          tenant={item.tenants.tenant}
+                          link={`edit/${item.id}`}
+                          harga={item.price}
+                          keterangan={item.isAvailable}
+                          linkFile={item.document}
+                          deskripsi={item.description}
+                          modalFile={() =>
+                            handleModalFile(item.documents, item.id, "Document")
+                          }
+                          modalGambar={() =>
+                            handleModalFile(item.albums, item.id, "Gambar")
+                          }
+                          modalDelete={() => {
+                            setConfirmModalOpen(true);
+                            setSelectedId(item.id);
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                   {/* Modal untuk File */}
                   <Modal

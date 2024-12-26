@@ -4,10 +4,12 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import axios from "axios";
 import Pagination from "../../Pagination";
+import Loading from "../../../reusable/Loading";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Token dari localStorage
   const token = localStorage.getItem("token");
@@ -23,6 +25,8 @@ const Dashboard = () => {
       setData(response.data.data.assets);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,26 +46,35 @@ const Dashboard = () => {
           <Search />
         </HeaderSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-          {data?.assets?.length > 0 ? (
-            data?.assets?.map((item) => (
-              <CardUserTenant
-                foto={item.albums?.[0] || "https://via.placeholder.com/150"}
-                title={item.name || "N/A"}
-                address={item.tenants.address || "N/A"}
-                deskripsi={item.description || "Tidak ada deskripsi"}
-                idAset={item.id}
-                linkDetail={`detail/${item.id}`}
-                linkPesan={`pesan/${item.id}`}
-              />
-            ))
-          ) : (
-            <p className="col-span-full text-center text-gray-500">
-              Tidak ada data tersedia.
-            </p>
-          )}
-        </div>
-
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                {data?.assets?.length > 0 ? (
+                  data?.assets?.map((item) => (
+                    <CardUserTenant
+                      foto={
+                        item.albums?.[0] || "https://via.placeholder.com/150"
+                      }
+                      title={item.name || "N/A"}
+                      address={item.tenants.address || "N/A"}
+                      deskripsi={item.description || "Tidak ada deskripsi"}
+                      idAset={item.id}
+                      linkDetail={`detail/${item.id}`}
+                      linkPesan={`pesan/${item.id}`}
+                    />
+                  ))
+                ) : (
+                  <p className="col-span-full text-center text-gray-500">
+                    Tidak ada data tersedia.
+                  </p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
         <Pagination />
       </div>
     </main>
