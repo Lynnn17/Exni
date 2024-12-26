@@ -8,6 +8,8 @@ import Search from "../../../reusable/Search";
 import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import Loading from "../../../reusable/Loading";
+import { StatusAlertServiceClass } from "react-status-alert/dist/status-alert-service";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +21,8 @@ const Dashboard = () => {
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const token = localStorage.getItem("token");
 
   const headers = {
@@ -26,14 +30,16 @@ const Dashboard = () => {
   };
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}assets?type=VEHICLE`
       );
-      console.log("data", response.data.data.assets);
       setData(response.data.data.assets);
+      setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      setIsLoading(false);
+      StatusAlertService.showError("Gagal memuat data!");
     }
   };
 
@@ -49,6 +55,7 @@ const Dashboard = () => {
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}assets/${selectedId}`,
@@ -57,10 +64,11 @@ const Dashboard = () => {
         }
       );
       setConfirmModalOpen(false);
+      setIsLoading(false);
       StatusAlertService.showSuccess("Data berhasil dihapus!");
       fetchData();
     } catch (error) {
-      console.error("Error deleting data:", error);
+      setIsLoading(false);
       StatusAlertService.showError("Data gagal dihapus!");
     }
   };
@@ -80,48 +88,64 @@ const Dashboard = () => {
           >
             <Search />
           </HeaderSection>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <>
+              {data?.assets?.length === 0 ? (
+                <div className="text-center text-gray-500">
+                  Data tidak ditemukan
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                  {data?.assets?.map((item, i) => (
+                    <Card
+                      key={item.id || i} // Use unique key for better re-rendering
+                      foto={item.albums?.[0] || ""}
+                      title={item.name || "N/A"}
+                      plat={item.vehicles?.no_police || "N/A"}
+                      type={""} // Placeholder for type
+                      year={item.vehicles?.year || "N/A"}
+                      machine={item.vehicles?.no_police || "N/A"}
+                      frame={item.vehicles?.no_frame || "N/A"}
+                      condition={""} // Placeholder for condition
+                      link={`edit/${item.id}`}
+                      modalFile={() =>
+                        handleModalFile(item.documents, item.id, "Document")
+                      }
+                      modalGambar={() =>
+                        handleModalFile(item.albums, item.id, "Gambar")
+                      }
+                      modalDelete={() => {
+                        setConfirmModalOpen(true);
+                        setSelectedId(item.id);
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {data?.assets?.map((item, i) => (
-              <Card
-                key={i}
-                foto={item.albums[0]}
-                title={item.name}
-                plat={item.vehicles.no_police}
-                type={""}
-                year={item.vehicles.year}
-                machine={item.vehicles.no_police}
-                frame={item.vehicles.no_frame}
-                condition=""
-                link={`edit/${item.id}`}
-                modalFile={() =>
-                  handleModalFile(item.documents, item.id, "Document")
-                }
-                modalGambar={() =>
-                  handleModalFile(item.albums, item.id, "Gambar")
-                }
-                modalDelete={() => {
-                  setConfirmModalOpen(true);
-                  setSelectedId(item.id);
-                }}
+              {/* Modal for File */}
+              <Modal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                data={selectedData}
+                idFile={selectedData}
+                idData={selectedId}
+                type={typeModal}
               />
-            ))}
-          </div>
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setModalOpen(false)}
-            data={selectedData}
-            idFile={selectedData}
-            idData={selectedId}
-            type={typeModal}
-          />
 
-          <ModalConfirm
-            isOpen={confirmModalOpen}
-            onClose={() => setConfirmModalOpen(false)}
-            onConfirm={handleDelete}
-          />
-          <Pagination />
+              {/* Confirmation Modal */}
+              <ModalConfirm
+                isOpen={confirmModalOpen}
+                onClose={() => setConfirmModalOpen(false)}
+                onConfirm={handleDelete}
+              />
+
+              {/* Pagination */}
+              <Pagination />
+            </>
+          )}
         </div>
       </main>
     </>

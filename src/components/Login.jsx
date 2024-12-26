@@ -37,7 +37,8 @@ const Login = () => {
       );
 
       console.log("Login successful:", response.data);
-      const token = response.data.token;
+      const token = response.data.access_token;
+
       localStorage.setItem("token", token);
       alert("Login successful!");
       // resetForm();

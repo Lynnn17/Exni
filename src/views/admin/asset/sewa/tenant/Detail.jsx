@@ -1,7 +1,7 @@
-import Sidebar from "../../../../components/admin/Sidebar";
-import Header from "../../../../components/admin/Header";
-import Content from "../../../../components/admin/asset/sewa/Detail";
-import NavMobile from "../../../../components/admin/NavMobile";
+import Sidebar from "../../../../../components/admin/Sidebar";
+import Header from "../../../../../components/admin/Header";
+import Content from "../../../../../components/admin/asset/sewa/tenant/Detail";
+import NavMobile from "../../../../../components/admin/NavMobile";
 
 const Detail = () => {
   return (

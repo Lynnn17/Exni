@@ -8,6 +8,7 @@ import HeaderForm from "../../../reusable/HeaderForm";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const Edit = () => {
   const { id } = useParams();
@@ -108,25 +109,7 @@ const Edit = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const endpoint = `${import.meta.env.VITE_API_URL}assets/${id}`;
-
-  //     await axios.put(endpoint, data, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
-  //     StatusAlertService.showSuccess("Data gedung berhasil diperbarui!");
-  //     setTimeout(() => navigate("/admin/asset/building"), 2000);
-  //   } catch (error) {
-  //     console.error("Error updating building data:", error);
-  //     StatusAlertService.showError("Gagal memperbarui data gedung.");
-  //   }
-  // };
-
-  // if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <Formik

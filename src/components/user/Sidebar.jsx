@@ -1,21 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
-import { IoHome } from "react-icons/io5";
-import { FaUsers } from "react-icons/fa6";
+import { IoHome, IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { FaUsers, FaBuilding, FaCarSide } from "react-icons/fa";
 import { TbBuildingWarehouse } from "react-icons/tb";
-import { GiReceiveMoney } from "react-icons/gi";
-import { FaBuilding } from "react-icons/fa";
 import { IoIosCube } from "react-icons/io";
-import { FaCarSide } from "react-icons/fa";
+import { GiReceiveMoney } from "react-icons/gi";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
 
 const Sidebar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
+  };
+
   const activeStyle = "text-black font-semibold";
   const defaultStyle = "text-teks";
+
   return (
-    <aside className=" bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60 ">
+    <aside className="bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60">
       <div className="px-1">
         <img src={LogoExni} alt="logo" className="w-[100px] h-[38px]" />
 
@@ -49,10 +54,13 @@ const Sidebar = () => {
             <div className="w-20 h-[0.3px] bg-teks ml-1"></div>
           </div>
 
-          <div className="flex pt-4 items-center">
+          {/* Aset Sewa Dropdown */}
+          <div
+            className="flex pt-4 items-center cursor-pointer"
+            onClick={toggleDropdown}
+          >
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
-              to="/user/asset/sewa-aset"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -61,7 +69,45 @@ const Sidebar = () => {
             >
               Aset Sewa
             </NavLink>
+            {isDropdownOpen ? (
+              <IoChevronUp className="text-xl ml-2" />
+            ) : (
+              <IoChevronDown className="text-xl ml-2" />
+            )}
           </div>
+
+          {/* Dropdown content for Sewa Aset */}
+          {isDropdownOpen && (
+            <div className="pl-4">
+              <div className="flex pt-4 items-center">
+                <FaBuilding className="text-xl" />
+                <NavLink
+                  to="/user/asset/sewa-building"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? activeStyle : defaultStyle
+                    } text-sm uppercase pl-3 font-medium`
+                  }
+                >
+                  Sewa Gedung
+                </NavLink>
+              </div>
+
+              <div className="flex pt-4 items-center">
+                <IoIosCube className="text-xl" />
+                <NavLink
+                  to="/user/asset/sewa-tenant"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? activeStyle : defaultStyle
+                    } text-sm uppercase pl-3 font-medium`
+                  }
+                >
+                  Sewa Tenant
+                </NavLink>
+              </div>
+            </div>
+          )}
 
           <div className="flex pt-4 items-center">
             <FaHandshakeSimple className="text-2xl" />

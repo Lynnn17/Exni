@@ -15,6 +15,9 @@ const Modal = ({
   style = "assets",
   idFile = null,
 }) => {
+  console.log("type", type);
+  console.log("idFile", idFile);
+
   const [editModalOpen, setEditModalOpen] = React.useState(false);
   const [addModalOpen, setAddModalOpen] = React.useState(false);
   const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);

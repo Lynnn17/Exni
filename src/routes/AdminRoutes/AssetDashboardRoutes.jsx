@@ -1,7 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import SewaAset from "../../views/admin/asset/sewa/Dashboard";
-import SewaDetail from "../../views/admin/asset/sewa/Detail";
+import SewaTenant from "../../views/admin/asset/sewa/tenant/Dashboard";
+import SewaTenantDetail from "../../views/admin/asset/sewa/tenant/Detail";
+import SewaBuilding from "../../views/admin/asset/sewa/building/Dashboard";
+import SewaBuildingDetail from "../../views/admin/asset/sewa/building/Detail";
 import BuildingDashboard from "../../views/admin/asset/building/Dashboard";
 import AddBulding from "../../views/admin/asset/building/Add";
 import EditBuilding from "../../views/admin/asset/building/Edit";
@@ -14,8 +16,10 @@ import EditVehicle from "../../views/admin/asset/vehicle/Edit";
 
 const AssetDashboardRoutes = () => (
   <Routes>
-    <Route path="/sewa-aset" element={<SewaAset />} />
-    <Route path="/sewa-aset/detail/:id" element={<SewaDetail />} />
+    <Route path="/sewa-tenant" element={<SewaTenant />} />
+    <Route path="/sewa-tenant/detail/:id" element={<SewaTenantDetail />} />
+    <Route path="/sewa-building" element={<SewaBuilding />} />
+    <Route path="/sewa-building/detail/:id" element={<SewaBuildingDetail />} />
     <Route path="/building" element={<BuildingDashboard />} />
     <Route path="/building/add" element={<AddBulding />} />
     <Route path="/building/edit/:id" element={<EditBuilding />} />

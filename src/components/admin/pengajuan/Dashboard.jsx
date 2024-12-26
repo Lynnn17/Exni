@@ -7,6 +7,7 @@ import { BsPencilSquare } from "react-icons/bs";
 import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
+import Loading from "../../reusable/Loading";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -41,12 +42,14 @@ const Dashboard = () => {
       <span
         key={index}
         className={`font-medium px-2 py-1 rounded ${
-          item.status === "PENDING"
+          item.status === "PROCESS"
             ? "bg-yellow-500 text-white"
-            : item.status === "REJECT"
+            : item.status === "REJECTED"
             ? "bg-red-500 text-white"
-            : item.status === "APPROVE"
+            : item.status === "APPROVED"
             ? "bg-green-500 text-white"
+            : item.status === "PENDING"
+            ? "bg-blue-500 text-white"
             : "bg-gray-500 text-white"
         }`}
       >
@@ -79,6 +82,10 @@ const Dashboard = () => {
       console.error(error);
     }
   }, []);
+
+  if (!datas) {
+    return <Loading />;
+  }
 
   return (
     <>

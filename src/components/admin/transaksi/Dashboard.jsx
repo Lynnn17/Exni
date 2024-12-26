@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import HeaderSection from "../../reusable/HeaderSection";
 import { FaCircleInfo } from "react-icons/fa6";
-import { LuPenSquare } from "react-icons/lu";
 import Pagination from "../Pagination";
 import Search from "../../reusable/Search";
 import DataTable from "../../dataTable/DataTable";
@@ -12,12 +11,14 @@ import Moment from "moment";
 import { NumericFormat } from "react-number-format";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
-import { Navigate } from "react-router-dom";
+import Loading from "../../reusable/Loading";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const columns = [
     { title: "No", key: "no" },
@@ -67,6 +68,7 @@ const Dashboard = () => {
   }));
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}transactions`,
@@ -76,14 +78,15 @@ const Dashboard = () => {
           },
         }
       );
-      console.log(response.data);
       setData(response.data.data);
+      setIsLoading(false);
     } catch (error) {
-      console.error(error);
+      setIsLoading(false);
+      StatusAlertService.showError("Gagal memuat data!");
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -104,11 +107,6 @@ const Dashboard = () => {
         </button>
       ),
     },
-    // {
-    //   icon: <LuPenSquare />,
-    //   link: (item) => `/admin/transaction/detail/${item}`,
-    //   className: "text-exni text-2xl pt-1",
-    // },
   ];
 
   return (
@@ -123,17 +121,22 @@ const Dashboard = () => {
         >
           <Search />
         </HeaderSection>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <Modal
+              isOpen={isModalOpen}
+              onClose={() => setModalOpen(false)}
+              data={selectedData}
+              fetchData={fetchData}
+            />
 
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setModalOpen(false)}
-          data={selectedData}
-          fetchData={fetchData}
-        />
+            <DataTable columns={columns} data={datas} actions={actions} />
 
-        <DataTable columns={columns} data={datas} actions={actions} />
-
-        <Pagination />
+            <Pagination />
+          </>
+        )}
       </div>
     </main>
   );

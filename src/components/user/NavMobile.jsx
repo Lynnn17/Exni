@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoCloseSharp, IoHome } from "react-icons/io5";
+import {
+  IoCloseSharp,
+  IoHome,
+  IoChevronDown,
+  IoChevronUp,
+} from "react-icons/io5";
 import { FaUsers, FaBuilding, FaCarSide } from "react-icons/fa";
 import { TbBuildingWarehouse } from "react-icons/tb";
 import { GiReceiveMoney } from "react-icons/gi";
@@ -13,9 +18,14 @@ import { MdSpaceDashboard } from "react-icons/md";
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
   };
 
   const activeClass = "text-black font-semibold"; // Active class styling
@@ -85,12 +95,52 @@ const NavMobile = () => {
                         isActive ? activeClass : "text-teks"
                       }`
                     }
+                    onClick={toggleDropdown} // Toggle dropdown on click
                   >
                     <TbBuildingWarehouse className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">
                       Aset Sewa
                     </p>
+                    {/* Display the dropdown icon */}
+                    {isDropdownOpen ? (
+                      <IoChevronUp className="ml-auto text-xl" />
+                    ) : (
+                      <IoChevronDown className="ml-auto text-xl" />
+                    )}
                   </NavLink>
+
+                  {/* Dropdown for Aset Sewa */}
+                  {isDropdownOpen && (
+                    <div className="pl-8">
+                      <NavLink
+                        to="/user/asset/"
+                        className={({ isActive }) =>
+                          `flex items-center pt-4 ${
+                            isActive ? activeClass : "text-teks"
+                          }`
+                        }
+                      >
+                        <FaBuilding className="text-2xl" />
+                        <p className="text-sm uppercase pl-3 font-medium">
+                          Sewa Gedung
+                        </p>
+                      </NavLink>
+
+                      <NavLink
+                        to="/user/asset/sewa-tenant"
+                        className={({ isActive }) =>
+                          `flex items-center pt-4 ${
+                            isActive ? activeClass : "text-teks"
+                          }`
+                        }
+                      >
+                        <IoIosCube className="text-2xl" />
+                        <p className="text-sm uppercase pl-3 font-medium">
+                          Sewa Tenant
+                        </p>
+                      </NavLink>
+                    </div>
+                  )}
 
                   <NavLink
                     to="/user/submission"

@@ -8,10 +8,12 @@ import HeaderForm from "../../../reusable/HeaderForm";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const EditVehicleAsset = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [initialValues, setInitialValues] = useState({
     nama: "",
     noPlat: "",
@@ -46,6 +48,7 @@ const EditVehicleAsset = () => {
       description: values.deskripsi,
       price: values.harga,
     };
+
     try {
       await axios.put(
         `${import.meta.env.VITE_API_URL}assets/vehicles/${id}`,
@@ -57,16 +60,12 @@ const EditVehicleAsset = () => {
         }
       );
       // console.log("Success Response:", response.data);
+
       resetForm();
       StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
-      setTimeout(() => {
-        navigate("/admin/asset/vehicle");
-      }, 1000);
-      // resetForm();
-      // StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
-      // navigate("/admin/asset/vehicle");
+
+      navigate("/admin/asset/vehicle");
     } catch (error) {
-      console.error("Error saving data:", error);
       StatusAlertService.showError("Data Vehicle gagal disimpan!");
     } finally {
       setSubmitting(false);
@@ -78,6 +77,7 @@ const EditVehicleAsset = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const endpoint = `${import.meta.env.VITE_API_URL}assets/${id}`;
@@ -87,7 +87,7 @@ const EditVehicleAsset = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.data.asset);
+
       const data = response.data.data.asset;
       setInitialValues({
         nama: data.name,
@@ -98,8 +98,9 @@ const EditVehicleAsset = () => {
         harga: data.price,
         deskripsi: data.description,
       });
+      setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setLoading(false);
       StatusAlertService.showError("Gagal memuat data. Silakan coba lagi.");
     }
   };
@@ -107,6 +108,10 @@ const EditVehicleAsset = () => {
   useEffect(() => {
     fetchData();
   }, [id]);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Formik

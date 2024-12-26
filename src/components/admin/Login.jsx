@@ -46,7 +46,6 @@ const Login = () => {
       );
 
       console.log("Login response:", response.data); // Debug respons dari backend
-
       const token = response.data.data.access_token;
       if (!token) {
         throw new Error("Token not received from server");
@@ -55,9 +54,8 @@ const Login = () => {
       localStorage.setItem("token", token);
       StatusAlertService.showSuccess("Login successfully!"); // Menampilkan alert sukses
       resetForm();
-      setTimeout(() => {
-        navigate("/admin/dashboard"); // Redirect setelah login
-      }, 1000);
+
+      navigate("/admin/dashboard"); // Redirect setelah login
     } catch (error) {
       console.error("Login failed:", error.response || error.message); // Debug error
       StatusAlertService.showError(

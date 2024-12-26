@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import HeaderForm from "../../../reusable/HeaderForm";
-import SectionDivider from "../../../reusable/SectionDivider";
+import HeaderForm from "../../../../reusable/HeaderForm";
+import SectionDivider from "../../../../reusable/SectionDivider";
 import { useParams } from "react-router-dom";
-import TenantInfo from "../../../reusable/TenantInfo";
-import Foto from "../../../../assets/gedung.png";
-import PaymentTable from "../../../reusable/PaymentTable";
+import TenantInfo from "../../../../reusable/TenantInfo";
+import PaymentTable from "../../../../reusable/PaymentTable";
 import axios from "axios";
 import Moment from "moment";
 import { NumericFormat } from "react-number-format";
-import Loading from "../../../reusable/Loading";
+import Loading from "../../../../reusable/Loading";
 
 const Detail = () => {
   const [data, setData] = useState([]);
