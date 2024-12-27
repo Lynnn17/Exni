@@ -26,6 +26,7 @@ const Dashboard = () => {
           },
         }
       );
+      console.log("res", response.data);
       setData(response.data.data.rents);
     } catch (error) {
       console.error(error);
@@ -78,7 +79,7 @@ const Dashboard = () => {
                           foto={item.application.asset.albums[0]}
                           title={item.application.asset.name}
                           address={item.application.asset.properties.address}
-                          noContract="2313/B2A3/123323 nunggu backend"
+                          noContract={item.no_contract || "-"}
                           price={item.total_price}
                           broad={
                             item.application.asset.properties.landArea +
@@ -90,6 +91,7 @@ const Dashboard = () => {
                           endDate={item.application.rent_end_date}
                           nameTenant={item.application.user.company}
                           link={`detail/${item.id}`}
+                          informasi={item.information}
                         />
                       ))}
                     </div>

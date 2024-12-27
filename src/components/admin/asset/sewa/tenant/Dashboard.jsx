@@ -19,13 +19,14 @@ const Dashboard = () => {
     try {
       setIsLoading(true); // Mulai loading
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}rents?type=PROPERTY`,
+        `${import.meta.env.VITE_API_URL}rents?type=TENANT`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
+      console.log("res", response.data.data.rents);
       setData(response.data.data.rents);
     } catch (error) {
       console.error(error);
@@ -71,16 +72,22 @@ const Dashboard = () => {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                      {Array.from(Array(10).keys()).map((_, i) => (
+                      {data?.rents?.map((item, i) => (
                         <CardTenant
                           key={i}
-                          foto={Foto}
-                          title={`Kabin Kapal Arunika Samudera ${i + 1}`}
-                          address="PT Pelni JAKARTA"
-                          alokasi="Kabin Kapal"
-                          capacity="16568"
-                          nameTenant="PT. Kekasih Abadi"
-                          link={`edit/${i + 1}`}
+                          foto={item?.application?.asset?.albums[0]}
+                          name={item?.application?.asset?.name}
+                          address={item?.application?.asset?.tenants?.address}
+                          tenant={item?.application?.asset?.tenants?.tenant}
+                          capacity={item?.application?.asset?.tenants?.floor}
+                          nameTenant={item?.application?.user?.company}
+                          building={item?.application?.asset?.tenants.building}
+                          harga={item?.total_price}
+                          noContract={item?.no_contract}
+                          link={`detail/${item.id}`}
+                          startDate={item?.application?.rent_start_date}
+                          endDate={item?.application?.rent_end_date}
+                          informasi={item?.information}
                         />
                       ))}
                     </div>

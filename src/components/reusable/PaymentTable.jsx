@@ -9,6 +9,7 @@ import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { IoReceipt } from "react-icons/io5";
+import { TbReceiptOff } from "react-icons/tb";
 
 const PaymentTable = ({ data }) => {
   const [updatedData, setUpdatedData] = useState(data);
@@ -101,8 +102,8 @@ const PaymentTable = ({ data }) => {
   );
 
   const initialValues = data.reduce((values, item, index) => {
-    values[`status_${index}`] = item.status || "";
-    values[`note_${index}`] = item.note || "";
+    values[`status_${index}`] = "REJECTED" || "";
+    values[`note_${index}`] = item.note || "-";
     return values;
   }, {});
 
@@ -138,7 +139,9 @@ const PaymentTable = ({ data }) => {
                     <th className="px-4 py-2 border-b">TANGGAL</th>
                     <th className="px-4 py-2 border-b">PROGRES PEMBAYARAN</th>
                     <th className="px-4 py-2 border-b">Catatan</th>
-                    <th className="px-4 py-2 border-b">Bukti Transfer</th>
+                    <th className="px-4 py-2 border-b text-center">
+                      Bukti Transfer
+                    </th>
                     <th className="px-4 py-2 border-b text-center">ACTION</th>
                   </tr>
                 </thead>
@@ -146,7 +149,7 @@ const PaymentTable = ({ data }) => {
                   {updatedData.map((item, index) => (
                     <tr
                       key={index}
-                      className="hover:bg-gray-50 transition-colors text-xs border-b"
+                      className="hover:bg-gray-50 transition-colors text-xs border-b "
                     >
                       <td className="px-4 py-2 ">{item.id}</td>
                       <td className="px-4 py-2  ">
@@ -184,16 +187,20 @@ const PaymentTable = ({ data }) => {
                           />
                         </div>
                       </td>
-                      <td className="  ">
+                      <td className="">
                         {item?.receipt ? (
                           <Link
                             target="_blank"
-                            className=" p-2  text-black text-sm font-bold rounded-full "
+                            className="p-2  text-black text-4xl font-bold rounded-full flex justify-center"
                             to={`https://drive.google.com/file/d/${item.receipt}/view`}
                           >
                             <IoReceipt />{" "}
                           </Link>
-                        ) : null}
+                        ) : (
+                          <span className="p-2  text-black text-4xl font-bold rounded-full flex justify-center">
+                            <TbReceiptOff />
+                          </span>
+                        )}
                       </td>
                       <td className="px-4 py-2  text-center flex flex-wrap gap-2 justify-center">
                         {item.status === "APPROVED" ? null : (
@@ -310,7 +317,11 @@ const PaymentTable = ({ data }) => {
                           {" "}
                           <IoReceipt />{" "}
                         </Link>
-                      ) : null}
+                      ) : (
+                        <span className="p-2 bg-blue-500  text-black text-2xl font-bold rounded-full">
+                          <TbReceiptOff />
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}

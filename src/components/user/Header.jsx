@@ -17,7 +17,7 @@ const Header = () => {
       try {
         const decodedToken = jwtDecode(token);
         console.log("Decoded token:", decodedToken);
-        const userName = decodedToken.name || "Anonymous"; // Ambil nama dari token, jika ada
+        const userName = decodedToken.company || "Anonymous"; // Ambil nama dari token, jika ada
         const userRole = decodedToken.role || "unauthorized"; // Ambil role dari token, jika ada
         setUser({ name: userName, role: userRole });
       } catch (error) {

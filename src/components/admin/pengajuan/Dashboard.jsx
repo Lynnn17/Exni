@@ -75,7 +75,6 @@ const Dashboard = () => {
           },
         })
         .then((res) => {
-          console.log(res.data.data.applications);
           setData(res.data.data.applications);
         });
     } catch (error) {

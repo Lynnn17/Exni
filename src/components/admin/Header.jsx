@@ -3,22 +3,21 @@ import { FaMoon } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import IconUser from "../../assets/icon/user.svg";
-import { jwtDecode } from "jwt-decode"; // Import jwt-decode
+import { jwtDecode } from "jwt-decode";
 
 const Header = () => {
   const [user, setUser] = useState({ name: "John Doe", role: "Admin" }); // Default user info
 
   // Fungsi untuk mendekode token dan mendapatkan informasi pengguna
+  const token =
+    sessionStorage.getItem("token") || localStorage.getItem("token");
   const getUserInfoFromToken = () => {
-    const token =
-      sessionStorage.getItem("token") || localStorage.getItem("token");
-
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         console.log("Decoded token:", decodedToken);
-        const userName = decodedToken.name || "Anonymous"; // Ambil nama dari token, jika ada
-        const userRole = decodedToken.role || "unauthorized"; // Ambil role dari token, jika ada
+        const userName = decodedToken.company || "Anonymous";
+        const userRole = decodedToken.role || "unauthorized";
         setUser({ name: userName, role: userRole });
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -30,7 +29,7 @@ const Header = () => {
   // Ambil informasi user saat komponen dimuat
   useEffect(() => {
     getUserInfoFromToken();
-  }, []);
+  }, [token]);
 
   return (
     <header className="bg-white hidden lg:flex py-4 px-4 w-full h-16 rounded-[8px]">

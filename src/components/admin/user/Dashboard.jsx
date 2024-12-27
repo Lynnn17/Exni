@@ -117,7 +117,7 @@ const Dashboard = () => {
         noHP: user.contact || "-",
         iconUser: IconUser,
       }));
-
+      console.log("formattedData", formattedData);
       setData(formattedData);
     } catch (error) {
       console.error("Error fetching user data:", error);

@@ -89,12 +89,7 @@ const NavMobile = () => {
                   </div>
 
                   <NavLink
-                    to="/user/asset/sewa-aset"
-                    className={({ isActive }) =>
-                      `flex items-center pt-4 ${
-                        isActive ? activeClass : "text-teks"
-                      }`
-                    }
+                    className={({}) => `flex items-center pt-4 ${"text-teks"}`}
                     onClick={toggleDropdown} // Toggle dropdown on click
                   >
                     <TbBuildingWarehouse className="text-2xl" />
@@ -113,7 +108,7 @@ const NavMobile = () => {
                   {isDropdownOpen && (
                     <div className="pl-8">
                       <NavLink
-                        to="/user/asset/"
+                        to="/user/asset/sewa-building"
                         className={({ isActive }) =>
                           `flex items-center pt-4 ${
                             isActive ? activeClass : "text-teks"

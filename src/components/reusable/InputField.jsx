@@ -3,7 +3,15 @@ import { Field, ErrorMessage } from "formik";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 
-const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
+const InputField = ({
+  name,
+  label,
+  type,
+  placeholder,
+  maxFiles = 1,
+  onChange,
+  className = "px-2",
+}) => {
   const handleFileChange = (event, field, form) => {
     const files = Array.from(event.target.files);
 
@@ -21,7 +29,7 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
   };
 
   return (
-    <div className="mb-4 px-2">
+    <div className={`mb-4 ${className}`}>
       <label htmlFor={name} className="block text-black pl-1">
         {label}
       </label>
@@ -33,7 +41,7 @@ const InputField = ({ name, label, type, placeholder, maxFiles, onChange }) => {
               type="file"
               placeholder={placeholder}
               onChange={(e) => handleFileChange(e, field, form)}
-              multiple={maxFiles > 1} // Izinkan multi-upload jika batas lebih dari 1
+              multiple={maxFiles > 1}
               className="mt-2 block w-full border border-gray-300 p-2 rounded"
             />
           )}

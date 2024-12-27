@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -15,6 +15,7 @@ import { IoIosCube } from "react-icons/io";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import IconUser from "../../assets/icon/user.svg";
 import { MdSpaceDashboard } from "react-icons/md";
+import { jwtDecode } from "jwt-decode";
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,30 @@ const NavMobile = () => {
   };
 
   const activeClass = "text-black font-semibold"; // Active class styling
+  const [user, setUser] = useState({ name: "John Doe", role: "Admin" }); // Default user info
+
+  // Fungsi untuk mendekode token dan mendapatkan informasi pengguna
+  const token =
+    sessionStorage.getItem("token") || localStorage.getItem("token");
+  const getUserInfoFromToken = () => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log("Decoded token:", decodedToken);
+        const userName = decodedToken.company || "Anonymous";
+        const userRole = decodedToken.role || "unauthorized";
+        setUser({ name: userName, role: userRole });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setUser({ name: "Anonymous", role: "unauthorized" });
+      }
+    }
+  };
+
+  // Ambil informasi user saat komponen dimuat
+  useEffect(() => {
+    getUserInfoFromToken();
+  }, [token]);
 
   return (
     <>
@@ -54,8 +79,8 @@ const NavMobile = () => {
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="pr-6 pl-1">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs">Admin</p>
+                    <p className="text-sm font-medium">{user.name}</p>
+                    <p className="text-xs">{user.role}</p>
                   </div>
                 </div>
                 <NavLink

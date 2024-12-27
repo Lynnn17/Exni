@@ -13,6 +13,7 @@ const CardTenant = ({
   startDate,
   endDate,
   nameTenant,
+  informasi,
   teksLink = "Lihat Selengkapnya",
 }) => {
   return (
@@ -53,6 +54,13 @@ const CardTenant = ({
               {Moment(endDate).format("DD MMMM YYYY")}
             </p>
           </div>
+          <div>
+            <p className="font-semibold text-gray-600">Informasi</p>
+            <div className="mt-1 text-sm text-gray-700 h-24 overflow-y-auto border border-gray-200 rounded-lg p-2">
+              {informasi ? informasi : "-"}
+            </div>
+          </div>
+
           <div className="pt-5 pb-1">
             {nameTenant ? (
               <>

@@ -4,7 +4,7 @@ import bgLogin from "../assets/bg-login.png";
 import fbgLogin from "../assets/front-bg-login.png";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "./reusable/InputFieldbackup";
+import InputField from "./reusable/InputField";
 import { useNavigate } from "react-router-dom";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
