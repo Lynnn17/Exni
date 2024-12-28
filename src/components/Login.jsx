@@ -39,7 +39,13 @@ const Login = () => {
       );
 
       const token = response.data.data.access_token;
+      const user = {
+        company: response.data.data.company,
+        role: response.data.data.role,
+        user_id: response.data.data.user_id,
+      };
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       StatusAlertService.showSuccess("Login successful!");
       resetForm();
       navigate("/user/dashboard");

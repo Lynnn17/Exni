@@ -11,6 +11,7 @@ const InputField = ({
   maxFiles = 1,
   onChange,
   className = "px-2",
+  accept = "*",
 }) => {
   const handleFileChange = (event, field, form) => {
     const files = Array.from(event.target.files);
@@ -37,6 +38,7 @@ const InputField = ({
         <Field name={name}>
           {({ field, form }) => (
             <input
+              accept={accept}
               id={name}
               type="file"
               placeholder={placeholder}

@@ -56,7 +56,7 @@ const Pesan = () => {
             <div className="md:flex md:gap-3">
               <div className="w-full">
                 <SectionDivider title="Properti" />
-                <div className="flex flex-col lg:flex-row justify-between">
+                <div className="flex flex-col lg:flex-row justify-between lg:w-[95%] lg:mx-auto">
                   <div className="pt-2 flex flex-col gap-2">
                     <TenantInfo
                       label="Nama"

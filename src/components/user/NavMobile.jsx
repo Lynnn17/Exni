@@ -30,6 +30,11 @@ const NavMobile = () => {
 
   const activeClass = "text-black font-semibold"; // Active class styling
 
+  const { company, role } = JSON.parse(localStorage.getItem("user")) || {
+    company: "Anonymous",
+    role: "unauthorized",
+  };
+
   return (
     <>
       <nav className="bg-white flex lg:hidden w-full rounded-[8px] p-4 items-center justify-between h-full">
@@ -54,8 +59,8 @@ const NavMobile = () => {
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="pr-6 pl-1">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs">user</p>
+                    <p className="text-sm font-medium">{company}</p>
+                    <p className="text-xs">{role}</p>
                   </div>
                 </div>
                 <NavLink

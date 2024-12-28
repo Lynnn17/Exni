@@ -94,7 +94,7 @@ const Add = () => {
 
       resetForm();
       StatusAlertService.showSuccess("Data tenant berhasil diupdate!");
-      setTimeout(() => navigate("/admin/asset/building"), 1000);
+      navigate("/admin/asset/building");
     } catch (error) {
       console.error("Error saving data:", error);
       StatusAlertService.showError("Data Gedung gagal disimpan!");
