@@ -106,7 +106,7 @@ const Dashboard = () => {
                           capacity={item.tenants.floor}
                           tenant={item.tenants.tenant}
                           link={`edit/${item.id}`}
-                          harga={item.price}
+                          price={item.price}
                           keterangan={item.isAvailable}
                           linkFile={item.document}
                           deskripsi={item.description}

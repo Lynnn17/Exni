@@ -50,10 +50,10 @@ const Login = () => {
       resetForm();
       navigate("/user/dashboard");
     } catch (error) {
-      console.error("Login failed:", error.response || error.message);
       StatusAlertService.showError(
         "Login failed. Please check your credentials."
       );
+      console.error("Login failed:", error.response || error.message);
     } finally {
       setSubmitting(false);
     }

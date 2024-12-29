@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { IoReceipt } from "react-icons/io5";
 import { TbReceiptOff } from "react-icons/tb";
 
-const PaymentTable = ({ data }) => {
+const PaymentTable = ({ data, type = "admin" }) => {
   const [updatedData, setUpdatedData] = useState(data);
   const [readOnlyStates, setReadOnlyStates] = useState(
     data.map(() => true) // Initially all notes are read-only
@@ -173,26 +173,37 @@ const PaymentTable = ({ data }) => {
                       </td>
 
                       <td className="px-4 py-2">
-                        <div>
-                          <Field
-                            as={EditableTextarea}
-                            isReadOnly={readOnlyStates[index]} // Use individual read-only state
-                            onToggleReadOnly={() => handleToggleReadOnly(index)} // Toggle read-only for each note
-                            name={`note_${index}`}
+                        {type !== "admin" ? (
+                          <textarea
+                            className="text-sm w-full border border-gray-300 rounded-md px-3 pt-2 text-gray-700 h-[12vh] lg:h-[20vh] xl:h-[12vh] overflow-y-scroll resize-none no-scrollbar"
+                            rows={3}
+                            value={item.note || "-"}
+                            readOnly
                           />
-                          <ErrorMessage
-                            name={`note_${index}`}
-                            component="div"
-                            className="text-red-500 text-sm"
-                          />
-                        </div>
+                        ) : (
+                          <div>
+                            <Field
+                              as={EditableTextarea}
+                              isReadOnly={readOnlyStates[index]} // Use individual read-only state
+                              onToggleReadOnly={() =>
+                                handleToggleReadOnly(index)
+                              } // Toggle read-only for each note
+                              name={`note_${index}`}
+                            />
+                            <ErrorMessage
+                              name={`note_${index}`}
+                              component="div"
+                              className="text-red-500 text-sm"
+                            />
+                          </div>
+                        )}
                       </td>
                       <td className="">
                         {item?.receipt ? (
                           <Link
                             target="_blank"
                             className="p-2  text-black text-4xl font-bold rounded-full flex justify-center"
-                            to={`https://drive.google.com/file/d/${item.receipt}/view`}
+                            to={`${item.receipt}`}
                           >
                             <IoReceipt />{" "}
                           </Link>
@@ -202,38 +213,45 @@ const PaymentTable = ({ data }) => {
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-2  text-center flex flex-wrap gap-2 justify-center">
-                        {item.status === "APPROVED" ? null : (
-                          <>
-                            <p>
-                              <Field
-                                as={StatusSelect}
-                                name={`status_${index}`}
-                                options={optionsPengajuan}
-                                onChange={(e) => {
-                                  setFieldValue(
-                                    `status_${index}`,
-                                    e.target.value
-                                  );
-                                  handleStatusChange(index, e.target.value);
-                                }}
-                              />
-                              <ErrorMessage
-                                name={`status_${index}`}
-                                component="div"
-                                className="text-red-500 text-sm"
-                              />
-                            </p>
+                      {type !== "admin" ? (
+                        <td className="px-4 py-2  text-center">
+                          <Link
+                            to={`/user/transaction/detail/${item.id}`}
+                            className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
+                          >
+                            Bayar
+                          </Link>
+                        </td>
+                      ) : item.status === "APPROVED" ? null : (
+                        <td className="px-4 py-2  text-center flex flex-wrap gap-2 justify-center">
+                          <p>
+                            <Field
+                              as={StatusSelect}
+                              name={`status_${index}`}
+                              options={optionsPengajuan}
+                              onChange={(e) => {
+                                setFieldValue(
+                                  `status_${index}`,
+                                  e.target.value
+                                );
+                                handleStatusChange(index, e.target.value);
+                              }}
+                            />
+                            <ErrorMessage
+                              name={`status_${index}`}
+                              component="div"
+                              className="text-red-500 text-sm"
+                            />
+                          </p>
 
-                            <button
-                              type="submit"
-                              className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
-                            >
-                              Submit
-                            </button>
-                          </>
-                        )}
-                      </td>
+                          <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
+                          >
+                            Submit
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -287,20 +305,38 @@ const PaymentTable = ({ data }) => {
                       </p>
                     )}
                     <div className="mt-2">
-                      <Field
-                        as={EditableTextarea}
-                        isReadOnly={readOnlyStates[index]} // Use individual read-only state
-                        onToggleReadOnly={() => handleToggleReadOnly(index)} // Toggle read-only for each note
-                        name={`note_${index}`}
-                      />
-                      <ErrorMessage
-                        name={`note_${index}`}
-                        component="div"
-                        className="text-red-500 text-sm"
-                      />
+                      {type !== "admin" ? (
+                        <textarea
+                          className="text-sm w-full border border-gray-300 rounded-md px-3 pt-2 text-gray-700 h-[12vh] lg:h-[20vh] xl:h-[12vh] overflow-y-scroll resize-none no-scrollbar"
+                          rows={3}
+                          value={item.note || "-"}
+                          readOnly
+                        />
+                      ) : (
+                        <>
+                          <Field
+                            as={EditableTextarea}
+                            isReadOnly={readOnlyStates[index]} // Use individual read-only state
+                            onToggleReadOnly={() => handleToggleReadOnly(index)} // Toggle read-only for each note
+                            name={`note_${index}`}
+                          />
+                          <ErrorMessage
+                            name={`note_${index}`}
+                            component="div"
+                            className="text-red-500 text-sm"
+                          />
+                        </>
+                      )}
                     </div>
                     <div className="mt-2 text-center flex justify-between">
-                      {item.status === "APPROVED" ? null : (
+                      {type !== "admin" ? (
+                        <Link
+                          to={`/user/transaction/detail/${item.id}`}
+                          className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600 flex  items-center"
+                        >
+                          Bayar
+                        </Link>
+                      ) : item.status === "APPROVED" ? null : (
                         <button
                           type="submit"
                           className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
@@ -312,7 +348,7 @@ const PaymentTable = ({ data }) => {
                         <Link
                           target="_blank"
                           className="p-2 bg-blue-500  text-white text-2xl font-bold rounded-full "
-                          to={`https://drive.google.com/file/d/${item.receipt}/view`}
+                          to={`${item.receipt}`}
                         >
                           {" "}
                           <IoReceipt />{" "}

@@ -25,6 +25,8 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
         { headers }
       );
+
+      console.log(response.data.data.assets);
       setData(response.data.data.assets);
       setIsLoading(false);
     } catch (error) {

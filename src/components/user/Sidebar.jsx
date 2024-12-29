@@ -61,6 +61,7 @@ const Sidebar = () => {
           >
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
+              to="/user/asset/sewa-asset"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -69,45 +70,9 @@ const Sidebar = () => {
             >
               Aset Sewa
             </NavLink>
-            {isDropdownOpen ? (
-              <IoChevronUp className="text-xl ml-2" />
-            ) : (
-              <IoChevronDown className="text-xl ml-2" />
-            )}
           </div>
 
           {/* Dropdown content for Sewa Aset */}
-          {isDropdownOpen && (
-            <div className="pl-4">
-              <div className="flex pt-4 items-center">
-                <FaBuilding className="text-xl" />
-                <NavLink
-                  to="/user/asset/sewa-building"
-                  className={({ isActive }) =>
-                    `${
-                      isActive ? activeStyle : defaultStyle
-                    } text-sm uppercase pl-3 font-medium`
-                  }
-                >
-                  Sewa Gedung
-                </NavLink>
-              </div>
-
-              <div className="flex pt-4 items-center">
-                <IoIosCube className="text-xl" />
-                <NavLink
-                  to="/user/asset/sewa-tenant"
-                  className={({ isActive }) =>
-                    `${
-                      isActive ? activeStyle : defaultStyle
-                    } text-sm uppercase pl-3 font-medium`
-                  }
-                >
-                  Sewa Tenant
-                </NavLink>
-              </div>
-            </div>
-          )}
 
           <div className="flex pt-4 items-center">
             <FaHandshakeSimple className="text-2xl" />

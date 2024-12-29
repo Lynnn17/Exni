@@ -22,6 +22,7 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
         { headers }
       );
+      console.log("tenant", response.data.data.assets);
       setData(response.data.data.assets);
     } catch (error) {
       console.error("Error fetching data:", error);
