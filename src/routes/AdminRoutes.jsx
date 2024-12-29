@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import Notif from "../views/admin/notifikasi";
 import DashboardAdmin from "../views/admin/Dashboard";
 import UserDashboardRoutes from "./AdminRoutes/UserDashboardRoutes";
 import AssetDashboardRoutes from "./AdminRoutes/AssetDashboardRoutes";
@@ -11,6 +12,7 @@ const AdminRoutes = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<DashboardAdmin />} />
+      <Route path="/notifikasi" element={<Notif />} />
       <Route path="/user/*" element={<UserDashboardRoutes />} />
       <Route path="/asset/*" element={<AssetDashboardRoutes />} />
       <Route path="/submission/*" element={<SubmissionDashboardRoutes />} />

@@ -10,6 +10,7 @@ import { IoIosCube } from "react-icons/io";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import IconUser from "../../assets/icon/user.svg";
 import { MdSpaceDashboard } from "react-icons/md";
+import { IoIosNotifications } from "react-icons/io";
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +71,18 @@ const NavMobile = () => {
                 >
                   <MdSpaceDashboard />
                   <p className="text-sm uppercase pl-3">Dashboard</p>
+                </NavLink>
+
+                <NavLink
+                  to="/admin/notifikasi"
+                  className={({ isActive }) =>
+                    `text-2xl pt-4 flex items-center ${
+                      isActive ? activeClass : "text-teks"
+                    }`
+                  }
+                >
+                  <IoIosNotifications />
+                  <p className="text-sm uppercase pl-3">Notifikasi</p>
                 </NavLink>
 
                 <div>
