@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoCloseSharp, IoHome } from "react-icons/io5";
+import {
+  IoCloseSharp,
+  IoHome,
+  IoChevronDown,
+  IoChevronUp,
+} from "react-icons/io5";
 import { FaUsers, FaBuilding, FaCarSide } from "react-icons/fa";
 import { TbBuildingWarehouse } from "react-icons/tb";
 import { GiReceiveMoney } from "react-icons/gi";
@@ -14,12 +19,18 @@ import { IoIosNotifications } from "react-icons/io";
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
   const activeClass = "text-black font-semibold"; // Active class styling
+
+  const { company, role } = JSON.parse(localStorage.getItem("user")) || {
+    company: "Anonymous",
+    role: "unauthorized",
+  };
 
   return (
     <>
@@ -45,8 +56,8 @@ const NavMobile = () => {
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="pr-6 pl-1">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs">user</p>
+                    <p className="text-sm font-medium">{company}</p>
+                    <p className="text-xs">{role}</p>
                   </div>
                 </div>
                 <NavLink
@@ -92,12 +103,8 @@ const NavMobile = () => {
                   </div>
 
                   <NavLink
-                    to="/user/asset/sewa-aset"
-                    className={({ isActive }) =>
-                      `flex items-center pt-4 ${
-                        isActive ? activeClass : "text-teks"
-                      }`
-                    }
+                    className={({}) => `flex items-center pt-4 ${"text-teks"}`}
+                    to="/user/asset/sewa-asset"
                   >
                     <TbBuildingWarehouse className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">

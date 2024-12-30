@@ -1,9 +1,7 @@
-import { FaRegFilePdf, FaRegFileImage, FaRegTrashAlt } from "react-icons/fa";
-import { BsPencilSquare } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import React from "react";
 import { NumericFormat } from "react-number-format";
-
+import Moment from "moment";
 const CardTenant = ({
   foto,
   name,
@@ -11,14 +9,13 @@ const CardTenant = ({
   tenant,
   capacity,
   link,
-  deskripsi,
+  informasi,
   building,
-  harga,
-  modalFile,
-  keterangan,
-  modalGambar,
-  modalDelete,
+  price,
+  startDate,
+  endDate,
   nameTenant,
+  noContract,
   teksLink = "Lihat Selengkapnya",
 }) => {
   return (
@@ -41,6 +38,10 @@ const CardTenant = ({
         {/* Informasi Gedung */}
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div>
+            <p className="font-semibold text-gray-600">Nomor Kontrak</p>
+            <p className="text-gray-700">{noContract || "-"}</p>
+          </div>
+          <div>
             <p className="font-semibold text-gray-600">Gedung</p>
             <p className="text-gray-700">{building}</p>
           </div>
@@ -52,7 +53,7 @@ const CardTenant = ({
             <p className="font-semibold text-gray-600">Harga</p>
             <p className="text-gray-700">
               <NumericFormat
-                value={harga}
+                value={price}
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"Rp "}
@@ -64,22 +65,21 @@ const CardTenant = ({
             <p className="text-gray-700">{capacity} Lantai</p>
           </div>
           <div>
-            <p className="font-semibold text-gray-600">Keterangan</p>
-            <p
-              className={`${
-                keterangan ? "text-green-600" : "text-red-600"
-              } font-medium`}
-            >
-              {keterangan ? "Tersedia" : "Tidak Tersedia"}
-            </p>
+            <p className="font-semibold text-gray-600">Masa Sewa</p>
+            <div className="text-gray-700">
+              <p>
+                {Moment(startDate).format("DD MMMM YYYY")} -{" "}
+                {Moment(endDate).format("DD MMMM YYYY")}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Deskripsi */}
+        {/* informasi */}
         <div>
-          <p className="font-semibold text-gray-600">Deskripsi</p>
+          <p className="font-semibold text-gray-600">Informasi</p>
           <div className="mt-1 text-sm text-gray-700 h-24 overflow-y-auto border border-gray-200 rounded-lg p-2">
-            {deskripsi ? deskripsi : "-"}
+            {informasi ? informasi : "-"}
           </div>
         </div>
 

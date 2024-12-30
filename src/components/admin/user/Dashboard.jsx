@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import ConfirmationModal from "../../reusable/ConfirmationModal";
+import Loading from "../../reusable/Loading";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ const Dashboard = () => {
         noHP: user.contact || "-",
         iconUser: IconUser,
       }));
-
+      console.log("formattedData", formattedData);
       setData(formattedData);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -187,7 +188,7 @@ const Dashboard = () => {
         />
 
         {loading ? (
-          <p>Loading data...</p>
+          <Loading />
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (

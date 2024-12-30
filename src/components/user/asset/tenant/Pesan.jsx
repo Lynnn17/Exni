@@ -5,6 +5,7 @@ import SectionDivider from "../../../reusable/SectionDivider";
 import TenantInfo from "../../../reusable/TenantInfo";
 import FormPesan from "../../../reusable/FormPesan";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const Pesan = () => {
   const { id } = useParams(); // Mengambil ID dari parameter URL
@@ -30,7 +31,7 @@ const Pesan = () => {
     fetchData();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (!buildingData) return <div>Data tidak ditemukan.</div>;
 
   return (
@@ -55,7 +56,7 @@ const Pesan = () => {
             <div className="md:flex md:gap-3">
               <div className="w-full">
                 <SectionDivider title="Properti" />
-                <div className="flex flex-col lg:flex-row justify-between">
+                <div className="flex flex-col lg:flex-row justify-between lg:w-[95%] lg:mx-auto">
                   <div className="pt-2 flex flex-col gap-2">
                     <TenantInfo
                       label="Nama"

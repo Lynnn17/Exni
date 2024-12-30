@@ -15,6 +15,7 @@ import axios from "axios";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
 import Modal from "../../reusable/ModalFile";
+import Loading from "../../reusable/Loading";
 
 const Detail = () => {
   const { id } = useParams();
@@ -22,15 +23,13 @@ const Detail = () => {
   const [data, setData] = useState(null);
   const navigate = useNavigate();
 
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectIdFile, setSelectedIdFIle] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const optionsPengajuan = [
-    { value: "PROCESS", label: "Process" },
     { value: "APPROVED", label: "Disetujui" },
-    { value: "PENDING", label: "Pending" },
     { value: "REJECTED", label: "Ditolak" },
   ];
 
@@ -93,6 +92,7 @@ const Detail = () => {
           );
           StatusAlertService.showSuccess("Data berhasil disimpan!");
         } catch (error) {
+          console.error("Error saving data:", error);
           if (error.response?.data?.message !== "Application already rented") {
             StatusAlertService.showError(
               "Terjadi kesalahan saat menyimpan data."
@@ -113,7 +113,7 @@ const Detail = () => {
 
   const handleBatal = () => navigate(`/admin/submission/`);
 
-  if (!data) return <p>Loading...</p>;
+  if (!data) return <Loading />;
 
   return (
     <main>
@@ -221,6 +221,7 @@ const Detail = () => {
                   label="Tanggal Update"
                   value={Moment(data?.updatedAt).format("D MMM YYYY")}
                 />
+                <TenantInfo label="Status Pengajuan" value={data?.status} />
               </div>
             </div>
           </div>
@@ -229,7 +230,7 @@ const Detail = () => {
             enableReinitialize
             initialValues={{
               note: data?.note || "",
-              status: data?.status || "",
+              status: "APPROVED" || "",
             }}
             validationSchema={validationSchema}
             onSubmit={handleSimpan}
@@ -279,6 +280,7 @@ const Detail = () => {
                           <button
                             type="button"
                             onClick={() => {
+                              setSelectedIdFIle(data?.proposal);
                               setModalOpen(true);
                               setTypeModal("proposal");
                             }}
@@ -291,13 +293,21 @@ const Detail = () => {
                           <p>Berita Acara</p>
                           <button
                             type="button"
+                            disabled={!data?.minutesOfMeeting}
                             onClick={() => {
+                              setSelectedIdFIle(data?.minutesOfMeeting);
                               setModalOpen(true);
                               setTypeModal("minutesOfMeeting");
                             }}
                             className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
                           >
-                            Lihat <FaArrowRight />
+                            {data?.minutesOfMeeting ? (
+                              <>
+                                Lihat <FaArrowRight />
+                              </>
+                            ) : (
+                              "Tidak ada"
+                            )}
                           </button>
                         </div>
                       </div>
@@ -331,7 +341,7 @@ const Detail = () => {
           <Modal
             isOpen={isModalOpen}
             onClose={() => setModalOpen(false)}
-            idFile={[data.proposal]}
+            idFile={[selectIdFile]}
             idData={data.id}
             type={typeModal}
             style="applications"

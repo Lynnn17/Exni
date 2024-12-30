@@ -8,6 +8,7 @@ import HeaderForm from "../../../reusable/HeaderForm";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const Edit = () => {
   const { id } = useParams();
@@ -105,7 +106,7 @@ const Edit = () => {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
   return (
     <Formik

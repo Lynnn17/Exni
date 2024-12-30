@@ -9,6 +9,7 @@ import axios from "axios";
 import { handleTokenRefresh } from "../../../utils/authUtils";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import Loading from "../../reusable/Loading";
 
 const Edit = () => {
   const { id } = useParams();
@@ -155,7 +156,7 @@ const Edit = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   return (

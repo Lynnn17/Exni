@@ -5,6 +5,7 @@ import SectionDivider from "../../../reusable/SectionDivider";
 import TenantInfo from "../../../reusable/TenantInfo";
 import FormPesan from "../../../reusable/FormPesan";
 import axios from "axios";
+import Loading from "../../../reusable/Loading";
 
 const Pesan = () => {
   const { id } = useParams(); // Mengambil ID dari parameter URL
@@ -30,7 +31,7 @@ const Pesan = () => {
     fetchData();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
   if (!buildingData) return <div>Data tidak ditemukan.</div>;
 
   return (

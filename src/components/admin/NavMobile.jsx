@@ -1,25 +1,63 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoCloseSharp, IoHome } from "react-icons/io5";
-import { FaUsers, FaBuilding, FaCarSide } from "react-icons/fa";
+import {
+  IoCloseSharp,
+  IoHome,
+  IoChevronDown,
+  IoChevronUp,
+} from "react-icons/io5";
+import { FaUsers, FaBuilding } from "react-icons/fa";
 import { TbBuildingWarehouse } from "react-icons/tb";
 import { GiReceiveMoney } from "react-icons/gi";
 import { IoIosCube } from "react-icons/io";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import IconUser from "../../assets/icon/user.svg";
 import { MdSpaceDashboard } from "react-icons/md";
+
+import { jwtDecode } from "jwt-decode";
+
 import { IoIosNotifications } from "react-icons/io";
+
 
 const NavMobile = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State untuk dropdown
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   const activeClass = "text-black font-semibold"; // Active class styling
+  const [user, setUser] = useState({ name: "John Doe", role: "Admin" }); // Default user info
+
+  // Fungsi untuk mendekode token dan mendapatkan informasi pengguna
+  const token =
+    sessionStorage.getItem("token") || localStorage.getItem("token");
+  const getUserInfoFromToken = () => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log("Decoded token:", decodedToken);
+        const userName = decodedToken.company || "Anonymous";
+        const userRole = decodedToken.role || "unauthorized";
+        setUser({ name: userName, role: userRole });
+      } catch (error) {
+        console.error("Error decoding token:", error);
+        setUser({ name: "Anonymous", role: "unauthorized" });
+      }
+    }
+  };
+
+  // Ambil informasi user saat komponen dimuat
+  useEffect(() => {
+    getUserInfoFromToken();
+  }, [token]);
 
   return (
     <>
@@ -45,8 +83,8 @@ const NavMobile = () => {
                     className="w-8 h-8 rounded-full"
                   />
                   <div className="pr-6 pl-1">
-                    <p className="text-sm font-medium">John Doe</p>
-                    <p className="text-xs">Admin</p>
+                    <p className="text-sm font-medium">{user.name}</p>
+                    <p className="text-xs">{user.role}</p>
                   </div>
                 </div>
                 <NavLink
@@ -105,19 +143,49 @@ const NavMobile = () => {
                     </p>
                   </NavLink>
 
-                  <NavLink
-                    to="/admin/asset/sewa-aset"
-                    className={({ isActive }) =>
-                      `flex items-center pt-4 ${
-                        isActive ? activeClass : "text-teks"
-                      }`
-                    }
-                  >
-                    <TbBuildingWarehouse className="text-2xl" />
-                    <p className="text-sm uppercase pl-3 font-medium">
-                      Aset Sewa
-                    </p>
-                  </NavLink>
+                  {/* Dropdown untuk Aset Sewa */}
+                  <div className="pt-4">
+                    <button
+                      onClick={toggleDropdown}
+                      className="flex items-center w-full text-teks"
+                    >
+                      <TbBuildingWarehouse className="text-2xl" />
+                      <p className="text-sm uppercase pl-3 font-medium">
+                        Aset Sewa
+                      </p>
+                      {dropdownOpen ? (
+                        <IoChevronUp className="ml-auto text-xl" />
+                      ) : (
+                        <IoChevronDown className="ml-auto text-xl" />
+                      )}
+                    </button>
+                    {dropdownOpen && (
+                      <div className="pl-8">
+                        <NavLink
+                          to="/admin/asset/sewa-tenant"
+                          className={({ isActive }) =>
+                            `flex items-center pt-2 ${
+                              isActive ? activeClass : "text-teks"
+                            }`
+                          }
+                        >
+                          <IoIosCube className="text-xl" />
+                          <p className="text-sm pl-2">Sewa Tenant</p>
+                        </NavLink>
+                        <NavLink
+                          to="/admin/asset/sewa-building"
+                          className={({ isActive }) =>
+                            `flex items-center pt-2 ${
+                              isActive ? activeClass : "text-teks"
+                            }`
+                          }
+                        >
+                          <FaBuilding className="text-xl" />
+                          <p className="text-sm pl-2">Sewa Bangunan</p>
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
 
                   <NavLink
                     to="/admin/submission"
@@ -176,20 +244,6 @@ const NavMobile = () => {
                   >
                     <IoIosCube className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">Tenant</p>
-                  </NavLink>
-
-                  <NavLink
-                    to="/admin/asset/vehicle"
-                    className={({ isActive }) =>
-                      `flex items-center pt-4 ${
-                        isActive ? activeClass : "text-teks"
-                      }`
-                    }
-                  >
-                    <FaCarSide className="text-2xl" />
-                    <p className="text-sm uppercase pl-3 font-medium">
-                      Kendaraan
-                    </p>
                   </NavLink>
                 </div>
               </div>

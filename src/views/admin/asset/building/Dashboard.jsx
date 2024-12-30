@@ -2,6 +2,8 @@ import Sidebar from "../../../../components/admin/Sidebar";
 import Header from "../../../../components/admin/Header";
 import Content from "../../../../components/admin/asset/building/Dashboard";
 import NavMobile from "../../../../components/admin/NavMobile";
+import Loading from "../../../../components/reusable/Loading";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   return (

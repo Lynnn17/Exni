@@ -1,5 +1,5 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import LogoExni from "../../assets/logo/exni.svg";
 import { IoHome } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa6";
@@ -10,16 +10,32 @@ import { IoIosCube } from "react-icons/io";
 import { FaCarSide } from "react-icons/fa";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
+
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+
 import { IoIosNotifications } from "react-icons/io";
 
+
 const Sidebar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const location = useLocation();
+
+  // Cek apakah path saat ini adalah salah satu dari dropdown "Aset Sewa"
+  const isAssetActive =
+    location.pathname.includes("/admin/asset/sewa-tenant") ||
+    location.pathname.includes("/admin/asset/sewa-building");
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   const activeStyle = "text-black font-semibold";
   const defaultStyle = "text-teks";
+
   return (
-    <aside className=" bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60 ">
+    <aside className="bg-white border-gray-200 border-2 px-2 sm:px-4 py-2.5 rounded left-0 top-0 overflow-y-auto w-60">
       <div className="px-1">
         <img src={LogoExni} alt="logo" className="w-[100px] h-[38px]" />
-
         <div className="text-2xl text-teks pt-8 cursor-pointer flex items-center">
           <IoHome />
           <NavLink
@@ -31,7 +47,6 @@ const Sidebar = () => {
             Beranda
           </NavLink>
         </div>
-
         <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
           <MdSpaceDashboard />
           <NavLink
@@ -76,18 +91,48 @@ const Sidebar = () => {
             </NavLink>
           </div>
 
-          <div className="flex pt-4 items-center">
-            <TbBuildingWarehouse className="text-2xl" />
-            <NavLink
-              to="/admin/asset/sewa-aset"
-              className={({ isActive }) =>
-                `${
-                  isActive ? activeStyle : defaultStyle
-                } text-sm uppercase pl-3 font-medium`
-              }
+          {/* Dropdown Menu */}
+          <div className="pt-4">
+            <div
+              className={`flex items-center cursor-pointer ${
+                isAssetActive ? activeStyle : defaultStyle
+              }`}
+              onClick={toggleDropdown}
             >
-              Aset Sewa
-            </NavLink>
+              <TbBuildingWarehouse className="text-2xl font-medium" />
+              <p className="text-sm uppercase pl-3 font-medium">Aset Sewa</p>
+              {isDropdownOpen ? (
+                <IoChevronUp className="ml-auto text-xl" />
+              ) : (
+                <IoChevronDown className="ml-auto text-xl" />
+              )}
+            </div>
+            {isDropdownOpen && (
+              <div className="pl-4 pt-2">
+                <NavLink
+                  to="/admin/asset/sewa-tenant"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? activeStyle : defaultStyle
+                    } text-xs uppercase block py-1 flex items-center`
+                  }
+                >
+                  <IoIosCube className="text-xl" />
+                  <p className=" pt-1 pl-2 font-medium">Sewa Tenant</p>
+                </NavLink>
+                <NavLink
+                  to="/admin/asset/sewa-building"
+                  className={({ isActive }) =>
+                    `${
+                      isActive ? activeStyle : defaultStyle
+                    } text-xs uppercase block py-1 flex items-center`
+                  }
+                >
+                  <FaBuilding className="text-xl" />
+                  <p className=" pt-2 pl-2 font-medium">Sewa Gedung</p>
+                </NavLink>
+              </div>
+            )}
           </div>
 
           <div className="flex pt-4 items-center">
@@ -118,7 +163,6 @@ const Sidebar = () => {
             </NavLink>
           </div>
         </div>
-
         <div>
           <div className="text-xs text-teks pt-10 cursor-pointer flex items-center">
             <p className="uppercase">Assets</p>

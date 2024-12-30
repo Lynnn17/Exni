@@ -1,5 +1,5 @@
 import React from "react";
-import { LuPenSquare } from "react-icons/lu";
+import { BsPencilSquare } from "react-icons/bs";
 import { useField } from "formik";
 
 const EditableTextarea = ({ isReadOnly, onToggleReadOnly, name }) => {
@@ -18,7 +18,7 @@ const EditableTextarea = ({ isReadOnly, onToggleReadOnly, name }) => {
         className="absolute bottom-2 right-2 text-gray-500"
         onClick={onToggleReadOnly}
       >
-        <LuPenSquare className="cursor-pointer mb-2 text-black text-xl " />
+        <BsPencilSquare className="cursor-pointer mb-2 text-black text-xl " />
       </button>
     </div>
   );

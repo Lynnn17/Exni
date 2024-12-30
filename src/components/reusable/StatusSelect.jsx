@@ -4,7 +4,6 @@ import { useFormikContext } from "formik";
 
 const StatusSelect = ({
   value = "",
-
   options = [],
   customStyles = {}, // Custom styles prop
   name, // Add name prop

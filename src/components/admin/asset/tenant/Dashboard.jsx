@@ -9,6 +9,7 @@ import Modal from "../../../reusable/ModalFile";
 import ModalConfirm from "../../../reusable/ConfirmationModal";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import Loading from "../../../reusable/Loading";
 
 const Dashboard = () => {
   const token = localStorage.getItem("token");
@@ -22,16 +23,21 @@ const Dashboard = () => {
   const [typeModal, setTypeModal] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
         { headers }
       );
       setData(response.data.data.assets);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data!");
+      setIsLoading(false);
     }
   };
 
@@ -78,56 +84,72 @@ const Dashboard = () => {
             <Search />
           </HeaderSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-            {data?.assets?.map((item, i) => (
-              <Card
-                key={i}
-                foto={item.albums[0]}
-                name={item.name}
-                address={item.tenants.address}
-                building={item.tenants.building}
-                capacity={item.tenants.floor}
-                tenant={item.tenants.tenant}
-                link={`edit/${item.id}`}
-                harga={item.price}
-                keterangan={item.isAvailable}
-                linkFile={item.document}
-                deskripsi={item.description}
-                modalFile={() =>
-                  handleModalFile(item.documents, item.id, "Document")
-                }
-                modalGambar={() =>
-                  handleModalFile(item.albums, item.id, "Gambar")
-                }
-                modalDelete={() => {
-                  setConfirmModalOpen(true);
-                  setSelectedId(item.id);
-                }}
-              />
-            ))}
-          </div>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <>
+              {data?.length === 0 ? (
+                <p className="col-span-full text-center text-gray-500">
+                  Tidak ada data tersedia.
+                </p>
+              ) : (
+                <>
+                  <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+                      {data?.assets?.map((item, i) => (
+                        <Card
+                          key={i}
+                          foto={item.albums[0]}
+                          name={item.name}
+                          address={item.tenants.address}
+                          building={item.tenants.building}
+                          capacity={item.tenants.floor}
+                          tenant={item.tenants.tenant}
+                          link={`edit/${item.id}`}
+                          price={item.price}
+                          keterangan={item.isAvailable}
+                          linkFile={item.document}
+                          deskripsi={item.description}
+                          modalFile={() =>
+                            handleModalFile(item.documents, item.id, "Document")
+                          }
+                          modalGambar={() =>
+                            handleModalFile(item.albums, item.id, "Gambar")
+                          }
+                          modalDelete={() => {
+                            setConfirmModalOpen(true);
+                            setSelectedId(item.id);
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  {/* Modal untuk File */}
+                  <Modal
+                    isOpen={isModalOpen}
+                    onClose={() => setModalOpen(false)}
+                    data={selectedData}
+                    idFile={selectedData}
+                    idData={selectedId}
+                    type={typeModal}
+                  />
 
-          {/* Modal untuk File */}
-          <Modal
-            isOpen={isModalOpen}
-            onClose={() => setModalOpen(false)}
-            data={selectedData}
-            idFile={selectedData}
-            idData={selectedId}
-            type={typeModal}
-          />
+                  {/* Modal Konfirmasi Hapus */}
+                  <ModalConfirm
+                    isOpen={confirmModalOpen}
+                    onClose={() => setConfirmModalOpen(false)}
+                    onConfirm={handleDelete}
+                  />
 
-          {/* Modal Konfirmasi Hapus */}
-          <ModalConfirm
-            isOpen={confirmModalOpen}
-            onClose={() => setConfirmModalOpen(false)}
-            onConfirm={handleDelete}
-          />
+                  {/* Notifikasi */}
 
-          {/* Notifikasi */}
+                  <Pagination />
+                </>
+              )}
+            </>
+          )}
+
           <StatusAlert />
-
-          <Pagination />
         </div>
       </main>
     </>

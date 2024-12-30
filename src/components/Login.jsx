@@ -4,8 +4,10 @@ import bgLogin from "../assets/bg-login.png";
 import fbgLogin from "../assets/front-bg-login.png";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import InputField from "./reusable/InputFieldbackup";
+import InputField from "./reusable/InputField";
 import { useNavigate } from "react-router-dom";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,15 +38,22 @@ const Login = () => {
         }
       );
 
-      console.log("Login successful:", response.data);
-      const token = response.data.token;
+      const token = response.data.data.access_token;
+      const user = {
+        company: response.data.data.company,
+        role: response.data.data.role,
+        user_id: response.data.data.user_id,
+      };
       localStorage.setItem("token", token);
-      alert("Login successful!");
-      // resetForm();
-      // navigate("/user/dashboard");
+      localStorage.setItem("user", JSON.stringify(user));
+      StatusAlertService.showSuccess("Login successful!");
+      resetForm();
+      navigate("/user/dashboard");
     } catch (error) {
+      StatusAlertService.showError(
+        "Login failed. Please check your credentials."
+      );
       console.error("Login failed:", error.response || error.message);
-      alert("Login failed. Please check your credentials.");
     } finally {
       setSubmitting(false);
     }
@@ -55,6 +64,7 @@ const Login = () => {
       className="w-full h-screen bg-cover bg-no-repeat bg-center"
       style={{ backgroundImage: `url(${bgLogin})` }}
     >
+      <StatusAlert />
       <div className="h-full flex justify-center items-center">
         <div className="flex">
           {/* Card */}
@@ -125,7 +135,6 @@ const Login = () => {
               </div>
             </div>
           </div>
-          {/* End Image Section */}
         </div>
       </div>
     </div>
