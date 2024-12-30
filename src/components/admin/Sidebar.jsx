@@ -10,7 +10,11 @@ import { IoIosCube } from "react-icons/io";
 import { FaCarSide } from "react-icons/fa";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
+
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+
+import { IoIosNotifications } from "react-icons/io";
+
 
 const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -54,6 +58,19 @@ const Sidebar = () => {
             Dashboard
           </NavLink>
         </div>
+
+        <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
+          <IoIosNotifications />
+          <NavLink
+            to="/admin/notifikasi"
+            className={({ isActive }) =>
+              `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
+            }
+          >
+            Notifikasi
+          </NavLink>
+        </div>
+
         <div>
           <div className="text-xs text-teks pt-10 cursor-pointer flex items-center">
             <p className="uppercase">Main Menu</p>
