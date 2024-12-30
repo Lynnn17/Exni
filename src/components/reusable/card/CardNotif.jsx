@@ -7,20 +7,15 @@ const CardNotif = ({ notifications }) => {
         <div
           key={index}
           className={`p-4 rounded-md ${
-            notif.isRead ? "bg-gray-100" : "bg-blue-50"
+            notif.isReadByUser ? "bg-gray-100" : "bg-blue-50"
           } shadow-sm mb-2 flex flex-row items-start`}
         >
-          <div className="mr-4">
-            <img
-              src={notif.icon}
-              alt="Notification Icon"
-              className="w-8 h-8 rounded-full"
-            />
-          </div>
           <div>
-            <p className="text-sm font-medium">{notif.message}</p>
+            <p className="text-sm font-bold">{notif.title}</p>
+            <p className="text-sm font-normal">{notif.message}</p>
             <p className="text-xs text-gray-500 mt-1">
-              {notif.date}, {notif.time}
+              {new Date(notif.createdAt).toLocaleDateString()},{" "}
+              {new Date(notif.createdAt).toLocaleTimeString()}
             </p>
           </div>
         </div>
