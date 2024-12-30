@@ -24,7 +24,8 @@ const Detail = () => {
   const { id } = useParams();
 
   const handleToggleReadOnly = () => setIsReadOnly(!isReadOnly);
-
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
   const fetchData = async () => {
     try {
       setIsLoading(true); // Set loading menjadi true
@@ -123,7 +124,33 @@ const Detail = () => {
         renderText={(value) => <div readOnly>{value} </div>}
       />
     ),
+    // buat modal
+    nominalPengajuan: (
+      <NumericFormat
+        value={item.amount}
+        displayType="text"
+        thousandSeparator
+        prefix="Rp "
+        renderText={(value) => <div readOnly>{value} </div>}
+      />
+    ),
+    lamaCicilan: item.number_of_trans,
+    tipePembayaran: data.status,
+    statusValue: <StatusButton status={item.status} />,
+    namaAset: data.application.asset.name,
+    namaPenyewa: data.application.user.company,
+    masaSewa:
+      Moment(data.application.rent_start_date).format("D MMM YYYY  HH:mm:ss") +
+      " - " +
+      Moment(data.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
+    catatan: item.note,
+    buktiTransfer: item.receipt,
   }));
+
+  const handleOpenModal = (item) => {
+    setSelectedData(item);
+    setModalOpen(true);
+  };
 
   return (
     <main>
@@ -288,12 +315,21 @@ const Detail = () => {
             <div className="bg-white border border-gray-200 mt-5 p-4 w-full">
               <div className="w-full h-full">
                 <SectionDivider title="Riwayat Transaksi" />
-                <PaymentTable data={datas} />
+                <PaymentTable
+                  data={datas}
+                  modal={(item) => handleOpenModal(item)}
+                />
               </div>
             </div>
           </div>
         )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        data={selectedData}
+        fetchData={fetchData}
+      />
     </main>
   );
 };

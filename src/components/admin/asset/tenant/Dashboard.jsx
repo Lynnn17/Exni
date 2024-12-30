@@ -1,4 +1,3 @@
-import Foto from "../../../../assets/ruangan.png";
 import Card from "../../../reusable/card/CardTenant";
 import Pagination from "../../Pagination";
 import React, { useState, useEffect } from "react";
@@ -25,18 +24,31 @@ const Dashboard = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchData = async (page = 1) => {
     setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}assets?type=TENANT`,
+        `${
+          import.meta.env.VITE_API_URL
+        }assets?type=TENANT&page=${page}${queryParam}`,
         { headers }
       );
-      setData(response.data.data.assets);
-      setIsLoading(false);
+
+      const { assets, totalPages: total } = response.data.data.assets;
+      setData(assets);
+      console.log("res", data);
+      setTotalPages(total);
     } catch (error) {
       console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data!");
+    } finally {
       setIsLoading(false);
     }
   };
@@ -58,16 +70,27 @@ const Dashboard = () => {
       );
       setConfirmModalOpen(false);
       StatusAlertService.showSuccess("Data berhasil dihapus!");
-      fetchData(); // Refresh data setelah penghapusan
+      fetchData(currentPage); // Refresh data setelah penghapusan
     } catch (error) {
       console.error("Error deleting data:", error);
       StatusAlertService.showError("Data gagal dihapus!");
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   return (
     <>
@@ -81,7 +104,11 @@ const Dashboard = () => {
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >
-            <Search />
+            <Search
+              placeholder="Cari tenant..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
 
           {isLoading ? (
@@ -96,7 +123,7 @@ const Dashboard = () => {
                 <>
                   <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                      {data?.assets?.map((item, i) => (
+                      {data?.map((item, i) => (
                         <Card
                           key={i}
                           foto={item.albums[0]}
@@ -143,7 +170,11 @@ const Dashboard = () => {
 
                   {/* Notifikasi */}
 
-                  <Pagination />
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
                 </>
               )}
             </>

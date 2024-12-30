@@ -1,13 +1,14 @@
-import Card from "../../../reusable/card/CardBuilding";
-import Pagination from "../../Pagination";
-import React, { useState, useEffect } from "react";
-import HeaderSection from "../../../reusable/HeaderSection";
-import Search from "../../../reusable/Search";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import Modal from "../../../reusable/ModalFile";
-import ModalConfirm from "../../../reusable/ConfirmationModal";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+
+import Card from "../../../reusable/card/CardBuilding";
+import Pagination from "../../Pagination";
+import HeaderSection from "../../../reusable/HeaderSection";
+import Search from "../../../reusable/Search";
+import Modal from "../../../reusable/ModalFile";
+import ModalConfirm from "../../../reusable/ConfirmationModal";
 import Loading from "../../../reusable/Loading";
 
 const Dashboard = () => {
@@ -20,20 +21,31 @@ const Dashboard = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Token dari localStorage
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
 
   // Fetch data dari API
-  const fetchData = async () => {
+  const fetchData = async (page = 1) => {
     setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
+        `${
+          import.meta.env.VITE_API_URL
+        }assets?type=PROPERTY&page=${page}${queryParam}`,
         { headers }
       );
-
-      setData(response.data.data.assets.assets);
+      console.log("res", response.data);
+      const { assets, totalPages: total } = response.data.data.assets;
+      setData(assets);
+      setTotalPages(total);
     } catch (error) {
       console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data!");
@@ -57,7 +69,7 @@ const Dashboard = () => {
 
       if (response.status === 200 || response.status === 204) {
         StatusAlertService.showSuccess("Data berhasil dihapus!");
-        fetchData(); // Refresh data setelah penghapusan
+        fetchData(currentPage); // Refresh data setelah penghapusan
       } else {
         throw new Error("Gagal menghapus data");
       }
@@ -70,23 +82,27 @@ const Dashboard = () => {
     }
   };
 
-  const handleModalFile = (item, id) => {
-    setTypeModal("Document");
+  const handleModal = (item, id, type) => {
+    setTypeModal(type);
     setIdData(id);
     setIdFile(item);
     setModalOpen(true);
   };
 
-  const handleModalGambar = (item, id) => {
-    setTypeModal("Gambar");
-    setIdData(id);
-    setIdFile(item);
-    setModalOpen(true);
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   return (
     <>
@@ -104,7 +120,11 @@ const Dashboard = () => {
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >
-            <Search />
+            <Search
+              placeholder="Cari properti ..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
 
           {/* Cards Section */}
@@ -114,9 +134,9 @@ const Dashboard = () => {
             <>
               <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                  {data?.length > 0 ? (
-                    data.map((item, i) => (
-                      <div key={item.id || i}>
+                  {data.length > 0 ? (
+                    data.map((item) => (
+                      <div key={item.id}>
                         <Card
                           foto={item.albums?.[0] || ""}
                           title={item.name || "N/A"}
@@ -128,13 +148,13 @@ const Dashboard = () => {
                           deskripsi={item.description || "N/A"}
                           link={`edit/${item.id}`}
                           modalFile={() =>
-                            handleModalFile(item.documents, item.id)
+                            handleModal(item.documents, item.id, "Document")
                           }
                           keterangan={
                             item.isAvailable ? "Tersedia" : "Tidak Tersedia"
                           }
                           modalGambar={() =>
-                            handleModalGambar(item.albums, item.id)
+                            handleModal(item.albums, item.id, "Gambar")
                           }
                           modalDelete={() => {
                             setConfirmModalOpen(true);
@@ -168,7 +188,11 @@ const Dashboard = () => {
               />
 
               {/* Pagination */}
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </div>

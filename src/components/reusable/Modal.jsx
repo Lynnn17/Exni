@@ -161,7 +161,7 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
 
                 <div className="flex justify-end gap-2 ">
                   <Link
-                    to={`https://drive.google.com/file/d/${data.buktiTransfer}/view`}
+                    to={`${data.buktiTransfer}`}
                     target="_blank"
                     className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 text-sm flex items-center gap-1"
                   >

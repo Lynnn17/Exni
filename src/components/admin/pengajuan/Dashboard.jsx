@@ -11,6 +11,16 @@ import Loading from "../../reusable/Loading";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
   const columns = [
     { title: "No", key: "no" },
     { title: "Nama PT", key: "name" },
@@ -20,7 +30,7 @@ const Dashboard = () => {
     { title: "Status", key: "ValueStatus" },
   ];
 
-  const datas = data?.applications?.map((item, index) => ({
+  const datas = data?.map((item, index) => ({
     id: item.id,
     no: index + 1,
     name: item.user.company,
@@ -66,35 +76,75 @@ const Dashboard = () => {
     },
   ];
 
-  useEffect(() => {
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
-      axios
-        .get(`${import.meta.env.VITE_API_URL}applications`, {
-          headers: {
-            "Authorization ": `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((res) => {
-          setData(res.data.data.applications);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}applications?page=${page}${queryParam}`,
+        { headers }
+      );
+      const { applications, totalPages: total } =
+        response.data.data.applications;
+      setData(applications);
 
-  if (!datas) {
-    return <Loading />;
-  }
+      setTotalPages(total);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setIsLoading(false);
+      StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   return (
     <>
       <main>
         <div className="w-full px-3 py-5 bg-white mt-4 h-full rounded-lg">
-          <HeaderSection title="Pengajuan" subtitle="">
-            <Search />
+          <HeaderSection
+            title="Pengajuan"
+            subtitle=""
+            isOpen={isOpen}
+            onToggle={() => setIsOpen(!isOpen)}
+          >
+            <Search
+              placeholder="Cari Pengajuan ..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
-          <DataTable columns={columns} data={datas} actions={actions} />
-          <Pagination />
+          {isLoading ? (
+            <Loading />
+          ) : data.length === 0 ? (
+            <div className="text-center py-10 text-gray-500">
+              <p>Tidak ada data pengajuan</p>
+            </div>
+          ) : (
+            <DataTable columns={columns} data={datas} actions={actions} />
+          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </main>
     </>
