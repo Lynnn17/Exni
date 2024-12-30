@@ -2,281 +2,250 @@ import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import axios from "axios";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import Loading from "../../reusable/Loading";
-import moment from "moment";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import InputField from "../../reusable/InputField";
 
 const Detail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}transactions/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      console.log(response.data.data);
-      setData(response.data.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      StatusAlertService.showError("Error fetching data");
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [metodePembayaran, setMetodePembayaran] = useState("Cicilan");
+  const [jumlahCicilan, setJumlahCicilan] = useState("6X");
+  const [cicilanKe, setCicilanKe] = useState("3");
+  const [fileName, setFileName] = useState("");
+  const [transactionId, setTransactionId] = useState("");
+  const [submissionId, setSubmissionId] = useState("");
+  const [tanggalPengajuan, setTanggalPengajuan] = useState("");
+  const [harga] = useState(114000000);
+  const [nominal, setNominal] = useState(0);
 
   useEffect(() => {
+    // Simulasi pengambilan data dari tabel pengajuan
+    const fetchData = async () => {
+      const mockData = {
+        transactionId: "TRX123456",
+        submissionId: "SUBM987654",
+        tanggalPengajuan: "30 November 2024",
+      };
+      setTransactionId(mockData.transactionId);
+      setSubmissionId(mockData.submissionId);
+      setTanggalPengajuan(mockData.tanggalPengajuan);
+    };
+
     fetchData();
-  }, [id]);
+  }, []);
 
-  const onSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      const formData = new FormData();
-      formData.append("amount", values.price);
-      formData.append("receipt", values.buktiTransfer[0]);
-
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}transactions/${id}/receipt`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-          timeout: 60000, // 30 detik (atur sesuai kebutuhan)
-        }
-      );
-
-      resetForm();
-      StatusAlertService.showSuccess("Transaksi berhasil dikirim!");
-      navigate("/user/transaction");
-    } catch (error) {
-      console.error(error);
-      StatusAlertService.showError("Gagal mengirimkan transaksi");
-    } finally {
-      setSubmitting(false);
-      resetForm();
+  // Sinkronisasi nominal bawah dengan nominal atas jika opsi Lunas dipilih
+  useEffect(() => {
+    if (metodePembayaran === "Lunas") {
+      setNominal(harga);
     }
+  }, [metodePembayaran, harga]);
+
+  const handleFileChange = (e) => {
+    setFileName(e.target.files[0]?.name || "No file chosen");
   };
 
-  const initialValues = {
-    price: "",
-    buktiTransfer: [],
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    StatusAlertService.showSuccess("Transaksi berhasil disubmit!");
   };
-
-  const validationSchema = Yup.object({
-    price: Yup.number()
-      .typeError("Harga must be a number")
-      .required("Harga diperlukan")
-      .positive("Harga harus lebih dari 0"),
-    buktiTransfer: Yup.array()
-      .of(
-        Yup.mixed().test(
-          "type",
-          "Harus berupa file foto",
-          (value) =>
-            value &&
-            ["image/jpg", "image/jpeg", "image/png", "image/webp"].includes(
-              value.type
-            )
-        )
-      )
-      .max(1, "Maksimal 1 foto")
-      .required("Bukti Transfer is required"),
-  });
 
   return (
     <main className=" pt-4 bg-gray-50">
       <div className="w-[95%] lg:w-full mx-auto bg-white shadow-md rounded-lg p-6">
+        {/* Komponen StatusAlert */}
         <StatusAlert />
 
+        {/* Back Button */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => window.history.back()}
           className="flex items-center gap-2 text-gray-600 text-sm mb-6"
         >
           <FaArrowLeft />
           Kembali
         </button>
+
         {/* Header */}
         <h1 className="text-xl font-semibold text-gray-800 mb-8">Transaksi</h1>
 
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <p className="text-sm text-gray-500 font-medium">
-                  ID Transaksi
-                </p>
-                <p className="text-gray-800 font-semibold">{data?.id}</p>
+        {/* ID Transaksi, ID Pengajuan, dan Tanggal Pengajuan */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <p className="text-sm text-gray-500 font-medium">ID Transaksi</p>
+            <p className="text-gray-800 font-semibold">{transactionId}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">ID Pengajuan</p>
+            <p className="text-gray-800 font-semibold">{submissionId}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">
+              Tanggal Pengajuan
+            </p>
+            <p className="text-gray-800 font-semibold">{tanggalPengajuan}</p>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit}>
+          {/* Penyewa dan Properti Details */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
+            <div>
+              <p className="text-sm text-gray-500 font-medium">Penyewa</p>
+              <p className="text-gray-800 font-semibold">PT. SAMPOERNA Tbk.</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500 font-medium">Properti</p>
+              <p className="text-gray-800 font-semibold">
+                Cv. Gracia Blue Logistic
+              </p>
+              <p className="text-gray-500 text-sm">
+                Graha Pelni, Jl Pahlawan No.18, Surabaya
+              </p>
+            </div>
+          </div>
+
+          {/* Nominal */}
+          <div className="grid grid-cols-2 gap-8 mb-6">
+            <div>
+              <p className="text-sm text-gray-500 font-medium">Harga</p>
+              <p className="text-gray-800 font-semibold">
+                Rp. {harga.toLocaleString("id-ID")},-
+              </p>
+            </div>
+          </div>
+
+          {/* Metode Pembayaran, Jumlah Cicilan, etc. */}
+          <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="">
+              <label className="block text-sm text-gray-500 font-medium mb-2">
+                Metode Pembayaran
+              </label>
+              <select
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={metodePembayaran}
+                onChange={(e) => setMetodePembayaran(e.target.value)}
+              >
+                <option value="Cicilan">Cicilan</option>
+                <option value="Lunas">Lunas</option>
+              </select>
+            </div>
+            <div className="">
+              <label className="block text-sm text-gray-500 font-medium mb-2">
+                Jumlah Cicilan
+              </label>
+              <select
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={jumlahCicilan}
+                onChange={(e) => setJumlahCicilan(e.target.value)}
+                disabled={metodePembayaran === "Lunas"}
+              >
+                <option value="6X">6X</option>
+                <option value="12X">12X</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Pembayaran Cicilan Ke and Nominal */}
+          <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm text-gray-500 font-medium mb-2">
+                Pembayaran Cicilan Ke
+              </label>
+              <select
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={cicilanKe}
+                onChange={(e) => setCicilanKe(e.target.value)}
+                disabled={metodePembayaran === "Lunas"}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gray-500 font-medium mb-2">
+                Nominal Pembayaran
+              </label>
+              <input
+                type="number"
+                className="w-full border border-gray-300 rounded-md p-2"
+                value={nominal}
+                onChange={(e) => setNominal(Number(e.target.value))}
+                disabled={metodePembayaran === "Lunas"}
+              />
+            </div>
+          </div>
+
+          {/* Rekening and Upload */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
+            {/* Rekening Section */}
+            <div>
+              <p className="text-sm text-gray-500 font-medium">
+                Nomor Rekening
+              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-800 font-semibold">7328195989</p>
+                <button
+                  className="text-purple-700 text-sm font-medium hover:underline"
+                  onClick={() => {
+                    navigator.clipboard
+                      .writeText("7328195989")
+                      .then(() => {
+                        StatusAlertService.showSuccess(
+                          "Nomor rekening berhasil disalin!"
+                        );
+                      })
+                      .catch(() => {
+                        StatusAlertService.showError(
+                          "Gagal menyalin nomor rekening."
+                        );
+                      });
+                  }}
+                >
+                  Salin
+                </button>
               </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">ID Sewa</p>
-                <p className="text-gray-800 font-semibold">{data?.rent_id}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">
-                  Tanggal Pengajuan (Update)
-                </p>
-                <p className="text-gray-800 font-semibold">
-                  {moment(data?.updated_at).format("DD MMMM YYYY HH:mm")}
-                </p>
-              </div>
+              <p className="text-gray-500 text-sm">
+                BCA / PT Pelayanan Nasional Indonesia
+              </p>
             </div>
 
-            {/* Form */}
-
-            {/* Penyewa dan Properti Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-6">
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Penyewa</p>
-                <p className="text-gray-800 font-semibold">
-                  PT. SAMPOERNA Tbk. nunggu backend
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">
-                  Properti nunggu backend
-                </p>
-                <p className="text-gray-800 font-semibold">
-                  Cv. Gracia Blue Logistic
-                </p>
-                <p className="text-gray-500 text-sm">
-                  Graha Pelni, Jl Pahlawan No.18, Surabaya
-                </p>
-              </div>
+            {/* Upload Bukti Transfer */}
+            <div>
+              <label className="block text-sm text-gray-500 font-medium mb-2">
+                Upload Bukti Transfer
+              </label>
+              <input
+                type="file"
+                className="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-semibold
+                file:bg-purple-50 file:text-purple-700
+                hover:file:bg-purple-100"
+                onChange={handleFileChange}
+              />
+              <p className="text-gray-700 text-sm mt-2">{fileName}</p>
             </div>
+          </div>
 
-            {/* Pembayaran Cicilan Ke and Nominal */}
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={onSubmit}
-            >
-              {({ isSubmitting, setFieldValue }) => (
-                <Form>
-                  <div className=" grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label className="block text-sm text-gray-500 font-medium mb-2">
-                        Pembayaran Cicilan Ke
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full border border-gray-300 rounded-md p-2"
-                        value={data?.number_of_trans}
-                        disabled
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-gray-500 font-medium mb-2">
-                        Nominal Pembayaran
-                      </label>
-                      <InputField
-                        name="price"
-                        type="text"
-                        placeholder="Enter your price"
-                        setFieldValue={setFieldValue}
-                        className="px-0"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Rekening and Upload */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8">
-                    {/* Rekening Section */}
-                    <div>
-                      <p className="text-sm text-gray-500 font-medium">
-                        Nomor Rekening
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-gray-800 font-semibold">
-                          7328195989
-                        </p>
-                        <button
-                          className="text-purple-700 text-sm font-medium hover:underline"
-                          onClick={() => {
-                            navigator.clipboard
-                              .writeText("7328195989")
-                              .then(() => {
-                                StatusAlertService.showSuccess(
-                                  "Nomor rekening berhasil disalin!"
-                                );
-                              })
-                              .catch(() => {
-                                StatusAlertService.showError(
-                                  "Gagal menyalin nomor rekening."
-                                );
-                              });
-                          }}
-                        >
-                          Salin
-                        </button>
-                      </div>
-                      <p className="text-gray-500 text-sm">
-                        BCA / PT Pelayanan Nasional Indonesia
-                      </p>
-                    </div>
-
-                    {/* Upload Bukti Transfer */}
-                    <div>
-                      <label className="block text-sm text-gray-500 font-medium mb-2">
-                        Upload Bukti Transfer
-                      </label>
-                      <InputField
-                        type="file"
-                        name="buktiTransfer"
-                        accept=".pdf"
-                        className="px-0"
-                        onChange={(e) =>
-                          setFieldValue(
-                            "buktiTransfer",
-                            Array.from(e.target.files)
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-
-                  {/* Buttons */}
-                  <div
-                    className="flex justify-center
+          {/* Buttons */}
+          <div
+            className="flex justify-center
            gap-4"
-                  >
-                    <Link
-                      to="/user/transaction"
-                      type="button"
-                      className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
-                    >
-                      Batal
-                    </Link>
-                    <button
-                      type="submit"
-                      className="px-6 py-2 bg-purple-600 text-white rounded-md"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Loading..." : "Submit"}
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-          </>
-        )}
+          >
+            <button
+              onClick={() => window.history.back()}
+              type="button"
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-purple-600 text-white rounded-md"
+            >
+              Unggah
+            </button>
+          </div>
+        </form>
       </div>
     </main>
   );

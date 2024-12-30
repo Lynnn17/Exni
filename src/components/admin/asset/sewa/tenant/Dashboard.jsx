@@ -82,7 +82,7 @@ const Dashboard = () => {
                           capacity={item?.application?.asset?.tenants?.floor}
                           nameTenant={item?.application?.user?.company}
                           building={item?.application?.asset?.tenants.building}
-                          price={item?.total_price}
+                          harga={item?.total_price}
                           noContract={item?.no_contract}
                           link={`detail/${item.id}`}
                           startDate={item?.application?.rent_start_date}

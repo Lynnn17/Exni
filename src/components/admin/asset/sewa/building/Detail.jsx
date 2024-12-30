@@ -284,7 +284,7 @@ const Detail = () => {
             <div className="w-full md:w-[33.8%] mt-5">
               <img
                 className="w-full h-full object-cover"
-                src={data?.application?.asset?.albums || ""}
+                src={data?.application?.asset?.albums[0]}
                 alt=""
                 srcset=""
                 loading="lazy"
