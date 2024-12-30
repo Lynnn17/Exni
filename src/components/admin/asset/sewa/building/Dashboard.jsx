@@ -8,6 +8,8 @@ import Search from "../../../../reusable/Search";
 import SectionDivider from "../../../../reusable/SectionDivider";
 import axios from "axios";
 import Loading from "../../../../reusable/Loading";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
 const Dashboard = () => {
   const location = useLocation(); // Mendapatkan lokasi saat ini
@@ -15,29 +17,51 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // State untuk loading
 
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true); // Mulai loading
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}rents?type=PROPERTY`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `${
+          import.meta.env.VITE_API_URL
+        }rents?type=PROPERTY&page=${page}${queryParam}`,
+        { headers }
       );
-      console.log("res", response.data);
-      setData(response.data.data.rents);
+      const { rents, totalPages: total } = response.data.data.rents;
+      setData(rents);
+      console.log("data", rents);
+      setTotalPages(total);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
     } finally {
-      setIsLoading(false); // Selesai loading
+      setIsLoading(false);
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   // Tentukan apakah halaman saat ini adalah "Aset Tenant" atau "Gedung"
   const isTenantOrBuildingPage =
@@ -47,6 +71,7 @@ const Dashboard = () => {
   return (
     <>
       <main>
+        <StatusAlert />
         <div className="w-full p-4 bg-white mt-4 h-full rounded-lg">
           <HeaderSection
             title="Aset Sewa"
@@ -54,7 +79,11 @@ const Dashboard = () => {
             onToggle={() => setIsOpen(!isOpen)}
             titleClass={isTenantOrBuildingPage ? "text-black" : "text-gray-500"} // Ubah warna berdasarkan halaman
           >
-            <Search />
+            <Search
+              placeholder="Cari sewa properti ..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
 
           {isLoading ? (
@@ -67,16 +96,16 @@ const Dashboard = () => {
                   classText="text-sm font-semibold uppercase text-teks"
                 />
                 <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
-                  {data?.rents?.length === 0 ? (
+                  {data?.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">
                       <p>No assets available</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                      {data?.rents?.map((item, i) => (
+                      {data?.map((item, i) => (
                         <CardBuilding
                           key={i}
-                          foto={item.application.asset.albums[0]}
+                          // foto={item.application.asset.albums[0]}
                           title={item.application.asset.name}
                           address={item.application.asset.properties.address}
                           noContract={item.no_contract || "-"}
@@ -97,7 +126,11 @@ const Dashboard = () => {
                     </div>
                   )}
                 </div>
-                <Pagination />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
             </>
           )}

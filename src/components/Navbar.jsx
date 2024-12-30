@@ -19,7 +19,7 @@ const Navbar = () => {
       try {
         const decodedToken = jwtDecode(token);
         console.log("Decoded token:", decodedToken);
-        const userName = decodedToken.name || "John Doe"; // Ambil nama dari token, jika ada
+        const userName = decodedToken.company || "John Doe"; // Ambil nama dari token, jika ada
         const userRole = decodedToken.role || "Admin"; // Ambil role dari token, jika ada
         setUser({ name: userName, role: userRole });
       } catch (error) {

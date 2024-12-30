@@ -15,29 +15,51 @@ const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // State untuk loading
 
-  const fetchData = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true); // Mulai loading
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}rents?type=TENANT`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `${
+          import.meta.env.VITE_API_URL
+        }rents?type=TENANT&page=${page}${queryParam}`,
+        { headers }
       );
-      console.log("res", response.data.data.rents);
-      setData(response.data.data.rents);
+      const { rents, totalPages: total } = response.data.data.rents;
+      setData(rents);
+      console.log("data", rents);
+      setTotalPages(total);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
     } finally {
-      setIsLoading(false); // Selesai loading
+      setIsLoading(false);
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   const isTenantOrBuildingPage =
     location.pathname.includes("tenant") ||
@@ -53,7 +75,11 @@ const Dashboard = () => {
             onToggle={() => setIsOpen(!isOpen)}
             titleClass={isTenantOrBuildingPage ? "text-black" : "text-gray-500"} // Ubah warna berdasarkan halaman
           >
-            <Search />
+            <Search
+              placeholder="Cari sewa tenant ..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
 
           {isLoading ? (
@@ -66,13 +92,13 @@ const Dashboard = () => {
                   classText="text-sm font-semibold uppercase text-teks"
                 />
                 <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
-                  {data?.rents?.length === 0 ? (
+                  {data?.length === 0 ? (
                     <div className="text-center py-10 text-gray-500">
                       <p>No assets available</p>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                      {data?.rents?.map((item, i) => (
+                      {data?.map((item, i) => (
                         <CardTenant
                           key={i}
                           foto={item?.application?.asset?.albums[0]}

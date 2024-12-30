@@ -89,11 +89,6 @@ const Detail = () => {
                       <button onClick={handleOpenModal}>
                         <HiEye />
                       </button>
-                      <PembayaranModal
-                        isOpen={isModalOpen}
-                        onClose={handleCloseModal}
-                        payments={payments}
-                      />
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">

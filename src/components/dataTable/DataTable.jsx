@@ -11,7 +11,7 @@ const DataTable = ({
   aksi,
 }) => {
   return (
-    <div className="overflow-x-auto pt-4 lg:px-2 w-full">
+    <div className=" max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-auto pt-4 lg:px-2 w-full">
       <div className="overflow-x-auto rounded-t-lg border border-gray-300">
         <table className="w-full table-auto">
           <ColumnHeader
@@ -19,7 +19,7 @@ const DataTable = ({
             actions={actions}
             actionLabel={aksi}
           />
-          <tbody>
+          <tbody className="">
             {data.length > 0 ? (
               data.map((item) => (
                 <DataRow

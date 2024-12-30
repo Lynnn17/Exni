@@ -93,10 +93,8 @@ const Detail = () => {
           StatusAlertService.showSuccess("Data berhasil disimpan!");
         } catch (error) {
           console.error("Error saving data:", error);
-          if (error.response?.data?.message !== "Application already rented") {
-            StatusAlertService.showError(
-              "Terjadi kesalahan saat menyimpan data."
-            );
+          if (error.response?.data?.message !== "Asset is already rented") {
+            StatusAlertService.showError("Asset sudah disewa.");
           }
         }
       } else {

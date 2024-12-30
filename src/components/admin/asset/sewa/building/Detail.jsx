@@ -16,12 +16,16 @@ import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import { FaFileContract } from "react-icons/fa";
 import { MdOutlineCommentsDisabled } from "react-icons/md";
+import Modal from "../../../../reusable/Modal";
+import StatusButton from "../../../../reusable/StatusButton";
 
 const Detail = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isReadOnly, setIsReadOnly] = useState(true);
   const { id } = useParams();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
 
   const handleToggleReadOnly = () => {
     setIsReadOnly(!isReadOnly);
@@ -125,7 +129,33 @@ const Detail = () => {
         renderText={(value) => <div readOnly>{value} </div>}
       />
     ),
+    // buat modal
+    nominalPengajuan: (
+      <NumericFormat
+        value={item.amount}
+        displayType="text"
+        thousandSeparator
+        prefix="Rp "
+        renderText={(value) => <div readOnly>{value} </div>}
+      />
+    ),
+    lamaCicilan: item.number_of_trans,
+    tipePembayaran: data.status,
+    statusValue: <StatusButton status={item.status} />,
+    namaAset: data.application.asset.name,
+    namaPenyewa: data.application.user.company,
+    masaSewa:
+      Moment(data.application.rent_start_date).format("D MMM YYYY  HH:mm:ss") +
+      " - " +
+      Moment(data.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
+    catatan: item.note,
+    buktiTransfer: item.receipt,
   }));
+
+  const handleOpenModal = (item) => {
+    setSelectedData(item);
+    setModalOpen(true);
+  };
 
   return (
     <main>
@@ -284,7 +314,7 @@ const Detail = () => {
             <div className="w-full md:w-[33.8%] mt-5">
               <img
                 className="w-full h-full object-cover"
-                src={data?.application?.asset?.albums[0]}
+                // src={data?.application?.asset?.albums[0]}
                 alt=""
                 srcset=""
                 loading="lazy"
@@ -293,12 +323,21 @@ const Detail = () => {
             <div className="bg-white border border-gray-200 mt-5 p-4 w-full">
               <div className="w-full h-full">
                 <SectionDivider title="Riwayat Transaksi" />
-                <PaymentTable data={datas} />
+                <PaymentTable
+                  data={datas}
+                  modal={(item) => handleOpenModal(item)}
+                />
               </div>
             </div>
           </div>
         )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        data={selectedData}
+        fetchData={fetchData}
+      />
     </main>
   );
 };
