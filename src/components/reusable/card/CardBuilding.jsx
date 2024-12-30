@@ -61,10 +61,10 @@ const CardBuilding = ({
             <p className="font-semibold text-gray-600">Keterangan</p>
             <p
               className={`${
-                keterangan ? "text-green-600" : "text-red-600"
+                keterangan === "Tersedia" ? "text-green-600" : "text-red-600"
               } font-medium`}
             >
-              {keterangan ? "Tersedia" : "Tidak Tersedia"}
+              {keterangan}
             </p>
           </div>
         </div>

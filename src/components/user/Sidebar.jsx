@@ -13,10 +13,6 @@ import { IoIosNotifications } from "react-icons/io";
 const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
-  };
-
   const activeStyle = "text-black font-semibold";
   const defaultStyle = "text-teks";
 
@@ -68,12 +64,10 @@ const Sidebar = () => {
           </div>
 
           {/* Aset Sewa Dropdown */}
-          <div
-            className="flex pt-4 items-center cursor-pointer"
-            onClick={toggleDropdown}
-          >
+          <div className="flex pt-4 items-center cursor-pointer">
             <TbBuildingWarehouse className="text-2xl" />
             <NavLink
+              to="/user/asset/sewa-asset"
               className={({ isActive }) =>
                 `${
                   isActive ? activeStyle : defaultStyle
@@ -82,45 +76,9 @@ const Sidebar = () => {
             >
               Aset Sewa
             </NavLink>
-            {isDropdownOpen ? (
-              <IoChevronUp className="text-xl ml-2" />
-            ) : (
-              <IoChevronDown className="text-xl ml-2" />
-            )}
           </div>
 
           {/* Dropdown content for Sewa Aset */}
-          {isDropdownOpen && (
-            <div className="pl-4">
-              <div className="flex pt-4 items-center">
-                <FaBuilding className="text-xl" />
-                <NavLink
-                  to="/user/asset/sewa-building"
-                  className={({ isActive }) =>
-                    `${
-                      isActive ? activeStyle : defaultStyle
-                    } text-sm uppercase pl-3 font-medium`
-                  }
-                >
-                  Sewa Gedung
-                </NavLink>
-              </div>
-
-              <div className="flex pt-4 items-center">
-                <IoIosCube className="text-xl" />
-                <NavLink
-                  to="/user/asset/sewa-tenant"
-                  className={({ isActive }) =>
-                    `${
-                      isActive ? activeStyle : defaultStyle
-                    } text-sm uppercase pl-3 font-medium`
-                  }
-                >
-                  Sewa Tenant
-                </NavLink>
-              </div>
-            </div>
-          )}
 
           <div className="flex pt-4 items-center">
             <FaHandshakeSimple className="text-2xl" />

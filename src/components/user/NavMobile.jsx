@@ -25,10 +25,6 @@ const NavMobile = () => {
     setIsOpen(!isOpen);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown visibility
-  };
-
   const activeClass = "text-black font-semibold"; // Active class styling
 
   const { company, role } = JSON.parse(localStorage.getItem("user")) || {
@@ -107,53 +103,16 @@ const NavMobile = () => {
                   </div>
 
                   <NavLink
+                    to="/user/asset/sewa-asset"
                     className={({}) => `flex items-center pt-4 ${"text-teks"}`}
-                    onClick={toggleDropdown} // Toggle dropdown on click
                   >
                     <TbBuildingWarehouse className="text-2xl" />
                     <p className="text-sm uppercase pl-3 font-medium">
                       Aset Sewa
                     </p>
-                    {/* Display the dropdown icon */}
-                    {isDropdownOpen ? (
-                      <IoChevronUp className="ml-auto text-xl" />
-                    ) : (
-                      <IoChevronDown className="ml-auto text-xl" />
-                    )}
                   </NavLink>
 
                   {/* Dropdown for Aset Sewa */}
-                  {isDropdownOpen && (
-                    <div className="pl-8">
-                      <NavLink
-                        to="/user/asset/sewa-building"
-                        className={({ isActive }) =>
-                          `flex items-center pt-4 ${
-                            isActive ? activeClass : "text-teks"
-                          }`
-                        }
-                      >
-                        <FaBuilding className="text-2xl" />
-                        <p className="text-sm uppercase pl-3 font-medium">
-                          Sewa Gedung
-                        </p>
-                      </NavLink>
-
-                      <NavLink
-                        to="/user/asset/sewa-tenant"
-                        className={({ isActive }) =>
-                          `flex items-center pt-4 ${
-                            isActive ? activeClass : "text-teks"
-                          }`
-                        }
-                      >
-                        <IoIosCube className="text-2xl" />
-                        <p className="text-sm uppercase pl-3 font-medium">
-                          Sewa Tenant
-                        </p>
-                      </NavLink>
-                    </div>
-                  )}
 
                   <NavLink
                     to="/user/submission"

@@ -8,12 +8,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
-
   const [dashboardData, setDashboardData] = useState({
     asset_count: 0,
     application_count: 0,
     transaction_count: 0,
   });
+
+  const { user_id } = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -21,7 +22,7 @@ const Dashboard = () => {
         const token = localStorage.getItem("token"); // Ambil token jika diperlukan
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}dashboard/user/${id}`,
+          `${import.meta.env.VITE_API_URL}dashboard/user/${user_id}`,
           { headers }
         );
         console.log("API Response:", response.data); // Log respons untuk debugging
@@ -33,8 +34,8 @@ const Dashboard = () => {
       }
     };
 
-    if (id) fetchDashboardData();
-  }, [id]);
+    fetchDashboardData();
+  }, [user_id]);
 
   return (
     <>

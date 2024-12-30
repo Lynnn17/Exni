@@ -400,7 +400,7 @@ const Detail = () => {
                           </p>
                           <Field
                             type="number"
-                            min="1"
+                            min="0"
                             name="installmentCount"
                             value={durationMonths}
                             onChange={(e) =>
@@ -449,7 +449,6 @@ const Detail = () => {
                             <InputField
                               type="file"
                               name="fileProposal"
-                              label="File Kontrak"
                               className="px-0 mb-0 text-sm"
                               onChange={(e) =>
                                 setFieldValue(
@@ -475,7 +474,6 @@ const Detail = () => {
                             <InputField
                               type="file"
                               name="beritaAcara"
-                              label="File Kontrak"
                               className="px-0 mb-0 text-sm"
                               onChange={(e) =>
                                 setFieldValue(

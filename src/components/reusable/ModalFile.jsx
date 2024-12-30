@@ -115,7 +115,11 @@ const Modal = ({
               <li key={index}>
                 <div className="flex gap-2 items-center justify-between pr-6">
                   <a
-                    href={`https://drive.google.com/file/d/${item}/view`}
+                    href={
+                      type === "Gambar"
+                        ? item
+                        : `https://drive.google.com/file/d/${item}/view`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm underline text-blue-600"

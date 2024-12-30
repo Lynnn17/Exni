@@ -51,13 +51,10 @@ const AdminRoutes = () => {
         }
       />
 
-      <Route path="/dashboard" element={<DashboardAdmin />} />
-      <Route path="/notifikasi" element={<Notif />} />
-      <Route path="/user/*" element={<UserDashboardRoutes />} />
-      <Route path="/asset/*" element={<AssetDashboardRoutes />} />
-      <Route path="/submission/*" element={<SubmissionDashboardRoutes />} />
-      <Route path="/transaction/*" element={<TransaksiDashboardRoutes />} />
-
+      <Route
+        path="/notifikasi"
+        element={<ProtectedRoute element={Notif} requiredRole="ADMIN" />}
+      />
     </Routes>
   );
 };
