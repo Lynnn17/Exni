@@ -4,33 +4,12 @@ import { IoIosNotifications } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import IconUser from "../../assets/icon/user.svg";
 
-import { jwtDecode } from "jwt-decode";
+
+import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const [user, setUser] = useState({ name: "John Doe", role: "Admin" }); // Default user info
-
-  // Fungsi untuk mendekode token dan mendapatkan informasi pengguna
-  const token =
-    sessionStorage.getItem("token") || localStorage.getItem("token");
-  const getUserInfoFromToken = () => {
-    if (token) {
-      try {
-        const decodedToken = jwtDecode(token);
-        console.log("Decoded token:", decodedToken);
-        const userName = decodedToken.company || "Anonymous";
-        const userRole = decodedToken.role || "unauthorized";
-        setUser({ name: userName, role: userRole });
-      } catch (error) {
-        console.error("Error decoding token:", error);
-        setUser({ name: "Anonymous", role: "unauthorized" });
-      }
-    }
-  };
-
-  // Ambil informasi user saat komponen dimuat
-  useEffect(() => {
-    getUserInfoFromToken();
-  }, [token]);
+  const activeStyle = "text-blue-500";
+  const defaultStyle = "text-gray-600 hover:text-gray-800";
 
 import { NavLink } from "react-router-dom";
 
