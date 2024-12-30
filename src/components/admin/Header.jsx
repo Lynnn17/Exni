@@ -4,11 +4,19 @@ import { IoIosNotifications } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import IconUser from "../../assets/icon/user.svg";
 
+
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const activeStyle = "text-blue-500";
   const defaultStyle = "text-gray-600 hover:text-gray-800";
+
+import { NavLink } from "react-router-dom";
+
+const Header = () => {
+  const activeStyle = "text-blue-500";
+  const defaultStyle = "text-gray-600 hover:text-gray-800";
+
 
   return (
     <header className="bg-white hidden lg:flex py-4 px-4 w-full h-16 rounded-[8px]">

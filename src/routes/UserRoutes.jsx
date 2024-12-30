@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import DashboardHome from "../views/user/Dashboard";
 import AssetDashboardRoutes from "./UserRoutes/AssetDashboardRoutes";
 import SubmissionDashboardRoutes from "./UserRoutes/SubmissionDashboardRoutes";
+
 import Notif from "../views/user/Notifikasi";
 import TransaksiDashboardRoutes from "./UserRoutes/TransactionDashboardRoutes";
 
@@ -40,7 +41,9 @@ const UserRoutes = () => {
           />
         }
       />
+
       <Route path="/notifikasi/*" element={<Notif />} />
+
     </Routes>
   );
 };

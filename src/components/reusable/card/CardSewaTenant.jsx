@@ -11,7 +11,7 @@ const CardTenant = ({
   link,
   informasi,
   building,
-  price,
+  harga,
   startDate,
   endDate,
   nameTenant,
@@ -53,7 +53,7 @@ const CardTenant = ({
             <p className="font-semibold text-gray-600">Harga</p>
             <p className="text-gray-700">
               <NumericFormat
-                value={price}
+                value={harga}
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"Rp "}
