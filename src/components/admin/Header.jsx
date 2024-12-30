@@ -3,21 +3,12 @@ import { FaMoon } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import IconUser from "../../assets/icon/user.svg";
-
-
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
   const activeStyle = "text-blue-500";
   const defaultStyle = "text-gray-600 hover:text-gray-800";
-
-import { NavLink } from "react-router-dom";
-
-const Header = () => {
-  const activeStyle = "text-blue-500";
-  const defaultStyle = "text-gray-600 hover:text-gray-800";
-
-
+  const { company, role } = JSON.parse(localStorage.getItem("user"));
   return (
     <header className="bg-white hidden lg:flex py-4 px-4 w-full h-16 rounded-[8px]">
       <div className="w-full flex justify-between items-center">
@@ -37,8 +28,8 @@ const Header = () => {
           <div className="flex flex-row items-center gap-2 pl-4">
             <img src={IconUser} alt="user" className="w-8 h-8 rounded-full" />
             <div className="pr-6 pl-1">
-              <p className="text-sm font-medium">{user.name}</p>
-              <p className="text-xs">{user.role}</p>
+              <p className="text-sm font-medium">{company}</p>
+              <p className="text-xs">{role}</p>
             </div>
           </div>
         </div>

@@ -45,13 +45,20 @@ const Login = () => {
         }
       );
 
-      console.log("Login response:", response.data); // Debug respons dari backend
+      console.log("Login response:", response.data);
       const token = response.data.data.access_token;
+      const user = {
+        company: response.data.data.company,
+        role: response.data.data.role,
+        user_id: response.data.data.user_id,
+      };
       if (!token) {
         throw new Error("Token not received from server");
       }
 
       localStorage.setItem("token", token);
+
+      localStorage.setItem("user", JSON.stringify(user));
       StatusAlertService.showSuccess("Login successfully!"); // Menampilkan alert sukses
       resetForm();
 
