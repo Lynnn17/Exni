@@ -158,7 +158,7 @@ const PaymentTable = ({ data }) => {
                       <td className="px-4 py-2">{item.updatedAt}</td>
                       <td className="px-4 py-2  ">
                         <span
-                          className={`px-4 py-2 text-white text-xs font-bold rounded ${
+                          className={`px-4 py-2 text-white text-xs font-bold rounded text-nowrap ${
                             item.status === "APPROVED"
                               ? "bg-green-500"
                               : item.status === "REJECTED"

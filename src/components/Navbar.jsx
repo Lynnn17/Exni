@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode"; // Pastikan import jwt-decode
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null); // Default to null (user not logged in)
+  const [user, setUser] = useState({}); // Default to null (user not logged in)
 
   // Fungsi untuk mengambil dan mendekode token
   const getUserInfoFromToken = () => {
@@ -52,7 +52,7 @@ const Navbar = () => {
           Home
         </NavLink>
         <NavLink
-          to="user/dashboard"
+          to={user.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard"}
           className={({ isActive }) => (isActive ? "font-bold " : "")}
         >
           Dashboard
@@ -118,6 +118,7 @@ const Navbar = () => {
                 src={IconUser}
                 alt="user"
                 className="w-10 h-10 rounded-full"
+                loading="lazy"
               />
               <div className="text-center">
                 <p className="text-base font-medium">{user.name}</p>

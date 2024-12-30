@@ -32,7 +32,8 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}assets?type=PROPERTY`,
         { headers }
       );
-      setData(response.data.data.assets);
+
+      setData(response.data.data.assets.assets);
     } catch (error) {
       console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data!");

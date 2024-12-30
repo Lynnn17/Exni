@@ -1,6 +1,6 @@
 import Sidebar from "../../../../components/user/Sidebar";
 import Header from "../../../../components/user/Header";
-import Content from "../../../../components/user/asset/sewa/tenant/Detail";
+import Content from "../../../../components/user/asset/sewa/Detail";
 import NavMobile from "../../../../components/user/NavMobile";
 
 const Dashboard = () => {

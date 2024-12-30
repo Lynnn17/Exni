@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import { NumericFormat } from "react-number-format";
 import Moment from "moment";
+import { FaFileAlt } from "react-icons/fa";
 const CardTenant = ({
   foto,
   name,
@@ -16,6 +17,7 @@ const CardTenant = ({
   endDate,
   nameTenant,
   noContract,
+  file,
   teksLink = "Lihat Selengkapnya",
 }) => {
   return (
@@ -40,6 +42,13 @@ const CardTenant = ({
           <div>
             <p className="font-semibold text-gray-600">Nomor Kontrak</p>
             <p className="text-gray-700">{noContract || "-"}</p>
+            <Link
+              target="_blank"
+              to={`https://drive.google.com/file/d/${file}`}
+              className="text-sm font-medium text-blue-500"
+            >
+              <FaFileAlt />
+            </Link>
           </div>
           <div>
             <p className="font-semibold text-gray-600">Gedung</p>
