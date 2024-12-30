@@ -8,7 +8,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
-  const { id } = useParams();
   const [dashboardData, setDashboardData] = useState({
     asset_count: 0,
     application_count: 0,
