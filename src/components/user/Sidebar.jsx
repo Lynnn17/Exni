@@ -8,6 +8,7 @@ import { IoIosCube } from "react-icons/io";
 import { GiReceiveMoney } from "react-icons/gi";
 import { FaHandshakeSimple } from "react-icons/fa6";
 import { MdSpaceDashboard } from "react-icons/md";
+import { IoIosNotifications } from "react-icons/io";
 
 const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown
@@ -45,6 +46,18 @@ const Sidebar = () => {
             }
           >
             Dashboard
+          </NavLink>
+        </div>
+
+        <div className="text-2xl text-teks pt-4 cursor-pointer flex items-center">
+          <IoIosNotifications />
+          <NavLink
+            to="/user/notifikasi"
+            className={({ isActive }) =>
+              `${isActive ? activeStyle : defaultStyle} text-sm uppercase pl-3`
+            }
+          >
+            Notifikasi
           </NavLink>
         </div>
 

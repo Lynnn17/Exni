@@ -108,6 +108,7 @@ const Dashboard = () => {
           </HeaderSection>
 
           {/* Cards Section */}
+
           {isLoading ? (
             <Loading />
           ) : (
@@ -148,6 +149,30 @@ const Dashboard = () => {
                       Tidak ada data tersedia.
                     </p>
                   )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+            {data?.assets?.length > 0 ? (
+              data?.assets?.map((item, i) => (
+                <div key={item.id || i}>
+                  <Card
+                    foto={item.albums?.[0] || ""}
+                    title={item.name || "N/A"}
+                    address={item.properties?.address || "N/A"}
+                    alokasi={item.properties?.allocation || "N/A"}
+                    landSize={item.properties?.landArea || "N/A"}
+                    buildingSize={item.properties?.buildingArea || "N/A"}
+                    harga={item.price || "N/A"}
+                    deskripsi={item.description || "N/A"}
+                    link={`edit/${item.id}`}
+                    modalFile={() => handleModalFile(item.documents, item.id)}
+                    keterangan={item.isAvailable}
+                    modalGambar={() => handleModalGambar(item.albums, item.id)}
+                    modalDelete={() => {
+                      setConfirmModalOpen(true);
+                      setIdData(item.id);
+                    }}
+                  />
+
                 </div>
               </div>
 

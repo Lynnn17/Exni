@@ -47,6 +47,7 @@ const Dashboard = () => {
           <Search />
         </HeaderSection>
 
+
         {isLoading ? (
           <Loading />
         ) : (
@@ -76,6 +77,29 @@ const Dashboard = () => {
             </div>
           </>
         )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
+          {data?.assets?.length > 0 ? (
+            data?.assets?.map((item) => (
+              <CardUserTenant
+                foto={item.albums?.[0] || "https://via.placeholder.com/150"}
+                title={item.name || "N/A"}
+                address={item.tenants.address || "N/A"}
+                deskripsi={item.description || "Tidak ada deskripsi"}
+                idAset={item.id}
+                isAvailable={item.isAvailable}
+                linkDetail={`detail/${item.id}`}
+                linkPesan={`pesan/${item.id}`}
+              />
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-500">
+              Tidak ada data tersedia.
+            </p>
+          )}
+        </div>
+
+
         <Pagination />
       </div>
     </main>
