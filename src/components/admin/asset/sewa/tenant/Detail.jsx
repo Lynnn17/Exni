@@ -16,6 +16,8 @@ import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import { FaFileContract } from "react-icons/fa";
 import { MdOutlineCommentsDisabled } from "react-icons/md";
+import Modal from "../../../../reusable/Modal";
+import StatusButton from "../../../../reusable/StatusButton";
 
 const Detail = () => {
   const [data, setData] = useState([]);
@@ -135,7 +137,7 @@ const Detail = () => {
       />
     ),
     lamaCicilan: item.number_of_trans,
-    tipePembayaran: data.status,
+    tipePembayaran: data.application.payment_type,
     statusValue: <StatusButton status={item.status} />,
     namaAset: data.application.asset.name,
     namaPenyewa: data.application.user.company,
@@ -144,7 +146,12 @@ const Detail = () => {
       " - " +
       Moment(data.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
     catatan: item.note,
+
     buktiTransfer: item.receipt,
+    beritaAcara: data.application.minutesOfMeeting,
+    pembayaranStatus: data.payment_status || "-",
+    rentalStatus: data.rental_status || "-",
+    update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
   }));
 
   const handleOpenModal = (item) => {

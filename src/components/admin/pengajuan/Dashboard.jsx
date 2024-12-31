@@ -23,50 +23,59 @@ const Dashboard = () => {
 
   const columns = [
     { title: "No", key: "no" },
+    { title: "ID Pengajuan ", key: "id" },
     { title: "Nama PT", key: "name" },
     { title: "Properti", key: "properti" },
     { title: "Nominal", key: "nominal" },
     { title: "Waktu", key: "waktu" },
+    { title: "Tanggal Pengajuan (Update)", key: "update" },
     { title: "Status", key: "ValueStatus" },
   ];
 
-  const datas = data?.map((item, index) => ({
-    id: item.id,
-    no: index + 1,
-    name: item.user.company,
-    properti: item.asset.name,
-    nominal: (
-      <NumericFormat
-        value={item.proposed_price} // Nilai yang ingin diformat
-        displayType={"text"} // Menampilkan sebagai teks
-        thousandSeparator={true} // Menambahkan pemisah ribuan
-        prefix={"Rp "} // Menambahkan prefix Rupiah
-        renderText={(value) => <div>{value} </div>} // Menampilkan hasilnya
-      />
-    ),
-    waktu:
-      Moment(item.rent_start_date).format("D MMM YYYY") +
-      " - " +
-      Moment(item.rent_end_date).format("D MMM YYYY"),
-    ValueStatus: (
-      <span
-        key={index}
-        className={`font-medium px-2 py-1 rounded ${
-          item.status === "PROCESS"
-            ? "bg-yellow-500 text-white"
-            : item.status === "REJECTED"
-            ? "bg-red-500 text-white"
-            : item.status === "APPROVED"
-            ? "bg-green-500 text-white"
-            : item.status === "PENDING"
-            ? "bg-blue-500 text-white"
-            : "bg-gray-500 text-white"
-        }`}
-      >
-        {item.status}
-      </span>
-    ),
-  }));
+  const datas = data
+    ?.sort((a, b) => {
+      const dateA = Moment(a.updatedAt);
+      const dateB = Moment(b.updatedAt);
+      return dateB - dateA;
+    })
+    .map((item, index) => ({
+      id: item.id,
+      no: index + 1,
+      update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
+      name: item.user.company,
+      properti: item.asset.name,
+      nominal: (
+        <NumericFormat
+          value={item.proposed_price} // Nilai yang ingin diformat
+          displayType={"text"} // Menampilkan sebagai teks
+          thousandSeparator={true} // Menambahkan pemisah ribuan
+          prefix={"Rp "} // Menambahkan prefix Rupiah
+          renderText={(value) => <div>{value} </div>} // Menampilkan hasilnya
+        />
+      ),
+      waktu:
+        Moment(item.rent_start_date).format("D MMM YYYY") +
+        " - " +
+        Moment(item.rent_end_date).format("D MMM YYYY"),
+      ValueStatus: (
+        <span
+          key={index}
+          className={`font-medium px-2 py-1 rounded ${
+            item.status === "PROCESS"
+              ? "bg-yellow-500 text-white"
+              : item.status === "REJECTED"
+              ? "bg-red-500 text-white"
+              : item.status === "APPROVED"
+              ? "bg-green-500 text-white"
+              : item.status === "PENDING"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-500 text-white"
+          }`}
+        >
+          {item.status}
+        </span>
+      ),
+    }));
 
   const actions = [
     {
@@ -86,10 +95,11 @@ const Dashboard = () => {
         `${import.meta.env.VITE_API_URL}applications?page=${page}${queryParam}`,
         { headers }
       );
+
       const { applications, totalPages: total } =
         response.data.data.applications;
       setData(applications);
-
+      console.log("data", applications);
       setTotalPages(total);
     } catch (error) {
       console.error("Error fetching data:", error);

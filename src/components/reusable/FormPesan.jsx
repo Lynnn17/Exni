@@ -14,7 +14,8 @@ const FormComponent = () => {
 
   const { user_id } = JSON.parse(localStorage.getItem("user"));
   const [isReadOnly, setIsReadOnly] = useState(true);
-  const [durationMonths, setDurationMonths] = useState(0);
+  const [durationMonths, setDurationMonths] = useState(1);
+  const [price, setPrice] = useState(0);
 
   const localDate = new Date();
   const currentDate = localDate
@@ -22,6 +23,12 @@ const FormComponent = () => {
     .slice(0, 16);
   const handleToggleReadOnly = () => {
     setIsReadOnly(!isReadOnly);
+  };
+
+  const calculateEndDate = (startDate, monthsToAdd) => {
+    const date = new Date(startDate);
+    date.setMonth(date.getMonth() + monthsToAdd);
+    return date.toLocaleString("sv-SE", { timeZoneName: "short" }).slice(0, 16);
   };
 
   const handlePaymentMethodChange = (e, setFieldValue) => {
@@ -42,6 +49,7 @@ const FormComponent = () => {
 
   const handlePriceBlur = (setFieldValue, price) => {
     const numericValue = price.replace(/[^\d]/g, "");
+    setPrice(numericValue);
 
     setFieldValue("price", numericValue);
     setFieldValue("totalPrice", numericValue * durationMonths);
@@ -54,17 +62,26 @@ const FormComponent = () => {
 
       const startDate = new Date(e.target.form.startDate.value);
       const endDate = new Date(startDate);
+      console.log(price);
       endDate.setMonth(startDate.getMonth() + months);
       setFieldValue("endDate", endDate.toISOString().slice(0, 16)); // Format as 'YYYY-MM-DDTHH:mm'
-      // setTotalPrice(numericValue * durationMonths);
+      setFieldValue("totalPrice", price * months);
     } catch (error) {
       // console.error("Error in handleDurationChange:", error);
     }
   };
 
+  const handleDuration = (e, setFieldValue) => {
+    console.log(e.target.value);
+    const startDate = new Date(e.target.value);
+    const endDate = new Date(startDate);
+    endDate.setMonth(startDate.getMonth() + durationMonths);
+    setFieldValue("endDate", endDate.toISOString().slice(0, 16)); // Format as 'YYYY-MM-DDTHH:mm'
+  };
+
   const initialValues = {
     startDate: currentDate,
-    endDate: "",
+    endDate: calculateEndDate(currentDate, durationMonths),
     paymentMethod: "INSTALLMENT",
     installmentCount: "3",
     fileProposal: "",
@@ -77,20 +94,8 @@ const FormComponent = () => {
 
   const validationSchema = Yup.object({
     startDate: Yup.date().required("Tanggal awal diperlukan"),
-    endDate: Yup.date()
-      .required("Tanggal akhir diperlukan")
-      .test(
-        "is-one-month-later",
-        "Tanggal akhir harus minimal 1 bulan setelah tanggal mulai",
-        function (value) {
-          const { startDate } = this.parent; // Ambil nilai startDate
-          if (!startDate || !value) return true; // Jika salah satu kosong, lewati validasi
-          const start = new Date(startDate);
-          const end = new Date(value);
-          const oneMonthLater = new Date(start.setMonth(start.getMonth() + 1));
-          return end >= oneMonthLater;
-        }
-      ),
+    endDate: Yup.date().required("Tanggal akhir diperlukan"),
+
     paymentMethod: Yup.string().required("Metode pembayaran diperlukan"),
     installmentCount: Yup.string().required("Jumlah cicilan diperlukan"),
 
@@ -180,6 +185,7 @@ const FormComponent = () => {
                 <Field
                   type="datetime-local"
                   name="startDate"
+                  onBlur={(e) => handleDuration(e, setFieldValue)}
                   className={`w-full p-2 border ${
                     touched.startDate && errors.startDate
                       ? "border-red-500"
@@ -221,6 +227,11 @@ const FormComponent = () => {
                   type="number"
                   name="hmm"
                   value={durationMonths}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                    }
+                  }}
                   onChange={(e) => handleDurationChange(e, setFieldValue)}
                   className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
                 />
@@ -241,6 +252,11 @@ const FormComponent = () => {
                     onBlur={() => handlePriceBlur(setFieldValue, values.price)}
                     className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
                     placeholder="Rp. 0"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                      }
+                    }}
                   />
                   <ErrorMessage
                     name="price"

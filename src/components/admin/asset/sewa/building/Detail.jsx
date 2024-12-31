@@ -140,7 +140,7 @@ const Detail = () => {
       />
     ),
     lamaCicilan: item.number_of_trans,
-    tipePembayaran: data.status,
+    tipePembayaran: data.application.payment_type,
     statusValue: <StatusButton status={item.status} />,
     namaAset: data.application.asset.name,
     namaPenyewa: data.application.user.company,
@@ -150,6 +150,10 @@ const Detail = () => {
       Moment(data.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
     catatan: item.note,
     buktiTransfer: item.receipt,
+    beritaAcara: data.application.minutesOfMeeting,
+    pembayaranStatus: data.payment_status || "-",
+    rentalStatus: data.rental_status || "-",
+    update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
   }));
 
   const handleOpenModal = (item) => {
@@ -314,7 +318,7 @@ const Detail = () => {
             <div className="w-full md:w-[33.8%] mt-5">
               <img
                 className="w-full h-full object-cover"
-                // src={data?.application?.asset?.albums[0]}
+                src={data?.application?.asset?.albums[0]}
                 alt=""
                 srcset=""
                 loading="lazy"

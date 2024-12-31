@@ -93,6 +93,7 @@ const Dashboard = () => {
                   <p className="text-center">Belum ada data</p>
                 ) : (
                   data?.map((item, index) => {
+                    console.log("item", item);
                     const dataPengajuan = {
                       id: item?.id,
                       properti: item?.asset?.name,

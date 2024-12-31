@@ -16,7 +16,8 @@ const Detail = () => {
   const { id } = useParams();
 
   const [isReadOnly, setIsReadOnly] = useState(true);
-  const [durationMonths, setDurationMonths] = useState(0);
+  const [durationMonths, setDurationMonths] = useState(1);
+  const [price, setPrice] = useState(0);
 
   const handleToggleReadOnly = () => {
     setIsReadOnly(!isReadOnly);
@@ -47,9 +48,10 @@ const Detail = () => {
   const handlePriceBlur = (setFieldValue, price) => {
     // Save the numeric value without the formatting
     const numericValue = price.replace(/[^\d]/g, "");
-
+    setPrice(numericValue);
     // Use setFieldValue to update the raw numeric value in Formik state
     setFieldValue("price", numericValue);
+    setFieldValue("totalPrice", numericValue * durationMonths);
   };
 
   const handleDurationChange = (e, setFieldValue) => {
@@ -61,10 +63,19 @@ const Detail = () => {
       const startDate = new Date(e.target.form.startDate.value);
       const endDate = new Date(startDate);
       endDate.setMonth(startDate.getMonth() + months);
-      setFieldValue("endDate", endDate.toISOString().slice(0, 16)); // Format as 'YYYY-MM-DDTHH:mm'
+      setFieldValue("endDate", endDate.toISOString().slice(0, 16));
+      console.log(price); // Format as 'YYYY-MM-DDTHH:mm'
+      setFieldValue("totalPrice", price * months);
     } catch (error) {
       // Handle error
     }
+  };
+
+  const handleDuration = (e, setFieldValue) => {
+    const startDate = new Date(e.target.value);
+    const endDate = new Date(startDate);
+    endDate.setMonth(startDate.getMonth() + durationMonths);
+    setFieldValue("endDate", endDate.toISOString().slice(0, 16)); // Format as 'YYYY-MM-DDTHH:mm'
   };
 
   const [data, setData] = useState(null); // Ganti dengan null untuk menandakan data belum tersedia
@@ -83,7 +94,6 @@ const Detail = () => {
     fileProposal: [],
     price: "",
     note: "",
-    beritaAcara: [],
   });
 
   const fetchData = async () => {
@@ -116,7 +126,7 @@ const Detail = () => {
         price: applicationData.proposed_price || "",
         note: applicationData.note || "-",
         fileProposal: [],
-        beritaAcara: [],
+        totalPrice: "",
       });
 
       setLoading(false);
@@ -132,20 +142,7 @@ const Detail = () => {
 
   const validationSchema = Yup.object({
     startDate: Yup.date().required("Tanggal awal diperlukan"),
-    endDate: Yup.date()
-      .required("Tanggal akhir diperlukan")
-      .test(
-        "is-one-month-later",
-        "Tanggal akhir harus minimal 1 bulan setelah tanggal mulai",
-        function (value) {
-          const { startDate } = this.parent;
-          if (!startDate || !value) return true;
-          const start = new Date(startDate);
-          const end = new Date(value);
-          const oneMonthLater = new Date(start.setMonth(start.getMonth() + 1));
-          return end >= oneMonthLater;
-        }
-      ),
+    endDate: Yup.date().required("Tanggal akhir diperlukan"),
     paymentMethod: Yup.string().required("Metode pembayaran diperlukan"),
     installmentCount: Yup.string().required("Jumlah cicilan diperlukan"),
     price: Yup.number()
@@ -163,16 +160,6 @@ const Detail = () => {
       )
       .max(1, "Minimal 1 dokumen")
       .required("Proposal is required"),
-    beritaAcara: Yup.array()
-      .of(
-        Yup.mixed().test(
-          "type",
-          "Harus berupa file pdf",
-          (value) => value && ["application/pdf"].includes(value.type)
-        )
-      )
-      .max(1, "Minimal 1 dokumen")
-      .required("Berita Acara is required"),
   });
 
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -189,9 +176,6 @@ const Detail = () => {
       formData.append("note", values.note);
       if (values.fileProposal[0]) {
         formData.append("proposal", values.fileProposal[0]);
-      }
-      if (values.beritaAcara[0]) {
-        formData.append("minutesOfMeeting", values.beritaAcara[0]);
       }
 
       await axios.put(
@@ -261,7 +245,7 @@ const Detail = () => {
                         <p className="text-gray-800 font-semibold">
                           {data.asset?.type}
                         </p>
-                      
+
                         <p className="text-sm text-gray-500 font-medium">
                           Nama Properti
                         </p>
@@ -425,7 +409,30 @@ const Detail = () => {
                             onChange={(e) =>
                               handleDurationChange(e, setFieldValue)
                             }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                e.preventDefault();
+                              }
+                            }}
                             className="w-full lg:w-[55%] p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
+                          />
+                        </div>
+                        <div className="md:w-[50%]">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Total Harga Sewa
+                          </label>
+
+                          <Field
+                            name="totalPrice"
+                            type="text"
+                            readOnly
+                            className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
+                            placeholder="Rp. 0"
+                          />
+                          <ErrorMessage
+                            name="price"
+                            component="p"
+                            className="text-sm text-red-500"
                           />
                         </div>
                         <div>
@@ -437,6 +444,7 @@ const Detail = () => {
                               <Field
                                 type="datetime-local"
                                 name="startDate"
+                                onBlur={(e) => handleDuration(e, setFieldValue)}
                                 className={` w-full p-2 border ${
                                   touched.startDate && errors.startDate
                                     ? "border-red-500"
@@ -462,7 +470,7 @@ const Detail = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                         <div>
                           <label className="block text-sm text-gray-500 font-medium mb-2">
-                            Link Proposal
+                            Proposal/Lampiran
                           </label>
                           <div className="flex items-center gap-2">
                             <InputField
@@ -487,23 +495,12 @@ const Detail = () => {
                         </div>
                         <div>
                           <label className="block text-sm text-gray-500 font-medium mb-2">
-                            Link Berita Acara
+                            Berita Acara
                           </label>
                           <div className="flex items-center gap-2">
-                            <InputField
-                              type="file"
-                              name="beritaAcara"
-                              className="px-0 mb-0 text-sm"
-                              onChange={(e) =>
-                                setFieldValue(
-                                  "beritaAcara",
-                                  Array.from(e.target.files)
-                                )
-                              }
-                            />
                             <Link
                               target="_blank"
-                              to={`https://drive.google.com/file/d/${data.minutesOfMeeting}`}
+                              to={`https://drive.google.com/file/d/${data.minutesOfMeeting}/view`}
                               className="text-purple-600 text-sm underline"
                             >
                               Lihat
@@ -531,21 +528,23 @@ const Detail = () => {
                       </div>
 
                       {/* Buttons */}
-                      <div className="flex justify-center gap-4">
-                        <button
-                          onClick={handleBatal}
-                          className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
-                        >
-                          Batal
-                        </button>
-                        <button
-                          className="px-6 py-2 bg-purple-600 text-white rounded-md"
-                          type="submit"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? "Menyimpan..." : "Simpan"}
-                        </button>
-                      </div>
+                      {data.status === "APPROVED" ? null : (
+                        <div className="flex justify-center gap-4">
+                          <button
+                            onClick={handleBatal}
+                            className="px-6 py-2 border border-gray-300 rounded-md text-gray-700"
+                          >
+                            Batal
+                          </button>
+                          <button
+                            className="px-6 py-2 bg-purple-600 text-white rounded-md"
+                            type="submit"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? "Menyimpan..." : "Simpan"}
+                          </button>
+                        </div>
+                      )}
                     </Form>
                   )}
                 </Formik>

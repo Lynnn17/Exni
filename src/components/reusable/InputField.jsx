@@ -57,7 +57,7 @@ const InputField = ({
       <label htmlFor={name} className="block text-black pl-1">
         {label}
       </label>
-      {name === "price" ? (
+      {name === "price" || name === "harga" ? (
         <Field
           name={name}
           type="text"
@@ -65,6 +65,11 @@ const InputField = ({
           onBlur={(e) => handlePriceBlur(e.target.value, setFieldValue)}
           className=" w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
           placeholder="Rp. 0"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault(); // Mencegah Enter
+            }
+          }}
         />
       ) : type === "file" ? (
         <Field name={name}>

@@ -101,56 +101,64 @@ const Modal = ({
                 Tambah
               </button>
             )}
-            {idFile.length === 0 && style !== "assets" && (
-              <button
-                className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
-                onClick={() => setAddModalOpen(true)}
-              >
-                Tambah
-              </button>
-            )}
+
+            {(!idFile ||
+              idFile.length === 0 ||
+              idFile.every((item) => item === null)) &&
+              style !== "assets" && (
+                <button
+                  className="text-sm bg-blue-800 text-white px-2 py-1 rounded"
+                  onClick={() => setAddModalOpen(true)}
+                >
+                  Tambah
+                </button>
+              )}
           </div>
           <ul className="list-disc pl-4 pt-2 max-h-[13rem] overflow-y-scroll">
-            {idFile.map((item, index) => (
-              <li key={index}>
-                <div className="flex gap-2 items-center justify-between pr-6">
-                  <a
-                    href={
-                      type === "Gambar"
-                        ? item
-                        : `https://drive.google.com/file/d/${item}/view`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm underline text-blue-600"
-                  >
-                    {type} {index + 1}
-                  </a>
-
-                  {/* Tombol Edit */}
-
-                  <button
-                    className="text-sm bg-blue-600 text-white px-2 py-1 rounded"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Edit
-                  </button>
-
-                  {/* Tombol Delete */}
-                  {style === "assets" ? (
-                    <button
-                      className="text-sm bg-red-600 text-white px-2 py-1 rounded"
-                      onClick={() => {
-                        setConfirmModalOpen(true);
-                        setSelectedFile(item);
-                      }}
+            {idFile.every((item) => item === null) ? (
+              <li className="text-sm text-gray-500">Belum ada data</li>
+            ) : (
+              idFile.map((item, index) => (
+                <li key={index}>
+                  <div className="flex gap-2 items-center justify-between pr-6">
+                    <a
+                      href={
+                        type === "Gambar"
+                          ? item
+                          : `https://drive.google.com/file/d/${item}/view`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm underline text-blue-600"
                     >
-                      Delete
+                      {type} {index + 1}
+                    </a>
+
+                    {/* Tombol Edit */}
+
+                    <button
+                      className="text-sm bg-blue-600 text-white px-2 py-1 rounded"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Edit
                     </button>
-                  ) : null}
-                </div>
-              </li>
-            ))}
+
+                    {/* Tombol Delete */}
+                    {style === "assets" ? (
+                      <button
+                        className="text-sm bg-red-600 text-white px-2 py-1 rounded"
+                        onClick={() => {
+                          setConfirmModalOpen(true);
+                          setSelectedFile(item);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    ) : null}
+                  </div>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </div>
@@ -170,6 +178,7 @@ const Modal = ({
         onCloseModal={() => setAddModalOpen(false)}
         idDataModal={idData}
         type={typeEdit}
+        style={style}
       />
 
       <ModalConfirm

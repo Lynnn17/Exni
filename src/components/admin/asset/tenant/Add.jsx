@@ -46,7 +46,7 @@ const Add = () => {
       .min(1, "Minimal 1 dokumen")
       .max(3, "Maksimal 3 dokumen")
       .required("Dokumen Aset is required"),
-    harga: Yup.number()
+    harga: Yup.string()
       .typeError("Harga must be a number")
       .required("Harga is required"),
     deskripsi: Yup.string().required("Deskripsi is required"),
@@ -156,6 +156,7 @@ const Add = () => {
                   name="harga"
                   label="Harga Sewa"
                   type="text"
+                  setFieldValue={setFieldValue}
                   placeholder="Masukan Harga Sewa"
                 />
                 <InputField

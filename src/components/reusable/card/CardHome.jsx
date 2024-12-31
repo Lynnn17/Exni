@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-const CardHome = ({ foto, title, deskripsi, link }) => {
+const CardHome = ({ foto, title, deskripsi, link, token }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -26,12 +26,14 @@ const CardHome = ({ foto, title, deskripsi, link }) => {
             {isExpanded ? "Read Less" : "Read More"}
           </button>
         </div>
-        <Link
-          to={link}
-          className="uppercase font-semibold bg-gray-700 px-4 rounded-2xl py-2 text-xs text-white shadow-2xl"
-        >
-          Pesan Sekarang
-        </Link>
+        {token ? (
+          <Link
+            to={link}
+            className="uppercase font-semibold bg-gray-700 px-4 rounded-2xl py-2 text-xs text-white shadow-2xl"
+          >
+            Pesan Sekarang
+          </Link>
+        ) : null}
       </div>
     </div>
   );

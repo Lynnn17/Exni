@@ -15,6 +15,10 @@ const Modal = ({
   type,
   style = "assets",
 }) => {
+  console.log("idDataModal", idDataModal);
+  console.log("type", type);
+  console.log("style", style);
+
   if (!isOpenModal || !idDataModal) return null;
 
   const history = useNavigate();

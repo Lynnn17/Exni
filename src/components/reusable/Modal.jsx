@@ -70,7 +70,8 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
     REJECTED: "Ditolak",
   };
 
-  const status = statusMapping[data.status] || "Tidak Diketahui";
+  const statusTranskasi =
+    jenisPembayaranMapping[data.pembayaranStatus] || "Tidak Diketahui";
 
   const jenisPembayaran =
     jenisPembayaranMapping[data.tipePembayaran] || "Tidak Diketahui";
@@ -101,7 +102,8 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
             <InfoLine label="Jenis Pembayaran" value={jenisPembayaran} />
             <InfoLine label="Cicilan Ke" value={data.lamaCicilan} />
             <InfoLine label="Tanggal Update" value={data.update} />
-            <InfoLine label="Status Transaksi" value={status} />
+            <InfoLine label="Status Transaksi" value={statusTranskasi} />
+            <InfoLine label="Status Rental" value={data.rentalStatus} />
           </div>
         </div>
 

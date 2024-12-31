@@ -19,7 +19,7 @@ const Navbar = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-       
+
         const userName = decodedToken.company || "Annonymous"; // Ambil nama dari token, jika ada
         const userRole = decodedToken.role || "Unauthorized"; // Ambil role dari token, jika ada
 
@@ -37,6 +37,7 @@ const Navbar = () => {
   const handleLogout = () => {
     sessionStorage.removeItem("token");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
     navigate("/login"); // Arahkan ke halaman login
   };
