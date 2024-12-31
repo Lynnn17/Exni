@@ -273,7 +273,7 @@ const Detail = () => {
                       </div>
                       <div className="flex gap-5">
                         <div>
-                          <p>Proposal</p>
+                          <p>Link Proposal/Lampiran</p>
 
                           <button
                             type="button"
@@ -284,14 +284,13 @@ const Detail = () => {
                             }}
                             className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
                           >
-                            Lihat <FaArrowRight />
+                            Lihat/Edit <FaArrowRight />
                           </button>
                         </div>
                         <div>
                           <p>Berita Acara</p>
                           <button
                             type="button"
-                            disabled={!data?.minutesOfMeeting}
                             onClick={() => {
                               setSelectedIdFIle(data?.minutesOfMeeting);
                               setModalOpen(true);
@@ -299,13 +298,7 @@ const Detail = () => {
                             }}
                             className="w-max px-3 py-1 bg-ungu rounded-lg text-white text-xs flex items-center gap-2"
                           >
-                            {data?.minutesOfMeeting ? (
-                              <>
-                                Lihat <FaArrowRight />
-                              </>
-                            ) : (
-                              "Tidak ada"
-                            )}
+                            Lihat/Edit <FaArrowRight />
                           </button>
                         </div>
                       </div>

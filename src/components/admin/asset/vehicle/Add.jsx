@@ -171,6 +171,7 @@ const Add = () => {
                   name="harga"
                   label="Harga"
                   type="text"
+                  setFieldValue={setFieldValue}
                   placeholder="Masukan Harga"
                 />
                 <InputField

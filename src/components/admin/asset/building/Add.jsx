@@ -9,6 +9,7 @@ import HeaderForm from "../../../reusable/HeaderForm";
 import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import Loading from "../../../reusable/Loading";
 
 const Add = () => {
   const navigate = useNavigate();
@@ -173,6 +174,7 @@ const Add = () => {
                   name="harga"
                   label="Harga Sewa"
                   type="text"
+                  setFieldValue={setFieldValue}
                   placeholder="Masukan Harga Sewa"
                 />
                 <InputField

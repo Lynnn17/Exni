@@ -30,46 +30,54 @@ const Dashboard = () => {
     { title: "Jenis Aset", key: "jenisAset" },
     { title: "Nama Aset", key: "namaAset" },
     { title: "Nama Penyewa", key: "namaPenyewa" },
-    { title: "Tanggal Pengajuan", key: "tanggalPengajuan" },
+    { title: "Tanggal Pengajuan (Update)", key: "tanggalPengajuan" },
     { title: "Masa Sewa", key: "masaSewa" },
     { title: "Status", key: "statusValue" },
   ];
 
   const [data, setData] = useState([]);
 
-  const datas = data?.map((item, index) => ({
-    id: item.id,
-    no: index + 1,
-    jenisAset: item.rent.application.asset.type,
-    namaAset: item.rent.application.asset.name,
-    namaPenyewa: item.rent.application.user.company,
-    tanggalPengajuan: Moment(item.rent.application.createdAt).format(
-      "D MMM YYYY  HH:mm:ss"
-    ),
-    masaSewa:
-      Moment(item.rent.application.rent_start_date).format(
+  const datas = data
+    ?.sort((a, b) => {
+      const dateA = Moment(a.rent.application.createdAt);
+      const dateB = Moment(b.rent.application.createdAt);
+      return dateB - dateA;
+    })
+    .map((item, index) => ({
+      id: item.id,
+      no: index + 1,
+      jenisAset: item.rent.application.asset.type,
+      namaAset: item.rent.application.asset.name,
+      namaPenyewa: item.rent.application.user.company,
+      tanggalPengajuan: Moment(item.rent.application.createdAt).format(
         "D MMM YYYY  HH:mm:ss"
-      ) +
-      " - " +
-      Moment(item.rent.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
-    statusValue: <StatusButton status={item.status} />,
-    status: item.status,
-    lamaCicilan: item.number_of_trans,
-    tipePembayaran: item.rent.application.payment_type,
-    update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
-    nominalPengajuan: (
-      <NumericFormat
-        value={item.amount}
-        displayType="text"
-        thousandSeparator
-        prefix="Rp "
-        renderText={(value) => <div readOnly>{value} </div>}
-      />
-    ),
-    buktiTransfer: item.receipt,
-    beritaAcara: item.rent.application.minutesOfMeeting,
-    catatan: item.note,
-  }));
+      ),
+      masaSewa:
+        Moment(item.rent.application.rent_start_date).format(
+          "D MMM YYYY  HH:mm:ss"
+        ) +
+        " - " +
+        Moment(item.rent.application.rent_end_date).format(
+          "D MMM YYYY HH:mm:ss"
+        ),
+      statusValue: <StatusButton status={item.status} />,
+      status: item.status,
+      lamaCicilan: item.number_of_trans,
+      tipePembayaran: item.rent.application.payment_type,
+      update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
+      nominalPengajuan: (
+        <NumericFormat
+          value={item.amount}
+          displayType="text"
+          thousandSeparator
+          prefix="Rp "
+          renderText={(value) => <div readOnly>{value} </div>}
+        />
+      ),
+      buktiTransfer: item.receipt,
+      beritaAcara: item.rent.application.minutesOfMeeting,
+      catatan: item.note,
+    }));
 
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };

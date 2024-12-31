@@ -63,7 +63,6 @@ const EditVehicleAsset = () => {
 
       resetForm();
       StatusAlertService.showSuccess("Data Vehicle berhasil disimpan!");
-
       navigate("/admin/asset/vehicle");
     } catch (error) {
       StatusAlertService.showError("Data Vehicle gagal disimpan!");
@@ -120,7 +119,7 @@ const EditVehicleAsset = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, setFieldValue }) => (
         <Form>
           <main>
             <StatusAlert />
@@ -164,6 +163,7 @@ const EditVehicleAsset = () => {
                   name="harga"
                   label="Harga"
                   type="text"
+                  setFieldValue={setFieldValue}
                   placeholder="Masukan Harga"
                 />
                 <InputField

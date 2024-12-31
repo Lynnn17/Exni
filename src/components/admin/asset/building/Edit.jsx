@@ -159,6 +159,7 @@ const Edit = () => {
                   name="price"
                   label="Harga"
                   type="text"
+                  setFieldValue={setFieldValue}
                   placeholder="Masukkan Harga Gedung"
                 />
                 <InputField

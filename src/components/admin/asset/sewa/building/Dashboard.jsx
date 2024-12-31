@@ -105,7 +105,7 @@ const Dashboard = () => {
                       {data?.map((item, i) => (
                         <CardBuilding
                           key={i}
-                          // foto={item.application.asset.albums[0]}
+                          foto={item.application.asset.albums[0]}
                           title={item.application.asset.name}
                           address={item.application.asset.properties.address}
                           noContract={item.no_contract || "-"}

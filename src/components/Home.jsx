@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import bgKapal from "../assets/kapal.png";
 import FotoKapal2 from "../assets/kapal4.png";
 import FotoKapal3 from "../assets/kapal3.png";
@@ -6,9 +6,10 @@ import StatusSelect from "./reusable/StatusSelect";
 import CardHome from "./reusable/card/CardHome";
 import FotoKapal4 from "../assets/kapal4.png";
 import Pagination from "./admin/Pagination";
-import { Formik, Form } from "formik";
+import axios from "axios";
+import StatusAlert, { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 
-// Komponen untuk menampilkan bagian Tentang Kami
 const AboutSection = ({ onPesanSekarangClick, className }) => (
   <div
     className={`bg-[#404C58] md:w-[60%] lg:h-[310px] lg:w-[55%] text-white p-12 ${className}`}
@@ -35,33 +36,27 @@ const LoginPrompt = ({ onHideClick }) => (
   <div className="px-2 pb-10 text-center pt-10 md:w-[60%] md:mx-auto">
     <p>
       Nikmati layanan PELNI tanpa perlu download Aplikasi cukup dengan Sign in
-      atau Sign up di bawah ini!
+      di bawah ini!
     </p>
     <button className="bg-[#5641BA] text-white w-[7rem] p-2 rounded-xl mt-4">
       Login
     </button>
-    {/* <button
-      onClick={onHideClick}
-      className="bg-red-500 text-white w-[7rem] p-2 rounded-xl mt-4 ml-4"
-    >
-      Hide
-    </button> */}
   </div>
 );
 
 const Home = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [status, setStatus] = useState("active");
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const token = localStorage.getItem("token");
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
-
-  const options = [
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "pending", label: "Pending" },
-  ];
 
   const customStyles = {
     textColor: "text-black",
@@ -77,6 +72,34 @@ const Home = () => {
   const handleHideClick = () => {
     setShowLoginPrompt(false);
   };
+
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}assets?isAvailable=true&page=${page}`
+      );
+      console.log("res", response.data);
+      const { assets, totalPages: total } = response.data.data.assets;
+      setData(assets);
+      setTotalPages(total);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
 
   return (
     <>
@@ -143,33 +166,30 @@ const Home = () => {
       </div>
 
       {/* list penyewaan */}
+
       <div className="flex gap-2 justify-center items-center">
         <p className="uppercase font-semibold">List Penyewaan Aset</p>
-        <StatusSelect
-          value={status}
-          onChange={handleStatusChange}
-          options={[
-            { value: "active", label: "Active" },
-            { value: "inactive", label: "Inactive" },
-            { value: "pending", label: "Pending" },
-          ]}
-          customStyles={customStyles}
-        />
       </div>
-      <div className="px-4 md:px-6 lg:px-10 pt-5 md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
-          <CardHome
-            key={i}
-            foto={FotoKapal4}
-            title={`Galangan Kapal ${i + 1}`}
-            deskripsi={
-              "GalLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam sed do eiusmod tempor incididunt ut labore et dolore."
-            }
-          />
-        ))}
+      <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
+        <div className="px-4 md:px-6 lg:px-10 pt-5 md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+          {data?.map((item, i) => (
+            <CardHome
+              key={i}
+              foto={item.albums[0]}
+              title={item.name}
+              deskripsi={item.description}
+              link={`/user/asset/building/pesan/${item.id}`}
+              token={token || ""}
+            />
+          ))}
+        </div>
       </div>
       <div className="py-2">
-        <Pagination />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </>
   );
