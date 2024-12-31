@@ -15,12 +15,11 @@ const FormComponent = () => {
   const { user_id } = JSON.parse(localStorage.getItem("user"));
   const [isReadOnly, setIsReadOnly] = useState(true);
   const [durationMonths, setDurationMonths] = useState(0);
+
   const localDate = new Date();
   const currentDate = localDate
     .toLocaleString("sv-SE", { timeZoneName: "short" })
     .slice(0, 16);
-  // const currentDate = new Date().toISOString().slice(0, 16); // Truncate to remove seconds and milliseconds
-
   const handleToggleReadOnly = () => {
     setIsReadOnly(!isReadOnly);
   };
@@ -28,33 +27,24 @@ const FormComponent = () => {
   const handlePaymentMethodChange = (e, setFieldValue) => {
     const selectedPaymentMethod = e.target.value;
     setFieldValue("paymentMethod", selectedPaymentMethod);
-
-    // If "CASH" is selected, set installmentCount to 1 and disable the select
     if (selectedPaymentMethod === "CASH") {
-      setFieldValue("installmentCount", 1); // Set default installment count to 1
+      setFieldValue("installmentCount", 1);
     }
   };
 
   const handlePriceChange = (e, setFieldValue) => {
     let inputValue = e.target.value;
-
-    // Remove all non-numeric characters except commas
     inputValue = inputValue.replace(/[^\d,]/g, "");
-
-    // Remove the commas and format the number
     const number = inputValue.replace(/[^\d]/g, "");
     const formattedValue = new Intl.NumberFormat("id-ID").format(number);
-
-    // Update the price state with the formatted value
     setFieldValue("price", formattedValue);
   };
 
   const handlePriceBlur = (setFieldValue, price) => {
-    // Save the numeric value without the formatting
     const numericValue = price.replace(/[^\d]/g, "");
 
-    // Use setFieldValue to update the raw numeric value in Formik state
     setFieldValue("price", numericValue);
+    setFieldValue("totalPrice", numericValue * durationMonths);
   };
 
   const handleDurationChange = (e, setFieldValue) => {
@@ -62,11 +52,11 @@ const FormComponent = () => {
       const months = parseInt(e.target.value, 10);
       setDurationMonths(months);
 
-      // Update endDate based on startDate and duration
       const startDate = new Date(e.target.form.startDate.value);
       const endDate = new Date(startDate);
       endDate.setMonth(startDate.getMonth() + months);
       setFieldValue("endDate", endDate.toISOString().slice(0, 16)); // Format as 'YYYY-MM-DDTHH:mm'
+      // setTotalPrice(numericValue * durationMonths);
     } catch (error) {
       // console.error("Error in handleDurationChange:", error);
     }
@@ -82,6 +72,7 @@ const FormComponent = () => {
     asset_id: id,
     price: "",
     note: "-",
+    totalPrice: "",
   };
 
   const validationSchema = Yup.object({
@@ -121,6 +112,8 @@ const FormComponent = () => {
   });
 
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
+    // console.log(values);
+    // return;
     try {
       const formData = new FormData();
       formData.append(
@@ -134,6 +127,7 @@ const FormComponent = () => {
       formData.append("note", values.note);
       formData.append("userId", values.user_id);
       formData.append("assetId", values.asset_id);
+      // formData.append("totalPrice", values.totalPrice);
       values.fileProposal.forEach((file) => formData.append("proposal", file));
 
       await axios.post(
@@ -225,7 +219,7 @@ const FormComponent = () => {
                 </label>
                 <Field
                   type="number"
-                  name="installmentCount"
+                  name="hmm"
                   value={durationMonths}
                   onChange={(e) => handleDurationChange(e, setFieldValue)}
                   className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
@@ -234,25 +228,44 @@ const FormComponent = () => {
             </div>
 
             <div className="flex flex-col md:flex-row md:gap-8 ">
-              {/* Pengajuan Harga */}
-              <div className="p-4 md:w-[50%]">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pengajuan Harga
-                </label>
+              <div className="md:w-[55%]">
+                <div className="p-4 md:w-full">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Pengajuan Harga (Perbulan)
+                  </label>
 
-                <Field
-                  name="price"
-                  type="text"
-                  onChange={(e) => handlePriceChange(e, setFieldValue)}
-                  onBlur={() => handlePriceBlur(setFieldValue, values.price)}
-                  className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
-                  placeholder="Rp. 0"
-                />
-                <ErrorMessage
-                  name="price"
-                  component="p"
-                  className="text-sm text-red-500"
-                />
+                  <Field
+                    name="price"
+                    type="text"
+                    onChange={(e) => handlePriceChange(e, setFieldValue)}
+                    onBlur={() => handlePriceBlur(setFieldValue, values.price)}
+                    className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
+                    placeholder="Rp. 0"
+                  />
+                  <ErrorMessage
+                    name="price"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
+                <div className="p-4 md:w-[50%]">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Total Harga Sewa
+                  </label>
+
+                  <Field
+                    name="totalPrice"
+                    type="text"
+                    readOnly
+                    className="w-full p-2 border rounded-md bg-white focus:ring-purple-500 focus:border-purple-500"
+                    placeholder="Rp. 0"
+                  />
+                  <ErrorMessage
+                    name="price"
+                    component="p"
+                    className="text-sm text-red-500"
+                  />
+                </div>
               </div>
 
               {/* Metode Pembayaran */}
@@ -325,36 +338,6 @@ const FormComponent = () => {
                     }
                   />
                 </div>
-
-                {/* <Field
-                    type="file"
-                    name="fileContract"
-                    accept=".pdf"
-                    onChange={(e) => {
-                      setFieldValue(
-                        "fileContract",
-                        Array.from(e.target.files[0])
-                      ),
-                        setFileName(e.target.files[0].name);
-                    }}
-                    className="hidden"
-                    id="fileUpload"
-                  />
-                  <label
-                    htmlFor="fileUpload"
-                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg cursor-pointer hover:bg-gray-300"
-                  >
-                    Choose File
-                  </label>
-                  <span className="ml-4 text-sm text-gray-700">
-                    {fileName || "Belum ada file"}
-                  </span>
-                </div>
-                <ErrorMessage
-                  name="file"
-                  component="p"
-                  className="text-sm text-red-500"
-                /> */}
               </div>
               <div className="p-4 w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-2">

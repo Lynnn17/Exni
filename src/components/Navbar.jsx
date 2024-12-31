@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import LogoExni from "../assets/logo/exni.svg";
 import IconUser from "../assets/icon/user.svg";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
-import { jwtDecode } from "jwt-decode"; // Pastikan import jwt-decode
+import { jwtDecode } from "jwt-decode"; // Perbaiki impor menjadi default import
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState({}); // Default to null (user not logged in)
+  const [user, setUser] = useState(null); // Gunakan null untuk default
+  const navigate = useNavigate();
 
   // Fungsi untuk mengambil dan mendekode token
   const getUserInfoFromToken = () => {
@@ -18,9 +19,10 @@ const Navbar = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded token:", decodedToken);
-        const userName = decodedToken.company || "John Doe"; // Ambil nama dari token, jika ada
-        const userRole = decodedToken.role || "Admin"; // Ambil role dari token, jika ada
+       
+        const userName = decodedToken.company || "Annonymous"; // Ambil nama dari token, jika ada
+        const userRole = decodedToken.role || "Unauthorized"; // Ambil role dari token, jika ada
+
         setUser({ name: userName, role: userRole });
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -29,6 +31,14 @@ const Navbar = () => {
     } else {
       setUser(null); // If no token found, user is not logged in
     }
+  };
+
+  // Fungsi logout
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login"); // Arahkan ke halaman login
   };
 
   // Ambil informasi user saat komponen dimuat
@@ -44,25 +54,25 @@ const Navbar = () => {
   return (
     <div className="flex justify-between items-center p-2 px-8 bg-white w-full h-[76px] rounded-b-[20px] drop-shadow-xl">
       <img src={LogoExni} className="w-24" alt="logo" />
-      <div className="hidden xl:flex items-center gap-10 text-sm ">
+      <div className="hidden xl:flex items-center gap-10 text-sm">
         <NavLink
           to="/"
-          className={({ isActive }) => (isActive ? "font-bold " : "")}
+          className={({ isActive }) => (isActive ? "font-bold" : "")}
         >
           Home
         </NavLink>
         <NavLink
-          to={user.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard"}
-          className={({ isActive }) => (isActive ? "font-bold " : "")}
+          to={user?.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard"}
+          className={({ isActive }) => (isActive ? "font-bold" : "")}
         >
           Dashboard
         </NavLink>
 
         {/* Show Login link if not logged in, otherwise show user profile */}
-        {!user ? (
+        {!user?.role ? (
           <NavLink
             to="/login"
-            className={({ isActive }) => (isActive ? "font-bold " : "")}
+            className={({ isActive }) => (isActive ? "font-bold" : "")}
           >
             Login
           </NavLink>
@@ -72,6 +82,12 @@ const Navbar = () => {
             <div className="pr-6 pl-1">
               <p className="text-sm font-medium">{user.name}</p>
               <p className="text-xs">{user.role}</p>
+              <button
+                onClick={handleLogout}
+                className="text-red-500 text-xs mt-1"
+              >
+                Logout
+              </button>
             </div>
           </div>
         )}
@@ -87,7 +103,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-[80px] left-0 w-full bg-white shadow-lg rounded-b-[25px] py-4 flex flex-col items-center gap-4 text-xl xl:hidden z-10 ">
+        <div className="absolute top-[80px] left-0 w-full bg-white shadow-lg rounded-b-[25px] py-4 flex flex-col items-center gap-4 text-xl xl:hidden z-10">
           <NavLink
             to="/"
             className={({ isActive }) => (isActive ? "font-bold" : "")}
@@ -96,7 +112,7 @@ const Navbar = () => {
             Home
           </NavLink>
           <NavLink
-            to="user/dashboard"
+            to={user?.role === "ADMIN" ? "/admin/dashboard" : "/user/dashboard"}
             className={({ isActive }) => (isActive ? "font-bold" : "")}
             onClick={toggleMenu}
           >
@@ -104,7 +120,7 @@ const Navbar = () => {
           </NavLink>
 
           {/* Show Login link if not logged in, otherwise show user profile */}
-          {!user ? (
+          {!user?.role ? (
             <NavLink
               to="/login"
               className={({ isActive }) => (isActive ? "font-bold" : "")}
@@ -123,6 +139,15 @@ const Navbar = () => {
               <div className="text-center">
                 <p className="text-base font-medium">{user.name}</p>
                 <p className="text-xs">{user.role}</p>
+                <button
+                  onClick={() => {
+                    toggleMenu();
+                    handleLogout();
+                  }}
+                  className="text-red-500 text-xs mt-1"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           )}

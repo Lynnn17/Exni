@@ -245,47 +245,66 @@ const Detail = () => {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">
-                      Id Pengajuan
-                    </p>
-                    <p className="text-gray-800 font-semibold">{data.id}</p>
+                <div className="xs:w-full md:w-[80%] flex flex-row justify-between">
+                  <div className="flex justify-between">
+                    <div className="flex flex-col gap-6">
+                      <div>
+                        <p className="text-sm text-gray-500 font-medium">
+                          Id Pengajuan
+                        </p>
+                        <p className="text-gray-800 font-semibold">{data.id}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 font-medium">
+                          Tipe
+                        </p>
+                        <p className="text-gray-800 font-semibold">
+                          {data.asset?.type}
+                        </p>
+                      
+                        <p className="text-sm text-gray-500 font-medium">
+                          Nama Properti
+                        </p>
+                        <p className="text-gray-800 font-semibold">
+                          {data.asset?.name}
+                        </p>
+                        <p className="text-gray-500 text-sm">
+                          {data?.asset?.properties?.address ||
+                            data?.asset?.tenants?.address}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">
-                      Tanggal Pengajuan (Update Terakhir)
-                    </p>
-                    <p className="text-gray-800 font-semibold">
-                      {Moment(data.updatedAt).format("DD-MM-YYYY HH:mm")}
-                    </p>
+                  <div className="flex flex-col gap-6 mb-6">
+                    <div>
+                      <p className="text-sm text-gray-500 font-medium">
+                        Tanggal Pengajuan (Update Terakhir)
+                      </p>
+                      <p className="text-gray-800 font-semibold">
+                        {Moment(data.updatedAt).format("DD-MM-YYYY HH:mm")}
+                      </p>
+                    </div>
+                    {/* Detail Penyewa dan Properti */}
+                    <div className="flex flex-col">
+                      <div>
+                        <p className="text-sm text-gray-500 font-medium">
+                          Penyewa
+                        </p>
+                        <p className="text-gray-800 font-semibold">
+                          {data.user.company}
+                        </p>
+                        <p className="text-gray-500 text-sm">{data.user.pic}</p>
+                        <p className="text-gray-500 text-sm">
+                          {data.user.contact}
+                        </p>
+                        <p className="text-gray-500 text-sm">
+                          {data.user.address}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Detail Penyewa dan Properti */}
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">Penyewa</p>
-                    <p className="text-gray-800 font-semibold">
-                      {data.user.company}
-                    </p>
-                    <p className="text-gray-500 text-sm">{data.user.pic}</p>
-                    <p className="text-gray-500 text-sm">{data.user.contact}</p>
-                    <p className="text-gray-500 text-sm">{data.user.address}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">
-                      Properti
-                    </p>
-                    <p className="text-gray-800 font-semibold">
-                      {data.asset?.name}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      {data?.asset?.properties?.address ||
-                        data?.asset?.tenants?.address}
-                    </p>
-                  </div>
-                </div>
                 {/* Status Pengajuan dan Status Pembayaran */}
                 <Formik
                   initialValues={initialValues}
