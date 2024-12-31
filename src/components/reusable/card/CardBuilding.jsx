@@ -25,6 +25,7 @@ const CardBuilding = ({
         src={foto}
         alt={title}
         className="w-full h-48 object-cover rounded-t-xl"
+        loading="lazy"
       />
 
       <div className="p-5 space-y-3">

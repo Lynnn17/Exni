@@ -17,8 +17,11 @@ const Dashboard = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
   const { user_id } = JSON.parse(localStorage.getItem("user"));
 
@@ -32,30 +35,48 @@ const Dashboard = () => {
     { title: "Catatan", key: "note" },
   ];
 
-  const fetchData = async () => {
-    setLoading(true);
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}transactions/user/${user_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `${
+          import.meta.env.VITE_API_URL
+        }transactions/user/${user_id}?page=${page}${queryParam}`,
+        { headers }
       );
-      console.log(response.data);
-      setData(response.data.data.transactions);
-      setLoading(false);
+      const { transactions, totalPages: total } = response.data.data;
+      setData(transactions);
+
+      setTotalPages(total);
     } catch (error) {
-      console.error(error);
-      setLoading(false);
-      StatusAlertService.showError("Failed to fetch data");
+      console.error("Error fetching data:", error);
+      setIsLoading(false);
+      StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   const statusMapping = {
     INITIATE: "Diajukan",
@@ -115,7 +136,11 @@ const Dashboard = () => {
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
         >
-          <Search />
+          <Search
+            placeholder="Cari Transaksi ..."
+            buttonText="Cari"
+            onSearch={handleSearch}
+          />
         </HeaderSection>
 
         {loading ? (
@@ -124,7 +149,11 @@ const Dashboard = () => {
           <>
             <DataTable columns={columns} data={datas} actions={actions} />
 
-            <Pagination />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </>
         )}
       </div>

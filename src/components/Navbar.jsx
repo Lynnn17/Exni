@@ -19,9 +19,10 @@ const Navbar = () => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded token:", decodedToken);
+       
         const userName = decodedToken.company || "Annonymous"; // Ambil nama dari token, jika ada
         const userRole = decodedToken.role || "Unauthorized"; // Ambil role dari token, jika ada
+
         setUser({ name: userName, role: userRole });
       } catch (error) {
         console.error("Error decoding token:", error);

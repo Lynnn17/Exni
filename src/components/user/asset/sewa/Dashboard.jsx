@@ -16,31 +16,56 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
 
   const { user_id } = JSON.parse(localStorage.getItem("user"));
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}rents/user/${user_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `${
+          import.meta.env.VITE_API_URL
+        }rents/user/${user_id}?page=${page}${queryParam}`,
+        { headers }
       );
-      console.log(response.data.data.rents.rents);
-      setData(response.data.data.rents.rents);
-      setLoading(false);
+      const { rents, totalPages: total } = response.data.data.rents;
+      setData(rents);
+      console.log("data", rents);
+      setTotalPages(total);
     } catch (error) {
-      setLoading(false);
-      StatusAlertService.showError("Gagal memuat data!");
       console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   useEffect(() => {
     fetchData();
@@ -56,7 +81,11 @@ const Dashboard = () => {
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >
-            <Search />
+            <Search
+              placeholder="Cari sewa..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
           <div className="pt-5">
             <SectionDivider
@@ -73,59 +102,57 @@ const Dashboard = () => {
             <>
               <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-                  {data?.map(
-                    (item, i) =>
-                      // console.log("item", item.application.asset.type),
+                  {data?.map((item, i) =>
+                    // console.log("item", item.application.asset.type),
 
-                      item.application.asset.type === "TENANT" ? (
-                        <CardTenant
-                          key={i}
-                          foto={item?.application?.asset?.albums[0]}
-                          name={item?.application?.asset?.name}
-                          address={item?.application?.asset?.tenants?.address}
-                          tenant={item?.application?.asset?.tenants?.tenant}
-                          capacity={item?.application?.asset?.tenants?.floor}
-                          building={item?.application?.asset?.tenants?.building}
-                          price={item?.total_price}
-                          noContract={item?.no_contract}
-                          file={item?.contract}
-                          link={`detail/${item.id}`}
-                          startDate={item?.application?.rent_start_date}
-                          endDate={item?.application?.rent_end_date}
-                          informasi={item?.information}
-                        />
-                      ) : (
-                        <CardBuilding
-                          key={i}
-                          foto={item?.application?.asset?.albums[0]}
-                          title={item?.application?.asset?.name}
-                          address={
-                            item?.application?.asset?.properties?.address
-                          }
-                          noContract={item?.no_contract}
-                          file={item?.contract}
-                          price={item?.total_price}
-                          broad={
-                            item?.application?.asset?.properties?.buildingArea +
-                            "m x " +
-                            item?.application?.asset?.properties?.landArea +
-                            "m"
-                          }
-                          startDate={item?.application?.rent_start_date}
-                          endDate={item?.application?.rent_end_date}
-                          informasi={item?.information}
-                          teksLink={"Lihat Selengkapnya"}
-                          link={`detail/${item.id}`}
-                        />
-                      )
-                    // ) : (
-
-                    // )
+                    item.application.asset.type === "TENANT" ? (
+                      <CardTenant
+                        key={i}
+                        foto={item?.application?.asset?.albums[0]}
+                        name={item?.application?.asset?.name}
+                        address={item?.application?.asset?.tenants?.address}
+                        tenant={item?.application?.asset?.tenants?.tenant}
+                        capacity={item?.application?.asset?.tenants?.floor}
+                        building={item?.application?.asset?.tenants?.building}
+                        price={item?.total_price}
+                        noContract={item?.no_contract}
+                        file={item?.contract}
+                        link={`detail/${item.id}`}
+                        startDate={item?.application?.rent_start_date}
+                        endDate={item?.application?.rent_end_date}
+                        informasi={item?.information}
+                      />
+                    ) : (
+                      <CardBuilding
+                        key={i}
+                        foto={item?.application?.asset?.albums[0]}
+                        title={item?.application?.asset?.name}
+                        address={item?.application?.asset?.properties?.address}
+                        noContract={item?.no_contract}
+                        file={item?.contract}
+                        price={item?.total_price}
+                        broad={
+                          item?.application?.asset?.properties?.buildingArea +
+                          "m x " +
+                          item?.application?.asset?.properties?.landArea +
+                          "m"
+                        }
+                        startDate={item?.application?.rent_start_date}
+                        endDate={item?.application?.rent_end_date}
+                        informasi={item?.information}
+                        teksLink={"Lihat Selengkapnya"}
+                        link={`detail/${item.id}`}
+                      />
+                    )
                   )}
                 </div>
               </div>
 
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </div>

@@ -9,7 +9,6 @@ import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import Loading from "../../../reusable/Loading";
-import { StatusAlertServiceClass } from "react-status-alert/dist/status-alert-service";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,29 +22,54 @@ const Dashboard = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const token = localStorage.getItem("token");
 
   const headers = {
     Authorization: `Bearer ${token}`,
   };
 
-  const fetchData = async () => {
+  const fetchData = async (page = 1) => {
     setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}assets?type=VEHICLE`
+        `${
+          import.meta.env.VITE_API_URL
+        }assets?type=VEHICLE&page=${page}${queryParam}`,
+        { headers }
       );
-      setData(response.data.data.assets);
-      setIsLoading(false);
+
+      const { assets, totalPages: total } = response.data.data.assets;
+      setData(assets);
+      setTotalPages(total);
     } catch (error) {
-      setIsLoading(false);
+      console.error("Error fetching data:", error);
       StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   const handleModalFile = (item, id, type) => {
     setTypeModal(type);
@@ -66,7 +90,7 @@ const Dashboard = () => {
       setConfirmModalOpen(false);
       setIsLoading(false);
       StatusAlertService.showSuccess("Data berhasil dihapus!");
-      fetchData();
+      fetchData(currentPage);
     } catch (error) {
       setIsLoading(false);
       StatusAlertService.showError("Data gagal dihapus!");
@@ -86,20 +110,24 @@ const Dashboard = () => {
             isOpen={isOpen}
             onToggle={() => setIsOpen(!isOpen)}
           >
-            <Search />
+            <Search
+              placeholder="Cari kenadaraan ..."
+              buttonText="Cari"
+              onSearch={handleSearch}
+            />
           </HeaderSection>
           {isLoading ? (
             <Loading />
           ) : (
             <>
-              {data?.assets?.length === 0 ? (
+              {data?.length === 0 ? (
                 <div className="text-center text-gray-500">
                   Data tidak ditemukan
                 </div>
               ) : (
                 <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 pt-4">
-                    {data?.assets?.map((item, i) => (
+                    {data?.map((item, i) => (
                       <Card
                         key={item.id || i} // Use unique key for better re-rendering
                         foto={item.albums?.[0] || ""}
@@ -145,7 +173,11 @@ const Dashboard = () => {
               />
 
               {/* Pagination */}
-              <Pagination />
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </div>

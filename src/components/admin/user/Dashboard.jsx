@@ -18,11 +18,22 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [loading, setIsLoading] = useState(true);
+
   const [selectedId, setSelectedId] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Token dari localStorage
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
 
   const columns = [
     { title: "No", key: "no" },
@@ -56,8 +67,8 @@ const Dashboard = () => {
     }
   };
 
-  const confirmDelete = (id) => {
-    setSelectedId(id);
+  const confirmDelete = (e) => {
+    setSelectedId(e.id);
     setIsModalOpen(true);
   };
 
@@ -95,74 +106,56 @@ const Dashboard = () => {
     }
   };
 
-  const fetchUserData = async () => {
-    const token = localStorage.getItem("token");
-    const headers = { Authorization: `Bearer ${token}` };
-
+  const fetchData = async (page = 1) => {
+    setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}users?role=USER&isActive=true`,
+        `${
+          import.meta.env.VITE_API_URL
+        }users?role=USER&isActive=true&page=${page}${queryParam}`,
         { headers }
       );
+      console.log("res", response.data);
+      const { users, totalPages: total } = response.data.data.users;
+      setData(users);
 
-      // Mengambil data users yang benar dari struktur data
-      const usersData = response?.data?.data?.users?.users || [];
-      const formattedData = usersData.map((user, index) => ({
-        no: index + 1,
-        id: user.id,
-        namaPT: user.company,
-        pic: user.pic || "-",
-        address: user.address,
-        email: user.email,
-        noHP: user.contact || "-",
-        iconUser: IconUser,
-      }));
-      console.log("formattedData", formattedData);
-      setData(formattedData);
+      setTotalPages(total);
     } catch (error) {
-      console.error("Error fetching user data:", error);
-      showAlert("Error fetching user data.", 500);
+      console.error("Error fetching data:", error);
+      StatusAlertService.showError("Gagal memuat data!");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    const initializeData = async () => {
-      setLoading(true);
-      setError(null);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
-      let token = localStorage.getItem("token");
-      if (!token || token === "undefined") {
-        try {
-          token = await handleTokenRefresh();
-        } catch (err) {
-          setError("Unable to authenticate user.");
-          setLoading(false);
-          return;
-        }
-      }
-
-      try {
-        await fetchUserData();
-      } catch (err) {
-        if (err.response?.data?.message === "jwt expired") {
-          try {
-            const newToken = await handleTokenRefresh(navigate);
-            await fetchUserData(newToken);
-          } catch (refreshError) {
-            setError("Session expired. Please login again.");
-          }
-        } else {
-          setError("Failed to load user data please refresh the page.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    initializeData();
-  }, []);
+  const datas = data.map((user, index) => ({
+    no: index + 1,
+    id: user.id,
+    namaPT: user.company,
+    pic: user.pic || "-",
+    address: user.address,
+    email: user.email,
+    noHP: user.contact || "-",
+    iconUser: IconUser,
+  }));
 
   return (
     <main>
@@ -176,7 +169,11 @@ const Dashboard = () => {
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
         >
-          <Search />
+          <Search
+            placeholder="Cari user ..."
+            buttonText="Cari"
+            onSearch={handleSearch}
+          />
         </HeaderSection>
         <ConfirmationModal
           isOpen={isModalOpen}
@@ -192,15 +189,20 @@ const Dashboard = () => {
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
-          <DataTable
-            columns={columns}
-            data={data}
-            actions={actions}
-            aksi="Aksi"
-          />
+          <>
+            <DataTable
+              columns={columns}
+              data={datas}
+              actions={actions}
+              aksi="Aksi"
+            />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
         )}
-
-        <Pagination />
       </div>
     </main>
   );

@@ -20,6 +20,10 @@ const Dashboard = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const columns = [
     { title: "No", key: "no" },
     { title: "ID Transaksi", key: "id" },
@@ -33,7 +37,7 @@ const Dashboard = () => {
 
   const [data, setData] = useState([]);
 
-  const datas = data?.transactions?.map((item, index) => ({
+  const datas = data?.map((item, index) => ({
     id: item.id,
     no: index + 1,
     jenisAset: item.rent.application.asset.type,
@@ -50,7 +54,7 @@ const Dashboard = () => {
       Moment(item.rent.application.rent_end_date).format("D MMM YYYY HH:mm:ss"),
     statusValue: <StatusButton status={item.status} />,
     status: item.status,
-    lamaCicilan: item.rent.application.installment_count,
+    lamaCicilan: item.number_of_trans,
     tipePembayaran: item.rent.application.payment_type,
     update: Moment(item.updatedAt).format("D MMM YYYY HH:mm:ss"),
     nominalPengajuan: (
@@ -67,31 +71,47 @@ const Dashboard = () => {
     catatan: item.note,
   }));
 
-  const fetchData = async () => {
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const fetchData = async (page = 1) => {
     setIsLoading(true);
     try {
+      const queryParam = searchQuery
+        ? `&search=${encodeURIComponent(searchQuery)}`
+        : "";
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}transactions`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
+        `${import.meta.env.VITE_API_URL}transactions?page=${page}${queryParam}`,
+        { headers }
       );
-      setData(response.data.data);
-      setIsLoading(false);
+      const { transactions, totalPages: total } = response.data.data;
+      setData(transactions);
+      console.log("data", transactions);
+      setTotalPages(total);
     } catch (error) {
+      console.error("Error fetching data:", error);
       setIsLoading(false);
       StatusAlertService.showError("Gagal memuat data!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
     }
   };
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setCurrentPage(1); // Reset ke halaman pertama saat melakukan pencarian
+  };
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage, searchQuery]);
 
   const handleOpenModal = (item) => {
-    console.log(item);
     setSelectedData(item);
     setModalOpen(true);
   };
@@ -119,7 +139,11 @@ const Dashboard = () => {
           isOpen={isOpen}
           onToggle={() => setIsOpen(!isOpen)}
         >
-          <Search />
+          <Search
+            placeholder="Cari Transaksi ..."
+            buttonText="Cari"
+            onSearch={handleSearch}
+          />
         </HeaderSection>
         {isLoading ? (
           <Loading />
@@ -134,7 +158,11 @@ const Dashboard = () => {
 
             <DataTable columns={columns} data={datas} actions={actions} />
 
-            <Pagination />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </>
         )}
       </div>
