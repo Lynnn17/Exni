@@ -1,34 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CardNotif from "../reusable/card/CardNotif"; // Import CardNotif
+import CardNotif from "../reusable/card/CardNotif";
 
 const Dashboard = () => {
   const [notifications, setNotifications] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Fungsi untuk mengambil notifikasi
   const fetchNotifications = async () => {
     try {
-      setIsLoading(true); // Start loading
+      setIsLoading(true);
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}notifications/admin`, // Sesuaikan dengan URL API yang benar
+        `${import.meta.env.VITE_API_URL}notifications/admin`, // Pastikan URL ini benar
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Pastikan token valid
           },
         }
       );
-      console.log("Notifications response:", response.data);
-      setNotifications(response.data.data.notifications); // Set notifications
+      const sortedNotifications = response.data.data.notifications.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt) // Mengurutkan berdasarkan waktu terbaru
+      );
+      setNotifications(sortedNotifications); // Set notifikasi yang sudah diurutkan
     } catch (error) {
       console.error("Error fetching notifications:", error);
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false);
     }
   };
 
+  // Mengambil data notifikasi setelah component mounted
   useEffect(() => {
-    fetchNotifications(); // Fetch notifications on component mount
-  }, []);
+    fetchNotifications();
+  }, []); // Hanya dijalankan sekali saat komponen pertama kali dimuat
 
   return (
     <main>
@@ -36,11 +40,10 @@ const Dashboard = () => {
         <p className="text-lg uppercase font-medium">Notifikasi</p>
         <div className="w-full h-[1px] bg-teks mt-2"></div>
 
-        {/* Show loading spinner or notifications */}
         {isLoading ? (
-          <div>Loading...</div> // You can replace this with a Loading component
+          <div>Loading...</div>
         ) : (
-          <CardNotif notifications={notifications} />
+          <CardNotif notifications={notifications} userType="admin" />
         )}
       </div>
     </main>
