@@ -78,9 +78,7 @@ const Detail = () => {
   };
 
   const validationSchema = Yup.object({
-    price:
-      Yup.string()
-      .required("Harga diperlukan"),
+    price: Yup.string().required("Harga diperlukan"),
 
     buktiTransfer: Yup.array()
       .of(
@@ -240,7 +238,7 @@ const Detail = () => {
                       <InputField
                         type="file"
                         name="buktiTransfer"
-                        accept=".pdf"
+                        accept="image/*"
                         className="px-0"
                         onChange={(e) =>
                           setFieldValue(

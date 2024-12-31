@@ -121,6 +121,7 @@ const Dashboard = () => {
                           nameTenant={item.application.user.company}
                           link={`detail/${item.id}`}
                           informasi={item.information}
+                          file={item.contract}
                         />
                       ))}
                     </div>

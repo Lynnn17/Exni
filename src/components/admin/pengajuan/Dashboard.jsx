@@ -46,7 +46,7 @@ const Dashboard = () => {
       properti: item.asset.name,
       nominal: (
         <NumericFormat
-          value={item.proposed_price} // Nilai yang ingin diformat
+          value={item.proposed_price * item.duration} // Nilai yang ingin diformat
           displayType={"text"} // Menampilkan sebagai teks
           thousandSeparator={true} // Menambahkan pemisah ribuan
           prefix={"Rp "} // Menambahkan prefix Rupiah

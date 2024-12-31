@@ -114,12 +114,17 @@ const Dashboard = () => {
                           startDate={item?.application?.rent_start_date}
                           endDate={item?.application?.rent_end_date}
                           informasi={item?.information}
+                          file={item?.contract}
                         />
                       ))}
                     </div>
                   )}
                 </div>
-                <Pagination />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
             </>
           )}

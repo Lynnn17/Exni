@@ -102,7 +102,7 @@ const Dashboard = () => {
                       )} - ${Moment(item.rent_end_date).format("D MMM YYYY ")}`, // Correct date formatting
                       nominal: (
                         <NumericFormat
-                          value={item.proposed_price}
+                          value={item.proposed_price * item.duration}
                           displayType="text"
                           thousandSeparator
                           prefix="Rp "

@@ -5,7 +5,7 @@ import TenantInfo from "../../../reusable/TenantInfo";
 import PaymentTable from "../../../reusable/PaymentTable";
 import Loading from "../../../reusable/Loading";
 import StatusAlert from "react-status-alert";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Moment from "moment";
 import { NumericFormat } from "react-number-format";
@@ -15,6 +15,7 @@ const Detail = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
+  const Navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -163,6 +164,7 @@ const Detail = () => {
           <PaymentTable
             data={formatTransactionData(data?.Transaction)}
             type="user"
+            modal={(item) => Navigate(`/user/transaction/detail/${item.id}`)}
           />
         </div>
       </div>
