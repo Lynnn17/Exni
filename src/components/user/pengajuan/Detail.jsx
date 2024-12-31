@@ -109,13 +109,15 @@ const Detail = () => {
 
       const applicationData = response.data.data.application;
       setData(applicationData);
-
+      console.log("data", applicationData);
       const startDate = new Date(applicationData.rent_start_date)
         .toISOString()
         .slice(0, 16);
       const endDate = new Date(applicationData.rent_end_date)
         .toISOString()
         .slice(0, 16);
+      setDurationMonths(applicationData.duration);
+      setPrice(applicationData.proposed_price);
 
       // Update initialValues with the fetched data
       setInitialValues({
@@ -126,7 +128,7 @@ const Detail = () => {
         price: applicationData.proposed_price || "",
         note: applicationData.note || "-",
         fileProposal: [],
-        totalPrice: "",
+        totalPrice: applicationData.proposed_price * applicationData.duration,
       });
 
       setLoading(false);
@@ -174,6 +176,7 @@ const Detail = () => {
       formData.append("installmentCount", values.installmentCount);
       formData.append("proposedPrice", values.price);
       formData.append("note", values.note);
+      formData.append("duration", durationMonths);
       if (values.fileProposal[0]) {
         formData.append("proposal", values.fileProposal[0]);
       }

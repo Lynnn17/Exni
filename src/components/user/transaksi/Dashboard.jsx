@@ -31,7 +31,8 @@ const Dashboard = () => {
     { title: "Properti", key: "namaAset" },
     { title: "Status Pembayaran", key: "statusPembayaran" },
     { title: "Urutan Pembayaran", key: "urutanPembayaran" },
-    { title: "Nominal", key: "nominal" },
+    { title: "Nominal Dibayar", key: "nominal" },
+    { title: "Tagihan", key: "tagihan" },
     { title: "Catatan", key: "note" },
   ];
 
@@ -52,7 +53,7 @@ const Dashboard = () => {
       );
       const { transactions, totalPages: total } = response.data.data;
       setData(transactions);
-
+      console.log("data", transactions);
       setTotalPages(total);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -95,6 +96,14 @@ const Dashboard = () => {
     nominal: (
       <NumericFormat
         value={item.amount} // Nilai yang ingin diformat
+        displayType={"text"} // Menampilkan sebagai teks
+        thousandSeparator={true} // Menambahkan pemisah ribuan
+        prefix={"Rp "} // Menambahkan prefix Rupiah
+      />
+    ),
+    tagihan: (
+      <NumericFormat
+        value={item.rent.total_price - item.amount} // Nilai yang ingin diformat
         displayType={"text"} // Menampilkan sebagai teks
         thousandSeparator={true} // Menambahkan pemisah ribuan
         prefix={"Rp "} // Menambahkan prefix Rupiah

@@ -77,6 +77,18 @@ const Dashboard = () => {
       buktiTransfer: item.receipt,
       beritaAcara: item.rent.application.minutesOfMeeting,
       catatan: item.note,
+      pembayaranStatus: item.status || "-",
+      rentalStatus: item.rent.rental_status || "-",
+      paymentStatus: item.rent.payment_status || "-",
+      nominalTagihan: (
+        <NumericFormat
+          value={item.rent.total_price - item.amount}
+          displayType="text"
+          thousandSeparator
+          prefix="Rp "
+          renderText={(value) => <div readOnly>{value} </div>}
+        />
+      ),
     }));
 
   const token = localStorage.getItem("token");

@@ -117,8 +117,6 @@ const FormComponent = () => {
   });
 
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
-    // console.log(values);
-    // return;
     try {
       const formData = new FormData();
       formData.append(
@@ -132,7 +130,7 @@ const FormComponent = () => {
       formData.append("note", values.note);
       formData.append("userId", values.user_id);
       formData.append("assetId", values.asset_id);
-      // formData.append("totalPrice", values.totalPrice);
+      formData.append("duration", durationMonths);
       values.fileProposal.forEach((file) => formData.append("proposal", file));
 
       await axios.post(
@@ -225,7 +223,7 @@ const FormComponent = () => {
                 </label>
                 <Field
                   type="number"
-                  name="hmm"
+                  name="durasi"
                   value={durationMonths}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {

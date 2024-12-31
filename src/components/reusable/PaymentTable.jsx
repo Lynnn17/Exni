@@ -8,7 +8,7 @@ import { IoReceipt } from "react-icons/io5";
 import { TbReceiptOff } from "react-icons/tb";
 import StatusButton from "./StatusButton";
 
-const PaymentTable = ({ data, modal }) => {
+const PaymentTable = ({ data, modal, type = "admin" }) => {
   const statusMapping = {
     APPROVED: "Disetujui",
     REJECTED: "Ditolak",
@@ -96,7 +96,7 @@ const PaymentTable = ({ data, modal }) => {
                         onClick={() => modal(item)}
                         className="flex items-center justify-center  px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
                       >
-                        Bayar
+                        {type === "admin" ? "Detail" : "Bayar"}
                       </button>
                     </>
                   )}
@@ -149,13 +149,13 @@ const PaymentTable = ({ data, modal }) => {
                 />
               </div>
               <div className="mt-2 text-center flex justify-between">
-                {item.status === "APPROVED" ? null : (
+                {item.status !== "APPROVED" && (
                   <button
                     type="button"
                     onClick={() => modal(item)}
                     className="px-4 py-2 bg-blue-500 text-white text-xs font-bold rounded hover:bg-blue-600"
                   >
-                    Bayar
+                    {type === "admin" ? "Detail" : "Bayar"}
                   </button>
                 )}
                 {item?.receipt ? (

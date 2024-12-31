@@ -128,10 +128,10 @@ const Detail = () => {
               )} - ${Moment(data?.rent_end_date).format("D MMM YYYY")}`}
             />
             <DetailInfo
-              label="Nominal"
+              label="Nominal keseluruhan"
               value={
                 <NumericFormat
-                  value={data?.proposed_price}
+                  value={data?.proposed_price * data?.duration}
                   displayType="text"
                   thousandSeparator
                   prefix="Rp "
@@ -201,7 +201,7 @@ const Detail = () => {
                   value={data?.installment_count}
                 />
                 <TenantInfo
-                  label="Harga Pengajuan"
+                  label="Harga Pengajuan Perbulan"
                   value={
                     <NumericFormat
                       value={data?.proposed_price}

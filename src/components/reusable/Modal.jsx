@@ -60,6 +60,11 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
 
   const jenisPembayaranMapping = {
     INSTALLMENT: "Cicilan",
+    CASH: "Tunai",
+  };
+
+  const jenisStatusPembayaranMapping = {
+    INSTALLMENT: "Belum Lunas",
     CASH: "Lunas",
   };
 
@@ -71,11 +76,13 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
   };
 
   const statusTranskasi =
-    jenisPembayaranMapping[data.pembayaranStatus] || "Tidak Diketahui";
+    statusMapping[data.pembayaranStatus] || "Tidak Diketahui";
 
   const jenisPembayaran =
     jenisPembayaranMapping[data.tipePembayaran] || "Tidak Diketahui";
 
+  const jenisStatusPembayaran =
+    jenisStatusPembayaranMapping[data.paymentStatus] || "Tidak Diketahui";
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[26rem] relative">
@@ -99,11 +106,13 @@ const Modal = ({ isOpen, onClose, data, fetchData }) => {
             <InfoLine label="Nama Penyewa" value={data.namaPenyewa} />
             <InfoLine label="Masa Sewa" value={data.masaSewa} />
             <InfoLine label="Nominal Dibayar" value={data.nominalPengajuan} />
+            <InfoLine label="Sisa Tagihan" value={data.nominalTagihan} />
             <InfoLine label="Jenis Pembayaran" value={jenisPembayaran} />
             <InfoLine label="Cicilan Ke" value={data.lamaCicilan} />
             <InfoLine label="Tanggal Update" value={data.update} />
             <InfoLine label="Status Transaksi" value={statusTranskasi} />
             <InfoLine label="Status Rental" value={data.rentalStatus} />
+            <InfoLine label="Status Pembayaran" value={jenisStatusPembayaran} />
           </div>
         </div>
 
