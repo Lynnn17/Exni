@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import CardNotif from "../reusable/card/CardNotif"; // Import CardNotif
+import CardNotif from "../reusable/card/CardNotif";
 import { jwtDecode } from "jwt-decode";
 
 const Dashboard = () => {
   const [notifications, setNotifications] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Loading state
-  const [userId, setUserId] = useState(null); // State untuk menyimpan userId
+  const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
-  // Fungsi untuk mengambil userId dari token
+  // Mengambil userId dari token JWT
   const getUserIdFromToken = () => {
-    const token = localStorage.getItem("token"); // Ambil token dari localStorage
+    const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        console.log("Decoded Token:", decodedToken); // Log token yang didekode
-        setUserId(decodedToken.id); // Ambil userId dari token
+        setUserId(decodedToken.id); // Mengambil id user dari token
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -24,34 +23,23 @@ const Dashboard = () => {
 
   // Fungsi untuk mengambil notifikasi berdasarkan userId
   const fetchNotifications = async () => {
-    if (!userId) {
-      console.log("No userId found, skipping fetch.");
-      return;
-    }
+    if (!userId) return; // Pastikan userId sudah ada sebelum melakukan request
 
     try {
       setIsLoading(true);
-      console.log(`Fetching notifications for userId: ${userId}`);
-
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}notifications/users/${userId}`,
+        `${import.meta.env.VITE_API_URL}notifications/users/${userId}`, // Menggunakan API endpoint untuk user
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Menggunakan token JWT untuk autentikasi
           },
         }
       );
-      console.log("Notifications response:", response.data); // Log respons data dari API
-
-      if (
-        response.data.status === "success" &&
-        response.data.data.notifications.length > 0
-      ) {
-        setNotifications(response.data.data.notifications); // Set notifications jika ada data
-      } else {
-        console.log("No notifications found.");
-        setNotifications([]); // Set empty jika tidak ada notifikasi
-      }
+      // Mengurutkan notifikasi berdasarkan waktu terbaru di atas
+      const sortedNotifications = response.data.data.notifications.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setNotifications(sortedNotifications); // Menyimpan notifikasi yang sudah diurutkan
     } catch (error) {
       console.error("Error fetching notifications:", error);
     } finally {
@@ -59,17 +47,15 @@ const Dashboard = () => {
     }
   };
 
-  // Ambil userId dari token ketika komponen pertama kali dimuat
   useEffect(() => {
-    getUserIdFromToken();
+    getUserIdFromToken(); // Mendapatkan userId saat komponen pertama kali dimuat
   }, []);
 
-  // Ambil notifikasi setelah userId ditemukan
   useEffect(() => {
     if (userId) {
-      fetchNotifications(); // Fetch notifications saat userId tersedia
+      fetchNotifications(); // Mengambil notifikasi setelah userId didapat
     }
-  }, [userId]);
+  }, [userId]); // Akan dijalankan ulang jika userId berubah
 
   return (
     <main>
@@ -78,11 +64,9 @@ const Dashboard = () => {
         <div className="w-full h-[1px] bg-teks mt-2"></div>
 
         {isLoading ? (
-          <div>Loading...</div> // Menampilkan loading ketika isLoading true
-        ) : notifications.length > 0 ? (
-          <CardNotif notifications={notifications} /> // Menampilkan CardNotif jika ada notifikasi
+          <div>Loading...</div>
         ) : (
-          <div>No notifications available</div> // Pesan jika tidak ada notifikasi
+          <CardNotif notifications={notifications} userType="user" />
         )}
       </div>
     </main>
