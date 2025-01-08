@@ -1,6 +1,6 @@
 import Sidebar from "../../components/admin/Sidebar";
 import Header from "../../components/admin/Header";
-import Content from "../../components/admin/notifikasi";
+import Content from "../../components/admin/Notifikasi";
 import NavMobile from "../../components/admin/NavMobile";
 
 const Notif = () => {

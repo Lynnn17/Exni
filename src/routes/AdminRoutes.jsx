@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Notif from "../views/admin/notifikasi";
+import Notif from "../views/admin/Notifikasi";
 import DashboardAdmin from "../views/admin/Dashboard";
 import UserDashboardRoutes from "./AdminRoutes/UserDashboardRoutes";
 import AssetDashboardRoutes from "./AdminRoutes/AssetDashboardRoutes";

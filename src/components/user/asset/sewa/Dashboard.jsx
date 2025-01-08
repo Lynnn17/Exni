@@ -6,15 +6,12 @@ import HeaderSection from "../../../reusable/HeaderSection";
 import Search from "../../../reusable/Search";
 import SectionDivider from "../../../reusable/SectionDivider";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
 import Loading from "../../../reusable/Loading";
 
 const Dashboard = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const navigate = useNavigate();
 
   const [loading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
