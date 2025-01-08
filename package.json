@@ -23,6 +23,7 @@
     "react-router-dom": "^7.1.1",
     "react-status-alert": "^1.4.1",
     "swiper": "^11.1.15",
+    "terser": "^5.37.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
