@@ -35,11 +35,10 @@ const Navbar = () => {
 
   // Fungsi logout
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/login"); // Arahkan ke halaman login
+    window.location.href = "/";
   };
 
   // Ambil informasi user saat komponen dimuat

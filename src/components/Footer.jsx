@@ -19,59 +19,63 @@ const Footer = () => {
         <div className="flex flex-wrap  justify-between  pt-2 text-[12px] w-full  gap-6 md:gap-0">
           <div className="grid grid-cols-3 gap-2 md:w-[30rem]">
             <div className="">
-              <p className="font-bold">KANTOR CABANG</p>
+              <p className="font-bold">
+                <a href="https://www.pelni.co.id/kantor-cabang">
+                  KANTOR CABANG
+                </a>
+              </p>
               <ul className="list-none pl-1">
-                <li>PPID</li>
-                <li>TENDER</li>
-                <li>KARIR</li>
-                <li>FAQ</li>
+                <li>
+                  <a href="https://ppid.pelni.co.id/">PPID</a>
+                </li>
+                <li>
+                  <a href="https://www.pelni.co.id/tender">TENDER</a>
+                </li>
+                <li>
+                  <a href="https://www.pelni.co.id/karir">KARIR</a>
+                </li>
+                <li>
+                  {" "}
+                  <a href="https://www.pelni.co.id/faq-id">FAQ</a>
+                </li>
               </ul>
             </div>
             <div className="">
               <p className="font-bold">PT. PELNI (Persero) HQ</p>
               <address className="text-[11px] not-italic">
-                Jl. Gajah Mada No. 14, Jakarta Pusat, 10130 DKI Jakarta,
-                Indonesia
+                Jl. Pahlawan No.112-114, Krembangan Sel., Kec. Krembangan,
+                Surabaya, Jawa Timur 60175
               </address>
             </div>
             <div className="">
               <p className="font-bold">Kontak Pusat</p>
               <ul className="list-none text-[11px]">
                 <li>T. 162 (Jabodetabek)</li>
-                <li>F. +62 21 6385 4130</li>
+                <li>F. +62 811-3050-563</li>
                 <li>E. infopelni162@pelni.co.id</li>
               </ul>
             </div>
           </div>
           <div className=" ">
             <p className="font-bold">Media Sosial Kami</p>
+
             <div className="flex gap-2 pt-2">
               <a
-                href="https://www.instagram.com"
+                href="https://www.instagram.com/pelni162/?hl=en"
                 target="_blank"
-                rel="noopener noreferrer"
               >
                 <FaInstagram className="text-2xl text-gray-600 hover:text-red-600" />
               </a>
               <a
-                href="https://www.youtube.com"
+                href="https://www.youtube.com/channel/UCG1IAElUtPQHpRzq5L1ZiRA"
                 target="_blank"
-                rel="noopener noreferrer"
               >
                 <FaYoutube className="text-2xl text-gray-600 hover:text-red-600" />
               </a>
-              <a
-                href="https://www.facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://www.facebook.com/pelni162/" target="_blank">
                 <FaFacebook className="text-2xl text-gray-600 hover:text-blue-600" />
               </a>
-              <a
-                href="https://www.twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://twitter.com/pelni162?lang=en" target="_blank">
                 <FaTwitter className="text-2xl text-gray-600 hover:text-blue-400" />
               </a>
             </div>
@@ -82,7 +86,7 @@ const Footer = () => {
         <div className="h-[10vh] bg-[#404C58] rounded-t-[25px]">
           <div className="text-white flex justify-center  items-center h-full   px-8 text-xs md:text-sm">
             <p className=" text-center ">
-              Copyright ©2024 Anak Magang PT Pelayaran Nasional Indonesia. All
+              Copyright ©2025 Anak Magang PT Pelayaran Nasional Indonesia. All
               rights reserved.
             </p>
           </div>

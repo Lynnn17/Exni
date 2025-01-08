@@ -9,10 +9,16 @@ import Pagination from "./admin/Pagination";
 import axios from "axios";
 import StatusAlert, { StatusAlertService } from "react-status-alert";
 import "react-status-alert/dist/status-alert.css";
+import Loading from "./reusable/Loading";
+import { Link } from "react-router-dom";
 
-const AboutSection = ({ onPesanSekarangClick, className }) => (
+const { role } = JSON.parse(localStorage.getItem("user")) || "anonymous";
+
+const roleUser = role === "USER" ? "user" : "admin";
+
+const AboutSection = ({ className }) => (
   <div
-    className={`bg-[#404C58] md:w-[60%] lg:h-[310px] lg:w-[55%] text-white p-12 ${className}`}
+    className={`bg-[#404C58] md:w-[60%] lg:h-[310px]  lg:w-[55%] text-white p-12 ${className}`}
   >
     <h1 className="text-2xl font-bold md:text-3xl uppercase ">Tentang Kami</h1>
     <p className="text-sm w-[90%] text-justify">
@@ -21,49 +27,33 @@ const AboutSection = ({ onPesanSekarangClick, className }) => (
       informasi yang berguna bagi pelanggan maupun calon pelanggan PELNI.
     </p>
     <div className="pt-2 lg:pt-4">
-      <button
-        onClick={onPesanSekarangClick}
-        className="bg-white text-black px-3 rounded-l-xl rounded-br-[25px] py-2 font-semibold"
-      >
-        PESAN SEKARANG
+      <button className="bg-white text-black px-3 rounded-l-xl rounded-br-[25px] py-2 font-semibold">
+        <Link to={`/${roleUser}/dashboard`}>PESAN SEKARANG</Link>
       </button>
     </div>
   </div>
 );
 
 // Komponen untuk menampilkan tombol login dan hide
-const LoginPrompt = ({ onHideClick }) => (
+const LoginPrompt = ({}) => (
   <div className="px-2 pb-10 text-center pt-10 md:w-[60%] md:mx-auto">
     <p>
       Nikmati layanan PELNI tanpa perlu download Aplikasi cukup dengan Sign in
       di bawah ini!
     </p>
     <button className="bg-[#5641BA] text-white w-[7rem] p-2 rounded-xl mt-4">
-      Login
+      <Link to="/login">Sign In</Link>
     </button>
   </div>
 );
 
 const Home = () => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const [status, setStatus] = useState("active");
+
   const [data, setData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-
-  const token = localStorage.getItem("token");
-
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
-  };
-
-  const customStyles = {
-    textColor: "text-black",
-    selectBg: "bg-white", // Custom background color
-    iconColor: "text-black", // Custom icon color
-    select: { borderColor: "black" }, // Optional additional styling
-  };
 
   const handlePesanSekarangClick = () => {
     setShowLoginPrompt(true);
@@ -124,18 +114,10 @@ const Home = () => {
         </div>
       </div>
 
-      <div>
-        {/* Show Login Prompt */}
-        {showLoginPrompt && <LoginPrompt onHideClick={handleHideClick} />}
-      </div>
-
       {/* Tentang Kami Section */}
-      <div className="pt-3 px-4 md:px-6 lg:px-10 h-50 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] relative z-[-100]">
+      <div className="pt-3 px-4 md:px-6 lg:px-10 h-50 md:pt-5 md:flex md:flex-wrap shadow-[0px_100px_100px_-100px_rgba(0,0,0,1)] ">
         {/* First About Section with top rounded corners */}
-        <AboutSection
-          onPesanSekarangClick={handlePesanSekarangClick}
-          className="rounded-t-[20px] md:rounded-t-none md:rounded-tl-[50px] "
-        />
+        <AboutSection className="rounded-t-[20px] md:rounded-t-none md:rounded-tl-[50px] " />
 
         <div className="md:w-[40%] lg:h-76 lg:w-[45%] 2xl:h-[19.4rem] ">
           <img
@@ -157,12 +139,9 @@ const Home = () => {
         </div>
 
         {/* Second About Section with bottom rounded corners */}
-        <AboutSection
-          onPesanSekarangClick={handlePesanSekarangClick}
-          className="rounded-b-[20px] md:rounded-b-none md:rounded-br-[50px]"
-        />
+        <AboutSection className="rounded-b-[20px] md:rounded-b-none md:rounded-br-[50px]" />
 
-        <LoginPrompt onHideClick={handleHideClick} />
+        <LoginPrompt />
       </div>
 
       {/* list penyewaan */}
@@ -171,17 +150,33 @@ const Home = () => {
         <p className="uppercase font-semibold">List Penyewaan Aset</p>
       </div>
       <div className="max-h-[calc(100vh-260px)] overflow-y-auto">
-        <div className="px-4 md:px-6 lg:px-10 pt-5 md:grid md:grid-cols-2 md:gap-4 lg:grid-cols-3">
-          {data?.map((item, i) => (
-            <CardHome
-              key={i}
-              foto={item.albums[0]}
-              title={item.name}
-              deskripsi={item.description}
-              link={`/user/asset/building/pesan/${item.id}`}
-              token={token || ""}
-            />
-          ))}
+        <div className="px-4 md:px-6 lg:px-10 pt-5 flex flex-wrap">
+          {isLoading ? (
+            <div className="mx-auto">
+              <Loading />
+            </div>
+          ) : data?.length === 0 ? (
+            <p className="col-span-full text-center text-gray-500">
+              Tidak ada data tersedia.
+            </p>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data?.map((item, index) => (
+                  <CardHome
+                    key={item.id || index} // Gunakan item.id jika unik, fallback ke index jika tidak
+                    foto={item.albums?.[0] || ""}
+                    title={item.name}
+                    deskripsi={item.description}
+                    link={`/user/asset/${
+                      item.type === "TENANT" ? "tenant" : "building"
+                    }/pesan/${item.id}`}
+                    role={roleUser}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className="py-2">

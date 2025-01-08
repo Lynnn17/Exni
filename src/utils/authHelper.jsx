@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
-
+import { StatusAlertService } from "react-status-alert";
+import "react-status-alert/dist/status-alert.css";
 // Fungsi untuk memeriksa apakah token valid dan tidak kedaluwarsa
 export const isTokenValid = (token, requiredRole) => {
   if (!token) {
@@ -20,7 +21,10 @@ export const isTokenValid = (token, requiredRole) => {
     // Check if the token is expired (exp is in seconds)
     const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
     if (decodedToken.exp < currentTime) {
-      console.error("Token has expired");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      StatusAlertService.showError("Session expired. Please log in again.");
+
       return false; // Token has expired
     }
 
