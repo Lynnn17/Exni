@@ -22,9 +22,13 @@ const Login = () => {
   };
 
   const validationSchema = Yup.object({
+<<<<<<< HEAD
     email: Yup.string()
       .email("Invalid email format")
       .required("Email is required"),
+=======
+    email: Yup.string().required("Email is required"),
+>>>>>>> refs/remotes/origin/main
     password: Yup.string()
       .min(6, "Password must have at least 6 characters")
       .required("Password is required"),
@@ -47,6 +51,7 @@ const Login = () => {
 
       console.log("Login response:", response.data);
       const token = response.data.data.access_token;
+<<<<<<< HEAD
       const user = {
         company: response.data.data.company,
         role: response.data.data.role,
@@ -60,20 +65,31 @@ const Login = () => {
 
       localStorage.setItem("user", JSON.stringify(user));
       StatusAlertService.showSuccess("Login successfully!"); // Menampilkan alert sukses
+=======
+      localStorage.setItem("token", token);
+      StatusAlertService.showSuccess("Login berhasil!");
+>>>>>>> refs/remotes/origin/main
       resetForm();
 
       navigate("/admin/dashboard"); // Redirect setelah login
     } catch (error) {
+<<<<<<< HEAD
       console.error("Login failed:", error.response || error.message); // Debug error
       StatusAlertService.showError(
         "Login failed. Please check your credentials."
       ); // Menampilkan alert gagal
+=======
+      StatusAlertService.showError(
+        "Login gagal. Silakan periksa kembali email atau password Anda."
+      );
+>>>>>>> refs/remotes/origin/main
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
+<<<<<<< HEAD
     <main>
       <StatusAlert className="" />
       <div
@@ -81,6 +97,16 @@ const Login = () => {
         style={{ backgroundImage: `url(${bgLogin})` }}
       >
         <div className="h-full flex justify-center items-center">
+=======
+    <>
+      <StatusAlert />
+      <div
+        className="w-full h-screen bg-cover bg-no-repeat bg-center -mt-4"
+        style={{ backgroundImage: `url(${bgLogin})` }}
+      >
+        <div className="h-full flex justify-center items-center">
+          <div className="absolute z-[100]"></div>
+>>>>>>> refs/remotes/origin/main
           <div className="flex">
             {/* Card */}
             <div className="bg-white w-[20rem] md:w-[25rem] py-7 xl:rounded-l-[30px] rounded-[30px] xl:rounded-none">
@@ -154,7 +180,11 @@ const Login = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
     </main>
+=======
+    </>
+>>>>>>> refs/remotes/origin/main
   );
 };
 
